@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30204.135
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeMD5_CMD", "ComputeMD5\ComputeMD5_CMD.csproj", "{2C0D5D39-8E2D-4E84-BBB2-D5874988553A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeMD5_GUI", "ComputeMD5_GUI\ComputeMD5_GUI.csproj", "{564557B9-FBEC-4E28-925E-4BCE132CACF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeMD5_MulitiThread", "ComputeMD5_MulitiThread\ComputeMD5_MulitiThread.csproj", "{40EF8D84-0EAE-423D-A476-2190598E95F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeMD5_CMD_NetCore_v2", "ComputeMD5_CMD_NetCore_v2\ComputeMD5_CMD_NetCore_v2.csproj", "{A1AC9BD2-7715-49D8-9F44-8C7CB152BE66}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeMD5_CMD_NetFramwork_v2", "ComputeMD5_CMD_NetFramwork_v2\ComputeMD5_CMD_NetFramwork_v2.csproj", "{637D4342-8A45-43C2-AD91-051FF6E63B54}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2C0D5D39-8E2D-4E84-BBB2-D5874988553A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C0D5D39-8E2D-4E84-BBB2-D5874988553A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C0D5D39-8E2D-4E84-BBB2-D5874988553A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C0D5D39-8E2D-4E84-BBB2-D5874988553A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{564557B9-FBEC-4E28-925E-4BCE132CACF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{564557B9-FBEC-4E28-925E-4BCE132CACF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{564557B9-FBEC-4E28-925E-4BCE132CACF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{564557B9-FBEC-4E28-925E-4BCE132CACF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40EF8D84-0EAE-423D-A476-2190598E95F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40EF8D84-0EAE-423D-A476-2190598E95F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40EF8D84-0EAE-423D-A476-2190598E95F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40EF8D84-0EAE-423D-A476-2190598E95F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1AC9BD2-7715-49D8-9F44-8C7CB152BE66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1AC9BD2-7715-49D8-9F44-8C7CB152BE66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1AC9BD2-7715-49D8-9F44-8C7CB152BE66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1AC9BD2-7715-49D8-9F44-8C7CB152BE66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{637D4342-8A45-43C2-AD91-051FF6E63B54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{637D4342-8A45-43C2-AD91-051FF6E63B54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{637D4342-8A45-43C2-AD91-051FF6E63B54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{637D4342-8A45-43C2-AD91-051FF6E63B54}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A6FCF5EF-9FB4-4A62-AD77-FC2596FB2184}
+	EndGlobalSection
+EndGlobal
