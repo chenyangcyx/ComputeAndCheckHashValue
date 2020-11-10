@@ -7,6 +7,8 @@ namespace ComputeMD5_CMD_NetCore_v2
 {
     class GetMd5
     {
+        static MD5 md5 = MD5.Create();
+
         public static string GetMd5HashValue(string path)
         {
             if (!File.Exists(path))
@@ -14,11 +16,8 @@ namespace ComputeMD5_CMD_NetCore_v2
                 Console.WriteLine(path + "不存在！");
                 return null;
             }
-            using (MD5 md5 = MD5.Create())
-            {
-                byte[] hashValue = md5.ComputeHash(new FileInfo(path).OpenRead());
-                return ConvertHashCodeBytes(hashValue);
-            }
+            byte[] hashValue = md5.ComputeHash(new FileInfo(path).OpenRead());
+            return ConvertHashCodeBytes(hashValue);
         }
 
         public static string GetMd5HashValue(FileInfo fi)
@@ -28,11 +27,8 @@ namespace ComputeMD5_CMD_NetCore_v2
                 Console.WriteLine(fi.FullName + "不存在！");
                 return null;
             }
-            using (MD5 md5 = MD5.Create())
-            {
-                byte[] hashValue = md5.ComputeHash(fi.OpenRead());
-                return ConvertHashCodeBytes(hashValue);
-            }
+            byte[] hashValue = md5.ComputeHash(fi.OpenRead());
+            return ConvertHashCodeBytes(hashValue);
         }
         public static string ConvertHashCodeBytes(byte[] hashvalue)
         {
