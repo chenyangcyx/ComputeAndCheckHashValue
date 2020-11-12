@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
-using System.Net.Http.Headers;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -77,8 +74,7 @@ namespace ComputeHash
                 Console.WriteLine(fi.FullName + "不存在！");
                 return null;
             }
-            string cmd = $"\"{blake_path}\" -a {hash_type} \"{fi.FullName}\"";
-            return runCMD(cmd).Split(" ")[0];
+            return Utilities.getBLAKEHash_CMD($"\"{blake_path}\"", $"-a {hash_type} \"{fi.FullName}\"").Split(" ")[0];
         }
 
         public static string getBLAKE3(FileInfo fi, string blake_path)
@@ -89,10 +85,10 @@ namespace ComputeHash
                 return null;
             }
             string cmd = $"\"{blake_path}\" \"{fi.FullName}\"";
-            return runCMD(cmd).Split(" ")[0];
+            return Utilities.getBLAKEHash_CMD(blake_path, fi.FullName).Split(" ")[0];
         }
 
-        public static string getHashByName(string hash_method,string path,SettingStruct.Rootobject setting)
+        public static string getHashByName(string hash_method, string path, SettingStruct.Rootobject setting)
         {
             switch (hash_method)
             {
@@ -118,39 +114,6 @@ namespace ComputeHash
                     return getBLAKE3(new FileInfo(path), setting.blake3_exe_path);
             }
             return null;
-        }
-
-        private static string runCMD(string cmd)
-        {
-            string result=null;
-            using (Process p = new Process())
-            {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                {
-                    p.StartInfo.FileName = "bash";
-                    p.StartInfo.Arguments = $"-c \"{cmd}\"";
-                    p.StartInfo.CreateNoWindow = true;
-                    p.StartInfo.UseShellExecute = false;
-                    p.StartInfo.RedirectStandardOutput = true;
-                    p.Start();
-                    p.WaitForExit();
-                    result = p.StandardOutput.ReadToEnd();
-                    p.Close();
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    p.StartInfo.FileName = cmd.Split(" ")[0];
-                    p.StartInfo.Arguments = cmd.Replace(cmd.Split(" ")[0] + " ", "");
-                    p.StartInfo.CreateNoWindow = true;
-                    p.StartInfo.UseShellExecute = false;
-                    p.StartInfo.RedirectStandardOutput = true;
-                    p.Start();
-                    p.WaitForExit();
-                    result = p.StandardOutput.ReadToEnd();
-                    p.Close();
-                }
-            }
-            return result;
         }
 
         public static string convertHashCodeBytes(byte[] hashvalue)

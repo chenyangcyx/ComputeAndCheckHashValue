@@ -40,40 +40,66 @@ namespace ComputeHash
             return hash_dic;
         }
 
-        public static void copyFile(string file_path, string dst_folder)
-        {
-            runCMD($"cp \"{file_path}\" \"{dst_folder}\"");
-        }
-
-        public static string runCMD(string cmd)
+        public static string runCMD_Linux(string cmd)
         {
             string result = null;
             using (Process p = new Process())
             {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                {
-                    p.StartInfo.FileName = "bash";
-                    p.StartInfo.Arguments = $"-c \"{cmd}\"";
-                    p.StartInfo.CreateNoWindow = true;
-                    p.StartInfo.UseShellExecute = false;
-                    p.StartInfo.RedirectStandardOutput = true;
-                    p.Start();
-                    p.WaitForExit();
-                    result = p.StandardOutput.ReadToEnd();
-                    p.Close();
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    p.StartInfo.FileName = cmd.Split(" ")[0];
-                    p.StartInfo.Arguments = cmd.Replace(cmd.Split(" ")[0] + " ", "");
-                    p.StartInfo.CreateNoWindow = true;
-                    p.StartInfo.UseShellExecute = false;
-                    p.StartInfo.RedirectStandardOutput = true;
-                    p.Start();
-                    p.WaitForExit();
-                    result = p.StandardOutput.ReadToEnd();
-                    p.Close();
-                }
+                p.StartInfo.FileName = "bash";
+                p.StartInfo.Arguments = $"-c \"{cmd}\"";
+                p.StartInfo.CreateNoWindow = true;
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.Start();
+                p.WaitForExit();
+                result = p.StandardOutput.ReadToEnd();
+                p.Close();
+            }
+            return result;
+        }
+
+        public static string runCMD_Windows(string exe_name, string args)
+        {
+            string result = null;
+            using (Process p = new Process())
+            {
+                p.StartInfo.FileName = exe_name;
+                p.StartInfo.Arguments = args;
+                p.StartInfo.CreateNoWindow = true;
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.Start();
+                p.WaitForExit();
+                result = p.StandardOutput.ReadToEnd();
+                p.Close();
+            }
+            return result;
+        }
+
+        public static void deleteFolder_CMD(string path)
+        {
+            try
+            {
+                new DirectoryInfo(path).Delete(true);
+            }
+            catch (Exception) { }
+        }
+
+        public static void createFolder_CMD(string path)
+        {
+            new DirectoryInfo(path).Create();
+        }
+
+        public static string getBLAKEHash_CMD(string blake_path, string args)
+        {
+            string result = null;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return runCMD_Linux(blake_path + " " + args);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return runCMD_Windows(blake_path, args);
             }
             return result;
         }

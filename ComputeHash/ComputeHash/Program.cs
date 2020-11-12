@@ -8,7 +8,7 @@ namespace ComputeHash
     {
         static void Main(string[] args)
         {
-            if (args.Length==0 || !File.Exists(args[0]))
+            if (args.Length == 0 || !File.Exists(args[0]))
             {
                 Console.WriteLine("没有输入配置文件！");
                 while (true)
@@ -82,7 +82,7 @@ namespace ComputeHash
                 hash_method_use.Add(false);
             no = 0;
             Console.Write("## hash method: ");
-            for(int i = 0; i < hash_method_name.Count; i++)
+            for (int i = 0; i < hash_method_name.Count; i++)
             {
                 if (hash_method_use[i])
                     if (i == 0)
@@ -91,11 +91,34 @@ namespace ComputeHash
                         Console.Write(", " + hash_method_name[i]);
             }
             Console.Write("\n");
+            Console.WriteLine("## refresh_before_compute: " + (setting.refresh_before_compute == 1));
+            Console.WriteLine("## forecast_remain_time: " + (setting.forecast_remain_time == 1));
 
             DateTime before_all = DateTime.Now;
             Console.WriteLine("\n开始执行，开始时间：" + before_all.ToString("yyyy-MM-dd HH:mm:ss") + "\n");
+            /*预测剩余时间*/
+            int all_file_num = 0;
+            long all_file_byte = 0L;
+            double handle_file_time_second = 0d;
+            int handle_file_num = 0;
+            long handle_file_byte = 0L;
+            double per_byte_average = 0d;
+            // 统计所有文件个数及大小
+            foreach (var dir in setting.compute_folder)
+            {
+                if (!Directory.Exists(dir))
+                    continue;
+                foreach (var file in new DirectoryInfo(dir).GetFiles())
+                {
+                    all_file_num++;
+                    all_file_byte += file.Length;
+                }
+            }
+            // 开关，是否开启剩余时间预测
+            bool forecast_remain_time = (setting.forecast_remain_time == 1);
+            /*预测剩余时间*/
             no = 0;
-            for (int path_no= 0;path_no<setting.compute_folder.Length;path_no++)
+            for (int path_no = 0; path_no < setting.compute_folder.Length; path_no++)
             {
                 string path = setting.compute_folder[path_no];
                 if (!Directory.Exists(path))
@@ -105,6 +128,11 @@ namespace ComputeHash
                 }
                 DateTime folder_before_time = DateTime.Now;
                 Console.WriteLine((++no) + "." + path + "，开始时间：" + folder_before_time.ToString("yyyy-MM-dd HH:mm:ss"));
+                if (setting.refresh_before_compute == 1)
+                {
+                    Utilities.deleteFolder_CMD(setting.result_save_folder[path_no]);
+                    Utilities.createFolder_CMD(setting.result_save_folder[path_no]);
+                }
                 FileInfo[] all_file = new DirectoryInfo(path).GetFiles();
                 int file_no = 0;
                 StreamWriter[] sw_all = new StreamWriter[hash_method_name.Count];
@@ -131,7 +159,17 @@ namespace ComputeHash
                         }
                     }
                     DateTime file_after_time = DateTime.Now;
-                    Console.WriteLine("      -开始时间：" + file_before_time.ToString("yyyy-MM-dd HH:mm:ss") + "，结束时间：" + file_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共同时：" + (file_after_time - file_before_time).TotalSeconds + " 秒");
+                    double use_time_second = (file_after_time - file_before_time).TotalSeconds;
+                    Console.WriteLine("      -开始时间：" + file_before_time.ToString("yyyy-MM-dd HH:mm:ss") + "，结束时间：" + file_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共同时：" + use_time_second + " 秒");
+                    if (forecast_remain_time)
+                    {
+                        handle_file_num++;
+                        handle_file_byte += file.Length;
+                        handle_file_time_second += use_time_second;
+                        per_byte_average = handle_file_byte / handle_file_time_second;
+                        double remain_second = (all_file_byte - handle_file_byte) / per_byte_average;
+                        Console.WriteLine("      -剩余时间：" + remain_second / 60 + " 分，" + remain_second + " 秒");
+                    }
                 }
                 for (int hash_no = 0; hash_no < hash_method_name.Count; hash_no++)
                 {

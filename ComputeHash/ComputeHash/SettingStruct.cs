@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ComputeHash
+﻿namespace ComputeHash
 {
     class SettingStruct
     {
@@ -13,6 +9,8 @@ namespace ComputeHash
             public string blake2_exe_path { get; set; }
             public string blake3_exe_path { get; set; }
             public Check_Method check_method { get; set; }
+            public int refresh_before_compute { get; set; }
+            public int forecast_remain_time { get; set; }
         }
 
         public class Check_Method
