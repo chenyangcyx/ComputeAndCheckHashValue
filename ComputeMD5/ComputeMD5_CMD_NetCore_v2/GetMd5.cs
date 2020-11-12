@@ -3,23 +3,11 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace ComputeMD5_CMD_NetFramwork_v2
+namespace ComputeMD5_CMD_NetCore_v2
 {
     class GetMd5
     {
-        static MD5 md5 = MD5.Create();
-
-        public static string GetMd5HashValue(string path)
-        {
-            if (!File.Exists(path))
-            {
-                Console.WriteLine(path + "不存在！");
-                return null;
-            }
-            byte[] hashValue = md5.ComputeHash(new FileInfo(path).OpenRead());
-            return ConvertHashCodeBytes(hashValue);
-        }
-
+        private static MD5 md5 = MD5.Create();
         public static string GetMd5HashValue(FileInfo fi)
         {
             if (!File.Exists(fi.FullName))
@@ -30,6 +18,7 @@ namespace ComputeMD5_CMD_NetFramwork_v2
             byte[] hashValue = md5.ComputeHash(fi.OpenRead());
             return ConvertHashCodeBytes(hashValue);
         }
+
         public static string ConvertHashCodeBytes(byte[] hashvalue)
         {
             StringBuilder builder = new StringBuilder();
