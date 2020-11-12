@@ -40,7 +40,7 @@ namespace ComputeHash
             return hash_dic;
         }
 
-        public static string runCMD_Linux(string cmd)
+        private static string runCMD_Linux(string cmd)
         {
             string result = null;
             using (Process p = new Process())
@@ -58,7 +58,7 @@ namespace ComputeHash
             return result;
         }
 
-        public static string runCMD_Windows(string exe_name, string args)
+        private static string runCMD_Windows(string exe_name, string args)
         {
             string result = null;
             using (Process p = new Process())
@@ -74,6 +74,14 @@ namespace ComputeHash
                 p.Close();
             }
             return result;
+        }
+
+        public static void chmodBLAKEprogram(string path)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                runCMD_Linux($"chmod 777 \"{path}\"");
+            }
         }
 
         public static void deleteFolder_CMD(string path)

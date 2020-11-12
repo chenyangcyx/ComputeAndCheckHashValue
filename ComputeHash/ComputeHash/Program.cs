@@ -15,12 +15,29 @@ namespace ComputeHash
                     Console.ReadLine();
             }
             SettingStruct.Rootobject setting = Utilities.getSetting(args[0]);
+            // 检查设置选项
+            if (!File.Exists(setting.blake2_exe_path))
+            {
+                Console.WriteLine("BLAKE2程序" + setting.blake2_exe_path + "不存在！");
+                while (true)
+                    Console.ReadLine();
+            }
+            if (!File.Exists(setting.blake3_exe_path))
+            {
+                Console.WriteLine("BLAKE3程序" + setting.blake3_exe_path + "不存在！");
+                while (true)
+                    Console.ReadLine();
+            }
+            // 赋予权限
+            Utilities.chmodBLAKEprogram(setting.blake2_exe_path);
+            Utilities.chmodBLAKEprogram(setting.blake3_exe_path);
+            // 输出设置
             Console.WriteLine("所有设置：");
-            Console.WriteLine("## compute_folder ##");
+            Console.WriteLine("## compute_folder");
             int no = 0;
             foreach (var path in setting.compute_folder)
                 Console.WriteLine((++no) + ". " + path);
-            Console.WriteLine("## result_save_folder ##");
+            Console.WriteLine("## result_save_folder");
             no = 0;
             foreach (var path in setting.result_save_folder)
                 Console.WriteLine((++no) + ". " + path);
