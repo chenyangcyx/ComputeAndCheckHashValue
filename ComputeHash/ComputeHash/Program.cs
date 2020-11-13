@@ -28,9 +28,6 @@ namespace ComputeHash
                 while (true)
                     Console.ReadLine();
             }
-            // 赋予权限
-            Utilities.chmodBLAKEprogram(setting.blake2_exe_path);
-            Utilities.chmodBLAKEprogram(setting.blake3_exe_path);
             // 输出设置
             Console.WriteLine("所有设置：");
             Console.WriteLine("## compute_folder");
@@ -119,7 +116,6 @@ namespace ComputeHash
             double handle_file_time_second = 0d;
             int handle_file_num = 0;
             long handle_file_byte = 0L;
-            double per_byte_average = 0d;
             // 统计所有文件个数及大小
             foreach (var dir in setting.compute_folder)
             {
@@ -181,7 +177,7 @@ namespace ComputeHash
                         handle_file_num++;
                         handle_file_byte += file.Length;
                         handle_file_time_second += use_time_second;
-                        per_byte_average = handle_file_byte / handle_file_time_second;
+                        double per_byte_average = handle_file_byte / handle_file_time_second;
                         double remain_second = (all_file_byte - handle_file_byte) / per_byte_average;
                         Console.WriteLine("      -剩余时间：" + (remain_second / 60).ToString("0.0000000") + " 分，" + remain_second.ToString("0.0000000") + " 秒");
                     }

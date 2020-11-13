@@ -76,14 +76,6 @@ namespace CheckHash
             return result;
         }
 
-        public static void chmodBLAKEprogram(string path)
-        {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                runCMD_Linux($"chmod 777 \"{path}\"");
-            }
-        }
-
         public static void deleteFolder_CMD(string path)
         {
             try
