@@ -162,8 +162,6 @@ namespace ComputeHash
                 }
                 foreach (var file in all_file)
                 {
-                    if (file.FullName.Contains(@"hash.md5"))
-                        continue;
                     DateTime file_before_time = DateTime.Now;
                     Console.WriteLine("    (" + (++file_no) + ")" + file.FullName);
                     for (int hash_no = 0; hash_no < hash_method_name.Count; hash_no++)
