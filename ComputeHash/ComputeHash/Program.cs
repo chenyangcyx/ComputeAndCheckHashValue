@@ -154,6 +154,7 @@ namespace ComputeHash
                     if (hash_method_use[hash_no])
                     {
                         sw_all[hash_no] = new StreamWriter(setting.result_save_folder[path_no] + "hash." + hash_method_name[hash_no], false, Utilities.utf8_encoding);
+                        sw_all[hash_no].AutoFlush = true;
                     }
                 }
                 foreach (var file in all_file)

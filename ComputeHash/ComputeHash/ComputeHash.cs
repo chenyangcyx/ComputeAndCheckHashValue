@@ -15,8 +15,11 @@ namespace ComputeHash
                 Console.WriteLine(fi.FullName + "不存在！");
                 return null;
             }
-            byte[] hashValue = md5.ComputeHash(fi.OpenRead());
-            return convertHashCodeBytes(hashValue);
+            using (var read_stream = fi.OpenRead())
+            {
+                byte[] hashValue = md5.ComputeHash(read_stream);
+                return convertHashCodeBytes(hashValue);
+            }
         }
 
         private static SHA1 sha1 = SHA1.Create();
@@ -27,8 +30,11 @@ namespace ComputeHash
                 Console.WriteLine(fi.FullName + "不存在！");
                 return null;
             }
-            byte[] hashValue = sha1.ComputeHash(fi.OpenRead());
-            return convertHashCodeBytes(hashValue);
+            using (var read_stream = fi.OpenRead())
+            {
+                byte[] hashValue = sha1.ComputeHash(read_stream);
+                return convertHashCodeBytes(hashValue);
+            }
         }
 
         private static SHA256 sha256 = SHA256.Create();
@@ -39,8 +45,11 @@ namespace ComputeHash
                 Console.WriteLine(fi.FullName + "不存在！");
                 return null;
             }
-            byte[] hashValue = sha256.ComputeHash(fi.OpenRead());
-            return convertHashCodeBytes(hashValue);
+            using (var read_stream = fi.OpenRead())
+            {
+                byte[] hashValue = sha256.ComputeHash(read_stream);
+                return convertHashCodeBytes(hashValue);
+            }
         }
 
         private static SHA384 sha384 = SHA384.Create();
@@ -51,8 +60,11 @@ namespace ComputeHash
                 Console.WriteLine(fi.FullName + "不存在！");
                 return null;
             }
-            byte[] hashValue = sha384.ComputeHash(fi.OpenRead());
-            return convertHashCodeBytes(hashValue);
+            using (var read_stream = fi.OpenRead())
+            {
+                byte[] hashValue = sha384.ComputeHash(read_stream);
+                return convertHashCodeBytes(hashValue);
+            }
         }
 
         private static SHA512 sha512 = SHA512.Create();
@@ -63,8 +75,11 @@ namespace ComputeHash
                 Console.WriteLine(fi.FullName + "不存在！");
                 return null;
             }
-            byte[] hashValue = sha512.ComputeHash(fi.OpenRead());
-            return convertHashCodeBytes(hashValue);
+            using (var read_stream = fi.OpenRead())
+            {
+                byte[] hashValue = sha512.ComputeHash(read_stream);
+                return convertHashCodeBytes(hashValue);
+            }
         }
 
         public static string getBLAKE2(FileInfo fi, string hash_type, string blake_path)

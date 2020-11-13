@@ -146,6 +146,7 @@ namespace CheckHash
                 }
                 DateTime folder_before_time = DateTime.Now;
                 StreamWriter sw_result = new StreamWriter(setting.result_output_file[path_no], false, Utilities.utf8_encoding);
+                sw_result.AutoFlush = true;
                 Console.WriteLine((++no) + "." + path + "，开始时间：" + folder_before_time.ToString("yyyy-MM-dd HH:mm:ss"));
                 sw_result.WriteLine((no) + "." + path);
                 FileInfo[] all_file = new DirectoryInfo(path).GetFiles();
