@@ -1,19 +1,20 @@
-﻿namespace ComputeHash
+﻿namespace CheckHash
 {
     class SettingStruct
     {
         public class Rootobject
         {
-            public string[] compute_folder { get; set; }
-            public string[] result_save_folder { get; set; }
+            public string[] check_folder { get; set; }
+            public string[] hash_file_folder { get; set; }
+            public string[] result_output_file { get; set; }
             public string blake2_exe_path { get; set; }
             public string blake3_exe_path { get; set; }
-            public Compute_Method compute_method { get; set; }
+            public Check_Method check_method { get; set; }
             public int refresh_before_compute { get; set; }
             public int forecast_remain_time { get; set; }
         }
 
-        public class Compute_Method
+        public class Check_Method
         {
             public int md5 { get; set; }
             public int sha1 { get; set; }

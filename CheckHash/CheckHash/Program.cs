@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace ComputeHash
+namespace CheckHash
 {
     class Program
     {
@@ -57,48 +57,48 @@ namespace ComputeHash
                 Utilities.BLAKE3_NAME
             };
             List<bool> hash_method_use = new List<bool>();
-            if (setting.compute_method.md5 != 0)
+            if (setting.check_method.md5 != 0)
                 hash_method_use.Add(true);
             else
                 hash_method_use.Add(false);
-            if (setting.compute_method.sha1 != 0)
+            if (setting.check_method.sha1 != 0)
                 hash_method_use.Add(true);
             else
                 hash_method_use.Add(false);
-            if (setting.compute_method.sha256 != 0)
+            if (setting.check_method.sha256 != 0)
                 hash_method_use.Add(true);
             else
                 hash_method_use.Add(false);
-            if (setting.compute_method.sha384 != 0)
+            if (setting.check_method.sha384 != 0)
                 hash_method_use.Add(true);
             else
                 hash_method_use.Add(false);
-            if (setting.compute_method.sha512 != 0)
+            if (setting.check_method.sha512 != 0)
                 hash_method_use.Add(true);
             else
                 hash_method_use.Add(false);
-            if (setting.compute_method.blake2b != 0)
+            if (setting.check_method.blake2b != 0)
                 hash_method_use.Add(true);
             else
                 hash_method_use.Add(false);
-            if (setting.compute_method.blake2s != 0)
+            if (setting.check_method.blake2s != 0)
                 hash_method_use.Add(true);
             else
                 hash_method_use.Add(false);
-            if (setting.compute_method.blake2bp != 0)
+            if (setting.check_method.blake2bp != 0)
                 hash_method_use.Add(true);
             else
                 hash_method_use.Add(false);
-            if (setting.compute_method.blake2sp != 0)
+            if (setting.check_method.blake2sp != 0)
                 hash_method_use.Add(true);
             else
                 hash_method_use.Add(false);
-            if (setting.compute_method.blake3 != 0)
+            if (setting.check_method.blake3 != 0)
                 hash_method_use.Add(true);
             else
                 hash_method_use.Add(false);
             no = 0;
-            Console.Write("## compute_method: ");
+            Console.Write("## hash method: ");
             for (int i = 0; i < hash_method_name.Count; i++)
             {
                 if (hash_method_use[i])
