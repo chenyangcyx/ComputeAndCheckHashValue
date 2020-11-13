@@ -184,19 +184,19 @@ namespace CheckHash
                         {
                             // 先计算这个文件的hash值
                             string hash_compute_value = ComputeHash.getHashByName(hash_method_name[hash_no], file.FullName, setting);
-                            Console.WriteLine("      -compute_value " + hash_method_name[hash_no] + ": " + hash_compute_value);
-                            sw_result.WriteLine("      -compute_value " + hash_method_name[hash_no] + ": " + hash_compute_value);
+                            Console.WriteLine("      -" + hash_method_name[hash_no] + "_hash: " + hash_compute_value);
+                            sw_result.WriteLine("      -" + hash_method_name[hash_no] + "_hash: " + hash_compute_value);
                             // 从字典中寻找这个文件之前计算的hash值
                             string hash_dic_value = "";
                             folder_hash_dic[hash_no].TryGetValue(file.Name, out hash_dic_value);
-                            Console.WriteLine("       dictionary_value " + hash_method_name[hash_no] + ": " + hash_dic_value);
-                            sw_result.WriteLine("      -dictionary_value " + hash_method_name[hash_no] + ": " + hash_dic_value);
+                            Console.WriteLine("       " + hash_method_name[hash_no] + "_dict: " + hash_dic_value);
+                            sw_result.WriteLine("       " + hash_method_name[hash_no] + "_dict: " + hash_dic_value);
                             // 输出比对结果
                             if (hash_compute_value.Equals(hash_dic_value))
                             {
                                 // hash结果一致
-                                Console.WriteLine("       check result " + hash_method_name[hash_no] + ": OK");
-                                sw_result.WriteLine("       check result " + hash_method_name[hash_no] + ": OK");
+                                Console.WriteLine("       result " + hash_method_name[hash_no] + ": OK");
+                                sw_result.WriteLine("       result " + hash_method_name[hash_no] + ": OK");
                             }
                             else
                             {
@@ -205,14 +205,14 @@ namespace CheckHash
                                     error_hash_check_file.Add(file);
                                 if (!error_check_folder.Contains(path))
                                     error_check_folder.Add(path);
-                                Console.WriteLine("       check result " + hash_method_name[hash_no] + ": Fail");
-                                sw_result.WriteLine("       check result " + hash_method_name[hash_no] + ": Fail");
+                                Console.WriteLine("       result " + hash_method_name[hash_no] + ": Fail");
+                                sw_result.WriteLine("       result " + hash_method_name[hash_no] + ": Fail");
                             }
                         }
                     }
                     DateTime file_after_time = DateTime.Now;
                     double use_time_second = (file_after_time - file_before_time).TotalSeconds;
-                    Console.WriteLine("      -开始时间：" + file_before_time.ToString("yyyy-MM-dd HH:mm:ss") + "，结束时间：" + file_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共同时：" + use_time_second + " 秒");
+                    Console.WriteLine("      -开始时间：" + file_before_time.ToString("yyyy-MM-dd HH:mm:ss") + "，结束时间：" + file_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共同时：" + use_time_second.ToString("0.0000000") + " 秒");
                     if (forecast_remain_time)
                     {
                         handle_file_num++;
@@ -220,11 +220,11 @@ namespace CheckHash
                         handle_file_time_second += use_time_second;
                         per_byte_average = handle_file_byte / handle_file_time_second;
                         double remain_second = (all_file_byte - handle_file_byte) / per_byte_average;
-                        Console.WriteLine("      -剩余时间：" + remain_second / 60 + " 分，" + remain_second + " 秒");
+                        Console.WriteLine("      -剩余时间：" + (remain_second / 60).ToString("0.0000000") + " 分，" + remain_second.ToString("0.0000000") + " 秒");
                     }
                 }
                 DateTime folder_after_time = DateTime.Now;
-                Console.WriteLine("  结束时间：" + folder_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共用时：" + (folder_after_time - folder_before_time).TotalMinutes + " 分，" + (folder_after_time - folder_before_time).TotalSeconds + " 秒\n");
+                Console.WriteLine("  结束时间：" + folder_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共用时：" + (folder_after_time - folder_before_time).TotalMinutes.ToString("0.0000000") + " 分，" + (folder_after_time - folder_before_time).TotalSeconds.ToString("0.0000000") + " 秒\n");
 
                 // 输出总结信息
                 if (error_hash_check_file.Count > 0)
@@ -236,8 +236,8 @@ namespace CheckHash
                     int fail_file_no = 0;
                     foreach (var error_file_info in error_hash_check_file)
                     {
-                        Console.WriteLine($"    -{(++fail_file_no)}: {error_file_info.Name}");
-                        sw_result.WriteLine($"    -{fail_file_no}: {error_file_info.Name}");
+                        Console.WriteLine($"({(++fail_file_no)}): {error_file_info.Name}");
+                        sw_result.WriteLine($"({fail_file_no}): {error_file_info.Name}");
                     }
                 }
                 else
@@ -250,13 +250,14 @@ namespace CheckHash
             }
             DateTime after_all = DateTime.Now;
             Console.WriteLine("\n结束执行，结束时间：" + after_all.ToString("yyyy-MM-dd HH:mm:ss"));
-            Console.WriteLine("总共用时：" + (after_all - before_all).TotalMinutes + " 分，" + (after_all - before_all).TotalSeconds + " 秒");
+            Console.WriteLine("总共用时：" + (after_all - before_all).TotalMinutes.ToString("0.0000000") + " 分，" + (after_all - before_all).TotalSeconds.ToString("0.0000000") + " 秒");
 
             if (error_check_folder.Count > 0)
             {
                 Console.WriteLine("\n#### 出错文件夹 ####");
+                no = 0;
                 foreach (var folder_path in error_check_folder)
-                    Console.WriteLine("  " + folder_path);
+                    Console.WriteLine((++no) + ". " + folder_path);
             }
             else
             {

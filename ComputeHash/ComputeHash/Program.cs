@@ -175,7 +175,7 @@ namespace ComputeHash
                     }
                     DateTime file_after_time = DateTime.Now;
                     double use_time_second = (file_after_time - file_before_time).TotalSeconds;
-                    Console.WriteLine("      -开始时间：" + file_before_time.ToString("yyyy-MM-dd HH:mm:ss") + "，结束时间：" + file_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共同时：" + use_time_second + " 秒");
+                    Console.WriteLine("      -开始时间：" + file_before_time.ToString("yyyy-MM-dd HH:mm:ss") + "，结束时间：" + file_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共同时：" + use_time_second.ToString("0.0000000") + " 秒");
                     if (forecast_remain_time)
                     {
                         handle_file_num++;
@@ -183,7 +183,7 @@ namespace ComputeHash
                         handle_file_time_second += use_time_second;
                         per_byte_average = handle_file_byte / handle_file_time_second;
                         double remain_second = (all_file_byte - handle_file_byte) / per_byte_average;
-                        Console.WriteLine("      -剩余时间：" + remain_second / 60 + " 分，" + remain_second + " 秒");
+                        Console.WriteLine("      -剩余时间：" + (remain_second / 60).ToString("0.0000000") + " 分，" + remain_second.ToString("0.0000000") + " 秒");
                     }
                 }
                 for (int hash_no = 0; hash_no < hash_method_name.Count; hash_no++)
@@ -196,11 +196,11 @@ namespace ComputeHash
                     }
                 }
                 DateTime folder_after_time = DateTime.Now;
-                Console.WriteLine("  结束时间：" + folder_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共用时：" + (folder_after_time - folder_before_time).TotalMinutes + " 分，" + (folder_after_time - folder_before_time).TotalSeconds + " 秒\n");
+                Console.WriteLine("  结束时间：" + folder_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共用时：" + (folder_after_time - folder_before_time).TotalMinutes.ToString("0.0000000") + " 分，" + (folder_after_time - folder_before_time).TotalSeconds.ToString("0.0000000") + " 秒\n");
             }
             DateTime after_all = DateTime.Now;
             Console.WriteLine("\n结束执行，结束时间：" + after_all.ToString("yyyy-MM-dd HH:mm:ss"));
-            Console.WriteLine("总共用时：" + (after_all - before_all).TotalMinutes + " 分，" + (after_all - before_all).TotalSeconds + " 秒");
+            Console.WriteLine("总共用时：" + (after_all - before_all).TotalMinutes.ToString("0.0000000") + " 分，" + (after_all - before_all).TotalSeconds.ToString("0.0000000") + " 秒");
 
             while (true)
                 Console.ReadLine();
