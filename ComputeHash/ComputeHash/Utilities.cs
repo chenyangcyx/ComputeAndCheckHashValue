@@ -90,16 +90,22 @@ namespace ComputeHash
             new DirectoryInfo(path).Create();
         }
 
-        public static string getBLAKEHash_CMD(string blake_path, string args)
+        public static string getBLAKEHash_CMD(string blake_path, string type, string file_path)
         {
             string result = null;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return runCMD_Linux(blake_path + " " + args);
+                if (type == null)
+                    return runCMD_Linux($"\'{blake_path}\' \'{file_path}\'");
+                else
+                    return runCMD_Linux($"\'{blake_path}\' -a {type} \'{file_path}\'");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                return runCMD_Windows(blake_path, args);
+                if (type == null)
+                    return runCMD_Windows(blake_path, $"\'{file_path}\'");
+                else
+                    return runCMD_Windows(blake_path, $"-a {type} \'{file_path}\'");
             }
             return result;
         }

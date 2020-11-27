@@ -163,7 +163,7 @@ namespace CheckHash
                         foreach(string hash_line in all_value)
                         {
                             if (hash_line.Length != 0)
-                                folder_hash_dic[hash_no].Add(hash_line.Split(" ")[1], hash_line.Split(" ")[0]);
+                                folder_hash_dic[hash_no].Add(hash_line.Substring(hash_line.IndexOf(" ") + 1, hash_line.Length - hash_line.IndexOf(" ") - 1), hash_line.Substring(0, hash_line.IndexOf(" ")));
                         }
                     }
                 }

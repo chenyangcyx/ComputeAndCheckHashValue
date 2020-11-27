@@ -89,7 +89,7 @@ namespace ComputeHash
                 Console.WriteLine(fi.FullName + "不存在！");
                 return null;
             }
-            return Utilities.getBLAKEHash_CMD($"\"{blake_path}\"", $"-a {hash_type} \"{fi.FullName}\"").Split(" ")[0];
+            return Utilities.getBLAKEHash_CMD(blake_path, hash_type, fi.FullName).Split(" ")[0];
         }
 
         public static string getBLAKE3(FileInfo fi, string blake_path)
@@ -99,8 +99,7 @@ namespace ComputeHash
                 Console.WriteLine(fi.FullName + "不存在！");
                 return null;
             }
-            string cmd = $"\"{blake_path}\" \"{fi.FullName}\"";
-            return Utilities.getBLAKEHash_CMD(blake_path, fi.FullName).Split(" ")[0];
+            return Utilities.getBLAKEHash_CMD(blake_path, null, fi.FullName).Split(" ")[0];
         }
 
         public static string getHashByName(string hash_method, string path, SettingStruct.Rootobject setting)

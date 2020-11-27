@@ -32,14 +32,6 @@ namespace CheckHash
             return JsonSerializer.Deserialize<SettingStruct.Rootobject>(File.ReadAllText(path));
         }
 
-        public static Dictionary<string, string> getHashDictionary(string[] all_line)
-        {
-            Dictionary<string, string> hash_dic = new Dictionary<string, string>();
-            foreach (string line in all_line)
-                hash_dic.Add(line.Split(" ")[1], line.Split(" ")[0]);
-            return hash_dic;
-        }
-
         private static string runCMD_Linux(string cmd)
         {
             string result = null;
@@ -90,16 +82,22 @@ namespace CheckHash
             new DirectoryInfo(path).Create();
         }
 
-        public static string getBLAKEHash_CMD(string blake_path, string args)
+        public static string getBLAKEHash_CMD(string blake_path, string type, string file_path)
         {
             string result = null;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return runCMD_Linux(blake_path + " " + args);
+                if (type == null)
+                    return runCMD_Linux($"\'{blake_path}\' \'{file_path}\'");
+                else
+                    return runCMD_Linux($"\'{blake_path}\' -a {type} \'{file_path}\'");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                return runCMD_Windows(blake_path, args);
+                if (type == null)
+                    return runCMD_Windows(blake_path, $"\'{file_path}\'");
+                else
+                    return runCMD_Windows(blake_path, $"-a {type} \'{file_path}\'");
             }
             return result;
         }
