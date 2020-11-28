@@ -95,9 +95,9 @@ namespace CheckHash
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 if (type == null)
-                    return runCMD_Windows(blake_path, $"\'{file_path}\'");
+                    return runCMD_Windows(blake_path, $"\"{file_path}\"");
                 else
-                    return runCMD_Windows(blake_path, $"-a {type} \'{file_path}\'");
+                    return runCMD_Windows(blake_path, $"-a {type} \"{file_path}\"");
             }
             return result;
         }
