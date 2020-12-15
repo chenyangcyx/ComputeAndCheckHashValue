@@ -9,9 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeMD5_GUI", "ComputeMD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeMD5_MulitiThread", "ComputeMD5_MulitiThread\ComputeMD5_MulitiThread.csproj", "{40EF8D84-0EAE-423D-A476-2190598E95F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeMD5_CMD_NetCore_v2", "ComputeMD5_CMD_NetCore_v2\ComputeMD5_CMD_NetCore_v2.csproj", "{A1AC9BD2-7715-49D8-9F44-8C7CB152BE66}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeMD5_CMD_NetCore_v2", "ComputeMD5_CMD_NetCore_v2\ComputeMD5_CMD_NetCore_v2.csproj", "{A1AC9BD2-7715-49D8-9F44-8C7CB152BE66}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeMD5_CMD_NetFramwork_v2", "ComputeMD5_CMD_NetFramwork_v2\ComputeMD5_CMD_NetFramwork_v2.csproj", "{637D4342-8A45-43C2-AD91-051FF6E63B54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeMD5_CMD_NET5", "ComputeMD5_CMD_NET5\ComputeMD5_CMD_NET5.csproj", "{54A3F8E4-83CF-4379-9CD7-8CDDE8CECE6F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{637D4342-8A45-43C2-AD91-051FF6E63B54}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{637D4342-8A45-43C2-AD91-051FF6E63B54}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{637D4342-8A45-43C2-AD91-051FF6E63B54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54A3F8E4-83CF-4379-9CD7-8CDDE8CECE6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54A3F8E4-83CF-4379-9CD7-8CDDE8CECE6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54A3F8E4-83CF-4379-9CD7-8CDDE8CECE6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54A3F8E4-83CF-4379-9CD7-8CDDE8CECE6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

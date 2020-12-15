@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace ComputeMD5
+namespace ComputeMD5_CMD_NET5
 {
     class Program
     {
