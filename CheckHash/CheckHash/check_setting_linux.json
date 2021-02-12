@@ -1,41 +1,45 @@
 {
-    "check_folder":[
-        "/home/netcore_test/test_hash/source/DetectSocksState/",
-        "/home/netcore_test/test_hash/source/hooks/",
-        "/home/netcore_test/test_hash/source/netcoreapp3.1/",
-        "/home/netcore_test/test_hash/source/netcoreapp3.11/",
-        "/home/netcore_test/test_hash/source/src/",
-        "/home/netcore_test/test_hash/source/program_log/"
-    ],
-    "hash_file_folder":[
-        "/home/netcore_test/test_hash/result/DetectSocksState/",
-        "/home/netcore_test/test_hash/result/hooks/",
-        "/home/netcore_test/test_hash/result/netcoreapp3.1/",
-        "/home/netcore_test/test_hash/result/netcoreapp3.11/",
-        "/home/netcore_test/test_hash/result/src/",
-        "/home/netcore_test/test_hash/result/program_log/"
-    ],
-    "result_output_file":[
-        "/home/netcore_test/test_hash/check_result/DetectSocksState.txt",
-        "/home/netcore_test/test_hash/check_result/hooks.txt",
-        "/home/netcore_test/test_hash/check_result/netcoreapp3.1.txt",
-        "/home/netcore_test/test_hash/check_result/netcoreapp3.11.txt",
-        "/home/netcore_test/test_hash/check_result/src.txt",
-        "/home/netcore_test/test_hash/check_result/program_log.txt"
-    ],
-    "blake2_exe_path":"/home/netcore_test/b2sum-amd64-linux",
-    "blake3_exe_path":"/home/netcore_test/b3sum_linux_x64_bin",
-    "check_method":{
-        "md5":1,
-        "sha1":1,
-        "sha256":1,
-        "sha384":1,
-        "sha512":1,
-        "blake2b":1,
-        "blake2bp":1,
-        "blake2s":1,
-        "blake2sp":1,
-        "blake3":1
-    },
-    "forecast_remain_time":1
+  "use_rclone": 1,
+  "rclone_config_file": "/home/wrtdown/chenyangczyy.conf",
+  "copy_temp": 1,
+  "temp_folder": "/home/wrtdown/CheckHash/temp/",
+  "check_folder": [
+    "/home/netcore_test/test_hash/source/DetectSocksState/",
+    "/home/netcore_test/test_hash/source/hooks/",
+    "/home/netcore_test/test_hash/source/netcoreapp3.1/",
+    "/home/netcore_test/test_hash/source/netcoreapp3.11/",
+    "/home/netcore_test/test_hash/source/src/",
+    "/home/netcore_test/test_hash/source/program_log/"
+  ],
+  "hash_file_folder": [
+    "/home/netcore_test/test_hash/result/DetectSocksState/",
+    "/home/netcore_test/test_hash/result/hooks/",
+    "/home/netcore_test/test_hash/result/netcoreapp3.1/",
+    "/home/netcore_test/test_hash/result/netcoreapp3.11/",
+    "/home/netcore_test/test_hash/result/src/",
+    "/home/netcore_test/test_hash/result/program_log/"
+  ],
+  "result_output_file": [
+    "/home/netcore_test/test_hash/check_result/DetectSocksState.txt",
+    "/home/netcore_test/test_hash/check_result/hooks.txt",
+    "/home/netcore_test/test_hash/check_result/netcoreapp3.1.txt",
+    "/home/netcore_test/test_hash/check_result/netcoreapp3.11.txt",
+    "/home/netcore_test/test_hash/check_result/src.txt",
+    "/home/netcore_test/test_hash/check_result/program_log.txt"
+  ],
+  "blake2_exe_path": "/home/netcore_test/b2sum-amd64-linux",
+  "blake3_exe_path": "/home/netcore_test/b3sum_linux_x64_bin",
+  "check_method": {
+    "md5": 1,
+    "sha1": 1,
+    "sha256": 1,
+    "sha384": 1,
+    "sha512": 1,
+    "blake2b": 1,
+    "blake2bp": 1,
+    "blake2s": 1,
+    "blake2sp": 1,
+    "blake3": 1
+  },
+  "forecast_remain_time": 1
 }

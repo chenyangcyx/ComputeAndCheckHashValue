@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
 
 namespace CheckHash
 {
@@ -16,6 +17,7 @@ namespace CheckHash
             }
             SettingStruct.Rootobject setting = Utilities.getSetting(args[0]);
             // 检查设置选项
+            // 检查blake程序是否存在
             if (!File.Exists(setting.blake2_exe_path))
             {
                 Console.WriteLine("BLAKE2程序" + setting.blake2_exe_path + "不存在！");
@@ -28,8 +30,24 @@ namespace CheckHash
                 while (true)
                     Console.ReadLine();
             }
+            // 检查hash_file_folder是否存在
+            foreach(var path in setting.hash_file_folder)
+            {
+                if (!Directory.Exists(path))
+                {
+                    Console.WriteLine($"hash_file_folder: {path} 不存在，退出程序！");
+                    while (true)
+                        Console.ReadLine();
+                }
+            }
+            // 设置temp目录
+            Directory.CreateDirectory(setting.temp_folder);
             // 输出设置
             Console.WriteLine("所有设置：");
+            Console.WriteLine("## use_rclone: "+(setting.use_rclone==1));
+            Console.WriteLine("## rclone_config_file: " + setting.rclone_config_file);
+            Console.WriteLine("## copy_temp: " + (setting.copy_temp == 1));
+            Console.WriteLine("## temp_folder: " + setting.temp_folder);
             Console.WriteLine("## check_folder");
             int no = 0;
             foreach (var path in setting.check_folder)
@@ -98,7 +116,6 @@ namespace CheckHash
                 hash_method_use.Add(true);
             else
                 hash_method_use.Add(false);
-            no = 0;
             Console.Write("## check_method: ");
             for (int i = 0; i < hash_method_name.Count; i++)
             {
@@ -120,14 +137,32 @@ namespace CheckHash
             int handle_file_num = 0;
             long handle_file_byte = 0L;
             // 统计所有文件个数及大小
-            foreach (var dir in setting.check_folder)
+            Dictionary<string, List<RcloneFileList.FileInfo>> rclone_all_file_dic_list = new Dictionary<string, List<RcloneFileList.FileInfo>>();
+            Dictionary<string, List<FileInfo>> local_all_file_dic_list = new Dictionary<string, List<FileInfo>>();
+            Utilities.setAllFolderInfo(rclone_all_file_dic_list, local_all_file_dic_list, setting);
+            if (setting.use_rclone == 1)
             {
-                if (!Directory.Exists(dir))
-                    continue;
-                foreach (var file in new DirectoryInfo(dir).GetFiles())
+                foreach(var info in rclone_all_file_dic_list.Values)
                 {
-                    all_file_num++;
-                    all_file_byte += file.Length;
+                    foreach(var file in info)
+                    {
+                        if (file.IsDir == false)
+                        {
+                            all_file_num++;
+                            all_file_byte += file.Size;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach(var info in local_all_file_dic_list.Values)
+                {
+                    foreach(var file in info)
+                    {
+                        all_file_num++;
+                        all_file_byte += file.Length;
+                    }
                 }
             }
             // 开关，是否开启剩余时间预测
@@ -139,17 +174,19 @@ namespace CheckHash
             for (int path_no = 0; path_no < setting.check_folder.Length; path_no++)
             {
                 string path = setting.check_folder[path_no];
-                if (!Directory.Exists(path))
+                if (!Directory.Exists(path) && setting.use_rclone!=1)
                 {
                     Console.WriteLine((++no) + "." + path + " 不存在，跳过！\n");
                     continue;
                 }
                 DateTime folder_before_time = DateTime.Now;
+                Directory.CreateDirectory(new FileInfo(setting.result_output_file[path_no]).DirectoryName);
                 StreamWriter sw_result = new StreamWriter(setting.result_output_file[path_no], false, Utilities.utf8_encoding);
                 sw_result.AutoFlush = true;
                 Console.WriteLine((++no) + "." + path + "，开始时间：" + folder_before_time.ToString("yyyy-MM-dd HH:mm:ss"));
                 sw_result.WriteLine((no) + "." + path);
-                FileInfo[] all_file = new DirectoryInfo(path).GetFiles();
+                // 获取所有的文件信息
+                List<string> all_file = Utilities.getAllFileInFolder(path, rclone_all_file_dic_list, local_all_file_dic_list, setting);
                 int file_no = 0;
 
                 // 导入该文件夹下的所有文件的hash值
@@ -169,23 +206,61 @@ namespace CheckHash
                 }
 
                 // 用来记录错误的文件
-                List<FileInfo> error_hash_check_file = new List<FileInfo>();
+                List<string> error_hash_check_file = new List<string>();
+                // 开始逐个遍历文件
                 foreach (var file in all_file)
                 {
                     DateTime file_before_time = DateTime.Now;
-                    Console.WriteLine("    (" + (++file_no) + ")" + file.FullName);
-                    sw_result.WriteLine("    (" + (file_no) + ")" + file.FullName);
+                    Console.WriteLine("    (" + (++file_no) + ")" + file);
+                    sw_result.WriteLine("    (" + (file_no) + ")" + file);
+                    // 复制文件
+                    FileInfo new_file;
+                    if (setting.use_rclone == 1)
+                    {
+                        // 使用rclone，复制到temp目录
+                        if (setting.copy_temp == 1)
+                        {
+                            new_file = new FileInfo(setting.temp_folder + file.Substring(file.LastIndexOf("/")+1));
+                            Console.WriteLine("      -复制文件 " + file + " -> " + new_file.FullName);
+                            Utilities.copyFile(file, new_file.DirectoryName, setting.use_rclone == 1, setting.rclone_config_file);
+                        }
+                        // 使用rclone，不复制到temp目录
+                        // 不允许该组合
+                        else
+                        {
+                            Console.WriteLine("不支持的组合：use_rclone: True, copy_temp: False");
+                            while (true)
+                                Console.ReadLine();
+                        }
+                    }
+                    else
+                    {
+                        // 本地校验，复制到temp目录
+                        if (setting.copy_temp == 1)
+                        {
+                            FileInfo old_file = new FileInfo(file);
+                            new_file = new FileInfo(setting.temp_folder + old_file.Name);
+                            Console.WriteLine("      -复制文件 " + old_file.FullName + " -> " + new_file.FullName);
+                            Utilities.copyFile(old_file.FullName, new_file.FullName, setting.use_rclone == 1, setting.rclone_config_file);
+                        }
+                        // 本地校验，不复制到temp目录
+                        else
+                        {
+                            new_file = new FileInfo(file);
+                        }
+                    }
+                    
                     for (int hash_no = 0; hash_no < hash_method_name.Count; hash_no++)
                     {
                         if (hash_method_use[hash_no])
                         {
                             // 先计算这个文件的hash值
-                            string hash_compute_value = ComputeHash.getHashByName(hash_method_name[hash_no], file.FullName, setting);
+                            string hash_compute_value = ComputeHash.getHashByName(hash_method_name[hash_no], new_file.FullName, setting);
                             Console.WriteLine("      -" + hash_method_name[hash_no] + "_hash: " + hash_compute_value);
                             sw_result.WriteLine("      -" + hash_method_name[hash_no] + "_hash: " + hash_compute_value);
                             // 从字典中寻找这个文件之前计算的hash值
                             string hash_dic_value = "";
-                            folder_hash_dic[hash_no].TryGetValue(file.Name, out hash_dic_value);
+                            folder_hash_dic[hash_no].TryGetValue(new_file.Name, out hash_dic_value);
                             Console.WriteLine("       " + hash_method_name[hash_no] + "_dict: " + hash_dic_value);
                             sw_result.WriteLine("       " + hash_method_name[hash_no] + "_dict: " + hash_dic_value);
                             // 输出比对结果
@@ -207,17 +282,23 @@ namespace CheckHash
                             }
                         }
                     }
+
                     DateTime file_after_time = DateTime.Now;
                     double use_time_second = (file_after_time - file_before_time).TotalSeconds;
                     Console.WriteLine("      -开始时间：" + file_before_time.ToString("yyyy-MM-dd HH:mm:ss") + "，结束时间：" + file_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共同时：" + use_time_second.ToString("0.0000000") + " 秒");
                     if (forecast_remain_time)
                     {
                         handle_file_num++;
-                        handle_file_byte += file.Length;
+                        handle_file_byte += new_file.Length;
                         handle_file_time_second += use_time_second;
                         double per_byte_average = handle_file_byte / handle_file_time_second;
                         double remain_second = (all_file_byte - handle_file_byte) / per_byte_average;
                         Console.WriteLine("      -剩余时间：" + (remain_second / 60).ToString("0.0000000") + " 分，" + remain_second.ToString("0.0000000") + " 秒");
+                    }
+                    // 删除temp目录下的文件
+                    if (setting.copy_temp == 1)
+                    {
+                        new_file.Delete();
                     }
                 }
                 DateTime folder_after_time = DateTime.Now;
@@ -233,8 +314,8 @@ namespace CheckHash
                     int fail_file_no = 0;
                     foreach (var error_file_info in error_hash_check_file)
                     {
-                        Console.WriteLine($"({(++fail_file_no)}): {error_file_info.Name}");
-                        sw_result.WriteLine($"({fail_file_no}): {error_file_info.Name}");
+                        Console.WriteLine($"({(++fail_file_no)}): {error_file_info}");
+                        sw_result.WriteLine($"({fail_file_no}): {error_file_info}");
                     }
                 }
                 else

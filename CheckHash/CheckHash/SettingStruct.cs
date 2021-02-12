@@ -4,6 +4,10 @@
     {
         public class Rootobject
         {
+            public int use_rclone { get; set; }
+            public string rclone_config_file { get; set; }
+            public int copy_temp { get; set; }
+            public string temp_folder { get; set; }
             public string[] check_folder { get; set; }
             public string[] hash_file_folder { get; set; }
             public string[] result_output_file { get; set; }
@@ -25,6 +29,20 @@
             public int blake2s { get; set; }
             public int blake2sp { get; set; }
             public int blake3 { get; set; }
+        }
+    }
+
+    class RcloneFileList
+    {
+        public class FileInfo
+        {
+            public string Path { get; set; }
+            public string Name { get; set; }
+            public long Size { get; set; }
+            public string MimeType { get; set; }
+            public string ModTime { get; set; }
+            public bool IsDir { get; set; }
+            public string ID { get; set; }
         }
     }
 }

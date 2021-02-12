@@ -101,5 +101,78 @@ namespace CheckHash
             }
             return result;
         }
+
+        public static void copyFile(string old_file_path, string new_file_path, bool use_rclone,string rclone_config_file)
+        {
+            if (!use_rclone)
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    runCMD_Linux($"cp -f \'{old_file_path}\' \'{new_file_path}\'");
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    runCMD_Windows("copy",$"/y \"{old_file_path}\" \"{new_file_path}\"");
+                }
+            }
+            else
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    runCMD_Linux($"rclone --config \'{rclone_config_file}\' copy \'{old_file_path}\' \'{new_file_path}\'");
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    runCMD_Windows("rclone",$"--config \"{rclone_config_file}\" copy \"{old_file_path}\" \"{new_file_path}\"");
+                }
+            }
+        }
+
+        public static void setAllFolderInfo(Dictionary<string, List<RcloneFileList.FileInfo>> rclone_all_file_dic_list, Dictionary<string, List<FileInfo>> local_all_file_dic_list, SettingStruct.Rootobject setting)
+        {
+            // rclone模式下
+            if (setting.use_rclone == 1)
+            {
+                foreach(var path in setting.check_folder)
+                {
+                    string lsjson_result = null;
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        lsjson_result = runCMD_Linux($"rclone --config \'{setting.rclone_config_file}\' lsjson \'{path}\'");
+                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        lsjson_result = runCMD_Windows("rclone", $"--config \"{setting.rclone_config_file}\" lsjson \"{path}\"");
+                    rclone_all_file_dic_list.Add(path, JsonSerializer.Deserialize<List<RcloneFileList.FileInfo>>(lsjson_result));
+                }
+            }
+            // 本地模式下
+            else
+            {
+                foreach(var path in setting.check_folder)
+                {
+                    local_all_file_dic_list.Add(path, new List<FileInfo>(new DirectoryInfo(path).GetFiles()));
+                }
+            }
+        }
+
+        public static List<string> getAllFileInFolder(string path,Dictionary<string, List<RcloneFileList.FileInfo>> rclone_all_file_dic_list, Dictionary<string, List<FileInfo>> local_all_file_dic_list, SettingStruct.Rootobject setting)
+        {
+            List<string> result = new List<string>();
+            if (setting.use_rclone != 1)
+            {
+                if (local_all_file_dic_list.ContainsKey(path))
+                {
+                    foreach (var file in local_all_file_dic_list[path])
+                        result.Add(file.FullName);
+                }
+            }
+            else
+            {
+                if (rclone_all_file_dic_list.ContainsKey(path))
+                {
+                    foreach (var file in rclone_all_file_dic_list[path])
+                        result.Add(path + file.Name);
+                }
+            }
+            return result;
+        }
     }
 }
