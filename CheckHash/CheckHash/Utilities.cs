@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 
 namespace CheckHash
 {
@@ -140,6 +141,7 @@ namespace CheckHash
                         lsjson_result = runCMD_Linux($"rclone --config \'{setting.rclone_config_file}\' lsjson \'{path}\'");
                     else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         lsjson_result = runCMD_Windows("rclone", $"--config \"{setting.rclone_config_file}\" lsjson \"{path}\"");
+                    Console.WriteLine($"{path}的lsjson结果：{lsjson_result}");
                     rclone_all_file_dic_list.Add(path, JsonSerializer.Deserialize<List<RcloneFileList.FileInfo>>(lsjson_result));
                 }
             }
