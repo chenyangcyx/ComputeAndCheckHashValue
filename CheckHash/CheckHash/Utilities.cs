@@ -5,7 +5,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
-using System.Threading;
 
 namespace CheckHash
 {
@@ -35,7 +34,7 @@ namespace CheckHash
 
         private static string runCMD_Linux(string cmd)
         {
-            string result = null;
+            StringBuilder sb = new StringBuilder();
             using (Process p = new Process())
             {
                 p.StartInfo.FileName = "bash";
@@ -44,16 +43,23 @@ namespace CheckHash
                 p.StartInfo.UseShellExecute = false;
                 p.StartInfo.RedirectStandardOutput = true;
                 p.Start();
+                using (var sr = p.StandardOutput)
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        string _t = sr.ReadLine();
+                        sb.Append(_t + '\n');
+                    }
+                }
                 p.WaitForExit();
-                result = p.StandardOutput.ReadToEnd();
                 p.Close();
             }
-            return result;
+            return sb.ToString();
         }
 
         private static string runCMD_Windows(string exe_name, string args)
         {
-            string result = null;
+            StringBuilder sb = new StringBuilder();
             using (Process p = new Process())
             {
                 p.StartInfo.FileName = exe_name;
@@ -62,11 +68,18 @@ namespace CheckHash
                 p.StartInfo.UseShellExecute = false;
                 p.StartInfo.RedirectStandardOutput = true;
                 p.Start();
+                using (var sr = p.StandardOutput)
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        string _t = sr.ReadLine();
+                        sb.Append(_t + '\n');
+                    }
+                }
                 p.WaitForExit();
-                result = p.StandardOutput.ReadToEnd();
                 p.Close();
             }
-            return result;
+            return sb.ToString();
         }
 
         public static void deleteFolder_CMD(string path)
@@ -141,7 +154,6 @@ namespace CheckHash
                         lsjson_result = runCMD_Linux($"rclone --config \'{setting.rclone_config_file}\' lsjson \'{path}\'");
                     else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         lsjson_result = runCMD_Windows("rclone", $"--config \"{setting.rclone_config_file}\" lsjson \"{path}\"");
-                    Console.WriteLine($"{path}的lsjson结果：{lsjson_result}");
                     rclone_all_file_dic_list.Add(path, JsonSerializer.Deserialize<List<RcloneFileList.FileInfo>>(lsjson_result));
                 }
             }
