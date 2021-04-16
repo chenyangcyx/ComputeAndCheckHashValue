@@ -30,7 +30,7 @@ namespace CheckHash
                     Console.ReadLine();
             }
             // 检查hash_file_folder是否存在
-            foreach(var path in setting.hash_file_folder)
+            foreach (var path in setting.hash_file_folder)
             {
                 if (!Directory.Exists(path))
                 {
@@ -43,7 +43,7 @@ namespace CheckHash
             Directory.CreateDirectory(setting.temp_folder);
             // 输出设置
             Console.WriteLine("所有设置：");
-            Console.WriteLine("## use_rclone: "+(setting.use_rclone==1));
+            Console.WriteLine("## use_rclone: " + (setting.use_rclone == 1));
             Console.WriteLine("## rclone_config_file: " + setting.rclone_config_file);
             Console.WriteLine("## copy_temp: " + (setting.copy_temp == 1));
             Console.WriteLine("## temp_folder: " + setting.temp_folder);
@@ -141,9 +141,9 @@ namespace CheckHash
             Utilities.setAllFolderInfo(rclone_all_file_dic_list, local_all_file_dic_list, setting);
             if (setting.use_rclone == 1)
             {
-                foreach(var info in rclone_all_file_dic_list.Values)
+                foreach (var info in rclone_all_file_dic_list.Values)
                 {
-                    foreach(var file in info)
+                    foreach (var file in info)
                     {
                         if (file.IsDir == false)
                         {
@@ -155,9 +155,9 @@ namespace CheckHash
             }
             else
             {
-                foreach(var info in local_all_file_dic_list.Values)
+                foreach (var info in local_all_file_dic_list.Values)
                 {
-                    foreach(var file in info)
+                    foreach (var file in info)
                     {
                         all_file_num++;
                         all_file_byte += file.Length;
@@ -173,7 +173,7 @@ namespace CheckHash
             for (int path_no = 0; path_no < setting.check_folder.Length; path_no++)
             {
                 string path = setting.check_folder[path_no];
-                if (!Directory.Exists(path) && setting.use_rclone!=1)
+                if (!Directory.Exists(path) && setting.use_rclone != 1)
                 {
                     Console.WriteLine((++no) + "." + path + " 不存在，跳过！\n");
                     continue;
@@ -196,7 +196,7 @@ namespace CheckHash
                     {
                         folder_hash_dic[hash_no] = new Dictionary<string, string>();
                         string[] all_value = File.ReadAllLines(setting.hash_file_folder[path_no] + "hash." + hash_method_name[hash_no]);
-                        foreach(string hash_line in all_value)
+                        foreach (string hash_line in all_value)
                         {
                             if (hash_line.Length != 0)
                                 folder_hash_dic[hash_no].Add(hash_line.Substring(hash_line.IndexOf(" ") + 1, hash_line.Length - hash_line.IndexOf(" ") - 1), hash_line.Substring(0, hash_line.IndexOf(" ")));
@@ -219,7 +219,7 @@ namespace CheckHash
                         // 使用rclone，复制到temp目录
                         if (setting.copy_temp == 1)
                         {
-                            new_file = new FileInfo(setting.temp_folder + file.Substring(file.LastIndexOf("/")+1));
+                            new_file = new FileInfo(setting.temp_folder + file.Substring(file.LastIndexOf("/") + 1));
                             Console.WriteLine("      -复制文件 " + file + " -> " + new_file.FullName);
                             Utilities.copyFile(file, new_file.DirectoryName, setting.use_rclone == 1, setting.rclone_config_file);
                         }
@@ -248,7 +248,7 @@ namespace CheckHash
                             new_file = new FileInfo(file);
                         }
                     }
-                    
+
                     for (int hash_no = 0; hash_no < hash_method_name.Count; hash_no++)
                     {
                         if (hash_method_use[hash_no])
@@ -292,7 +292,7 @@ namespace CheckHash
                         handle_file_time_second += use_time_second;
                         double per_byte_average = handle_file_byte / handle_file_time_second;
                         double remain_second = (all_file_byte - handle_file_byte) / per_byte_average;
-                        Console.WriteLine("      -剩余时间：" + (remain_second / 60).ToString("0.0000000") + " 分，" + remain_second.ToString("0.0000000") + " 秒");
+                        Console.WriteLine("      -剩余时间：" + (remain_second / 86400.0).ToString("0.0000000") + " 天 ≈≈ " + (remain_second / 3600.0).ToString("0.0000000") + " 小时 ≈≈ " + (remain_second / 60.0).ToString("0.0000000") + " 分 ≈≈ " + remain_second.ToString("0.0000000") + " 秒");
                     }
                     // 删除temp目录下的文件
                     if (setting.copy_temp == 1)
@@ -301,7 +301,7 @@ namespace CheckHash
                     }
                 }
                 DateTime folder_after_time = DateTime.Now;
-                Console.WriteLine("  结束时间：" + folder_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共用时：" + (folder_after_time - folder_before_time).TotalMinutes.ToString("0.0000000") + " 分，" + (folder_after_time - folder_before_time).TotalSeconds.ToString("0.0000000") + " 秒\n");
+                Console.WriteLine("  结束时间：" + folder_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共用时：" + (folder_after_time - folder_before_time).TotalDays.ToString("0.0000000") + " 天 ≈≈ " + (folder_after_time - folder_before_time).TotalHours.ToString("0.0000000") + " 小时 ≈≈ " + (folder_after_time - folder_before_time).TotalMinutes.ToString("0.0000000") + " 分 ≈≈ " + (folder_after_time - folder_before_time).TotalSeconds.ToString("0.0000000") + " 秒\n");
 
                 // 输出总结信息
                 if (error_hash_check_file.Count > 0)
@@ -327,7 +327,7 @@ namespace CheckHash
             }
             DateTime after_all = DateTime.Now;
             Console.WriteLine("\n结束执行，结束时间：" + after_all.ToString("yyyy-MM-dd HH:mm:ss"));
-            Console.WriteLine("总共用时：" + (after_all - before_all).TotalMinutes.ToString("0.0000000") + " 分，" + (after_all - before_all).TotalSeconds.ToString("0.0000000") + " 秒");
+            Console.WriteLine("总共用时：" + (after_all - before_all).TotalDays.ToString("0.0000000") + " 天 ≈≈ " + (after_all - before_all).TotalHours.ToString("0.0000000") + " 小时 ≈≈ " + (after_all - before_all).TotalMinutes.ToString("0.0000000") + " 分 ≈≈ " + (after_all - before_all).TotalSeconds.ToString("0.0000000") + " 秒");
 
             if (error_check_folder.Count > 0)
             {

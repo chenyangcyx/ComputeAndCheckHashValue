@@ -148,6 +148,7 @@ namespace CheckHash
             // rclone模式下
             if (setting.use_rclone == 1)
             {
+                long total_size = 0;
                 foreach (var path in setting.check_folder)
                 {
                     List<RcloneFileList.FileInfo> afterall_result = null;
@@ -173,14 +174,16 @@ namespace CheckHash
                             max_reuslt = this_result_size;
                             afterall_result = result_temp;
                         }
-                        Console.WriteLine("    统计结果：" + this_result_size + " Byte");
+                        Console.WriteLine("  此次统计结果：" + this_result_size + " Byte");
                         // 休眠一段时间
                         Thread.Sleep(10000);
                     }
                     // 将最终结果加入列表
-                    Console.WriteLine(path + "的最终统计结果：" + max_reuslt + " Byte");
+                    Console.WriteLine("★文件夹统计结果：" + max_reuslt + " Byte");
+                    total_size += max_reuslt;
                     rclone_all_file_dic_list.Add(path, afterall_result);
                 }
+                Console.WriteLine("★★全部文件夹大小：" + total_size + " Byte");
             }
             // 本地模式下
             else
