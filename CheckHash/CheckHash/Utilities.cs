@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 
 namespace CheckHash
 {
@@ -116,7 +117,7 @@ namespace CheckHash
             return result;
         }
 
-        public static void copyFile(string old_file_path, string new_file_path, bool use_rclone,string rclone_config_file)
+        public static void copyFile(string old_file_path, string new_file_path, bool use_rclone, string rclone_config_file)
         {
             if (!use_rclone)
             {
@@ -126,7 +127,7 @@ namespace CheckHash
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    runCMD_Windows("copy",$"/y \"{old_file_path}\" \"{new_file_path}\"");
+                    runCMD_Windows("copy", $"/y \"{old_file_path}\" \"{new_file_path}\"");
                 }
             }
             else
@@ -137,7 +138,7 @@ namespace CheckHash
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    runCMD_Windows("rclone",$"--config \"{rclone_config_file}\" copy \"{old_file_path}\" \"{new_file_path}\"");
+                    runCMD_Windows("rclone", $"--config \"{rclone_config_file}\" copy \"{old_file_path}\" \"{new_file_path}\"");
                 }
             }
         }
@@ -147,27 +148,51 @@ namespace CheckHash
             // rclone模式下
             if (setting.use_rclone == 1)
             {
-                foreach(var path in setting.check_folder)
+                foreach (var path in setting.check_folder)
                 {
-                    string lsjson_result = null;
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                        lsjson_result = runCMD_Linux($"rclone --config \'{setting.rclone_config_file}\' lsjson \'{path}\'");
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                        lsjson_result = runCMD_Windows("rclone", $"--config \"{setting.rclone_config_file}\" lsjson \"{path}\"");
-                    rclone_all_file_dic_list.Add(path, JsonSerializer.Deserialize<List<RcloneFileList.FileInfo>>(lsjson_result));
+                    List<RcloneFileList.FileInfo> afterall_result = null;
+                    long max_reuslt = 0;
+                    // 每个目录地址进行4次的确认
+                    for (int _t = 1; _t <= 4; _t++)
+                    {
+                        Console.WriteLine("第" + _t + "次，共4次    获取" + path + "的rclone文件描述……");
+                        string lsjson_result = null;
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            lsjson_result = runCMD_Linux($"rclone --config \'{setting.rclone_config_file}\' lsjson \'{path}\'");
+                        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            lsjson_result = runCMD_Windows("rclone", $"--config \"{setting.rclone_config_file}\" lsjson \"{path}\"");
+                        List<RcloneFileList.FileInfo> result_temp = JsonSerializer.Deserialize<List<RcloneFileList.FileInfo>>(lsjson_result);
+                        // 统计该结果的数据
+                        long this_result_size = 0;
+                        foreach (RcloneFileList.FileInfo _d in result_temp)
+                        {
+                            if (!_d.IsDir) this_result_size += _d.Size;
+                        }
+                        if (this_result_size > max_reuslt)
+                        {
+                            max_reuslt = this_result_size;
+                            afterall_result = result_temp;
+                        }
+                        Console.WriteLine("    统计结果：" + this_result_size + " Byte");
+                        // 休眠一段时间
+                        Thread.Sleep(10000);
+                    }
+                    // 将最终结果加入列表
+                    Console.WriteLine(path + "的最终统计结果：" + max_reuslt + " Byte");
+                    rclone_all_file_dic_list.Add(path, afterall_result);
                 }
             }
             // 本地模式下
             else
             {
-                foreach(var path in setting.check_folder)
+                foreach (var path in setting.check_folder)
                 {
                     local_all_file_dic_list.Add(path, new List<FileInfo>(new DirectoryInfo(path).GetFiles()));
                 }
             }
         }
 
-        public static List<string> getAllFileInFolder(string path,Dictionary<string, List<RcloneFileList.FileInfo>> rclone_all_file_dic_list, Dictionary<string, List<FileInfo>> local_all_file_dic_list, SettingStruct.Rootobject setting)
+        public static List<string> getAllFileInFolder(string path, Dictionary<string, List<RcloneFileList.FileInfo>> rclone_all_file_dic_list, Dictionary<string, List<FileInfo>> local_all_file_dic_list, SettingStruct.Rootobject setting)
         {
             List<string> result = new List<string>();
             if (setting.use_rclone != 1)
