@@ -1,0 +1,18 @@
+﻿{
+  "check_folder_config_file": "C:\\Users\\cheny\\Desktop\\input.txt",
+  "blake2_exe_path": "C:\\Users\\cheny\\Desktop\\b2sum-amd64-windows.exe",
+  "blake3_exe_path": "C:\\Users\\cheny\\Desktop\\b3sum_windows_x64_bin.exe",
+  "check_method": {
+    "md5": 0,
+    "sha1": 0,
+    "sha256": 0,
+    "sha384": 0,
+    "sha512": 0,
+    "blake2b": 0,
+    "blake2bp": 0,
+    "blake2s": 0,
+    "blake2sp": 0,
+    "blake3": 1
+  },
+  "forecast_remain_time": 1
+}
