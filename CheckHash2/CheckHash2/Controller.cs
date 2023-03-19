@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -154,8 +156,8 @@ namespace CheckHash2
             // 开关，是否开启剩余时间预测
             bool forecast_remain_time = setting.forecast_remain_time == 1;
             // 开始流程
-            List<string> error_check_folder = new List<string>();
-            List<string> error_check_file = new List<string>();
+            VerifyErrorDetailHandler error_check_file = new VerifyErrorDetailHandler();
+            VerifyErrorDetailHandler error_check_folder = new VerifyErrorDetailHandler();
             int no = 0;
             for (int path_no = 0; path_no < check_folder_list.Count; path_no++)
             {
@@ -163,14 +165,14 @@ namespace CheckHash2
                 if (!Directory.Exists(path))
                 {
                     Console.WriteLine((++no) + "." + path + " 不存在，跳过！\n");
-                    error_check_folder.Add(path);
+                    error_check_folder.addVerifyErrorDetail(new VerifyErrorDetail(path, "目录路径不存在，跳过"));
                     continue;
                 }
                 string hash_file_path = path + "\\" + Utilities.HASH_FILE_NAME;
                 if (!File.Exists(hash_file_path))
                 {
                     Console.WriteLine((++no) + "." + hash_file_path + " 不存在，跳过！\n");
-                    error_check_folder.Add(hash_file_path);
+                    error_check_folder.addVerifyErrorDetail(new VerifyErrorDetail(path, "hash文件不存在，跳过"));
                     continue;
                 }
                 // 读入文件夹内的hash.txt文件
@@ -222,23 +224,27 @@ namespace CheckHash2
                     if (_file_hash_dict == null || _file_hash_dict.Count == 0)
                     {
                         Console.WriteLine($"{file_item} 没有对应的hash记录！");
-                        error_check_file.Add(file_item);
+                        error_check_file.addVerifyErrorDetail(new VerifyErrorDetail(file_item, "没有对应的hash记录"));
+                        error_check_folder.addVerifyErrorDetail(new VerifyErrorDetail(path, $"{file.Name} 没有对应的hash记录"));
                         continue;
                     }
                     // 获取各个hash方法的结果
                     for (int hash_name_index = 0; hash_name_index < hash_method_name.Count; hash_name_index++)
                     {
+                        string item_hash_method_name = hash_method_name[hash_name_index];
+
                         if (!verify_method_use[hash_name_index])
                         {
                             continue;
                         }
                         if (verify_method_use[hash_name_index] && !_file_hash_dict.ContainsKey(hash_method_name[hash_name_index]))
                         {
-                            Console.WriteLine("      " + $"没有对[{hash_method_name[hash_name_index]}]的hash值进行记录！");
-
+                            Console.WriteLine("      -" + item_hash_method_name + " 没有记录hash值！");
+                            error_check_file.addVerifyErrorDetail(new VerifyErrorDetail(file_item, $"没有记录[{item_hash_method_name}]的hash值"));
+                            error_check_folder.addVerifyErrorDetail(new VerifyErrorDetail(path, $"{file.Name} 没有记录[{item_hash_method_name}]的hash值"));
                             continue;
                         }
-                        string item_hash_method_name = hash_method_name[hash_name_index];
+
                         var item_hash_method_value = _file_hash_dict[item_hash_method_name];
                         string item_hash_compute_value = ComputeHash.getHashByName(item_hash_method_name, file.FullName, setting);
                         // 输出对比结果
@@ -251,8 +257,8 @@ namespace CheckHash2
                         {
                             Console.WriteLine("      -" + item_hash_method_name + " 期望[FAIL]: " + item_hash_method_value);
                             Console.WriteLine("      -" + item_hash_method_name + " 计算[FAIL]: " + item_hash_compute_value);
-                            error_check_file.Add(file_item);
-                            error_check_folder.Add(path);
+                            error_check_file.addVerifyErrorDetail(new VerifyErrorDetail(file_item, $"[{item_hash_method_name}]的hash值不正确"));
+                            error_check_folder.addVerifyErrorDetail(new VerifyErrorDetail(path, $"{file.Name} [{item_hash_method_name}]的hash值不正确"));
                         }
                     }
 
@@ -280,8 +286,14 @@ namespace CheckHash2
             {
                 Console.WriteLine("\n\n#### 出错文件 ####");
                 no = 0;
-                foreach (var file_path in error_check_file)
-                    Console.WriteLine((++no) + ". " + file_path);
+                foreach (var file_item in error_check_file.errorItemNameList)
+                {
+                    Console.WriteLine((++no) + ". " + file_item);
+                    foreach (var reason_item in error_check_file.errorItemDetailListDict[file_item])
+                    {
+                        Console.WriteLine("  -" + reason_item);
+                    }
+                }
             }
             else
             {
@@ -293,17 +305,20 @@ namespace CheckHash2
             {
                 Console.WriteLine("#### 出错文件夹 ####");
                 no = 0;
-                foreach (var folder_path in error_check_folder)
-                    Console.WriteLine((++no) + ". " + folder_path);
+                foreach (var folder_item in error_check_folder.errorItemNameList)
+                {
+                    Console.WriteLine((++no) + ". " + folder_item);
+                    foreach (var reason_item in error_check_folder.errorItemDetailListDict[folder_item])
+                    {
+                        Console.WriteLine("  -" + reason_item);
+                    }
+                }
             }
             else
             {
                 Console.WriteLine("全部文件夹全部校验正确！");
             }
             Console.Write("\n\n");
-
-            // TODO: 失败的具体原因
-             
         }
     }
 
@@ -315,7 +330,52 @@ namespace CheckHash2
             this.errorMessage = message;
         }
 
-        public string errorItem { get;set; }
+        public string errorItem { get; set; }
         public string errorMessage { get; set; }
+    }
+
+    internal class VerifyErrorDetailHandler
+    {
+        public List<VerifyErrorDetail> verifyErrorDetailList { get; }
+        public List<string> errorItemNameList { get; }
+        public Dictionary<string, List<string>> errorItemDetailListDict { get; }
+
+        public int Count { get; set; }
+
+        public VerifyErrorDetailHandler()
+        {
+            verifyErrorDetailList = new List<VerifyErrorDetail>();
+            errorItemNameList = new List<string>();
+            errorItemDetailListDict = new Dictionary<string, List<string>>();
+            Count = 0;
+        }
+
+        public void addVerifyErrorDetail(VerifyErrorDetail detail)
+        {
+            // 加入verifyErrorDetailList
+            verifyErrorDetailList.Add(detail);
+            // 加入errorItemNameList
+            if (!errorItemNameList.Contains(detail.errorItem))
+            {
+                errorItemNameList.Add(detail.errorItem);
+            }
+            // 加入errorItemDetailListDict
+            if (!errorItemDetailListDict.ContainsKey(detail.errorItem))
+            {
+                // 首次初始化
+                List<string> list = new List<string>
+                {
+                    detail.errorMessage
+                };
+                errorItemDetailListDict[detail.errorItem] = list;
+            }
+            else
+            {
+                // 已经存在
+                errorItemDetailListDict[detail.errorItem].Add(detail.errorMessage);
+            }
+            // 设置Count的值
+            Count++;
+        }
     }
 }
