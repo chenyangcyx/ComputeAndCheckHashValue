@@ -13,11 +13,12 @@ namespace CheckHash2
             public string check_folder_config_file { get; set; }
             public string blake2_exe_path { get; set; }
             public string blake3_exe_path { get; set; }
-            public Check_Method check_method { get; set; }
+            public Hash_Method generate_method { get; set; }
+            public Hash_Method verify_method { get; set; }
             public int forecast_remain_time { get; set; }
         }
 
-        public class Check_Method
+        public class Hash_Method
         {
             public int md5 { get; set; }
             public int sha1 { get; set; }

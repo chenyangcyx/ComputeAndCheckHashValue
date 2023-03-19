@@ -130,7 +130,7 @@ namespace CheckHash2
             Console.Write("\n\n");
         }
 
-        public static void checkHash(SettingStruct.SettingConfig setting, List<string> check_folder_list)
+        public static void checkHash(SettingStruct.SettingConfig setting, List<string> check_folder_list, List<string> hash_method_name, List<bool> verify_method_use)
         {
             DateTime before_all = DateTime.Now;
             Console.WriteLine("\n开始校验，开始时间：" + before_all.ToString("yyyy-MM-dd HH:mm:ss") + "\n");
@@ -226,21 +226,31 @@ namespace CheckHash2
                         continue;
                     }
                     // 获取各个hash方法的结果
-                    foreach (var pair_item in _file_hash_dict)
+                    for (int hash_name_index = 0; hash_name_index < hash_method_name.Count; hash_name_index++)
                     {
-                        string hash_method_name = pair_item.Key;
-                        var hash_method_value = pair_item.Value;
-                        string hash_compute_value = ComputeHash.getHashByName(hash_method_name, file.FullName, setting);
-                        // 输出对比结果
-                        if (hash_method_value.Equals(hash_compute_value))
+                        if (!verify_method_use[hash_name_index])
                         {
-                            Console.WriteLine("      -" + hash_method_name + " 期望[OK]: " + hash_method_value);
-                            Console.WriteLine("      -" + hash_method_name + " 计算[OK]: " + hash_compute_value);
+                            continue;
+                        }
+                        if (verify_method_use[hash_name_index] && !_file_hash_dict.ContainsKey(hash_method_name[hash_name_index]))
+                        {
+                            Console.WriteLine("      " + $"没有对[{hash_method_name[hash_name_index]}]的hash值进行记录！");
+
+                            continue;
+                        }
+                        string item_hash_method_name = hash_method_name[hash_name_index];
+                        var item_hash_method_value = _file_hash_dict[item_hash_method_name];
+                        string item_hash_compute_value = ComputeHash.getHashByName(item_hash_method_name, file.FullName, setting);
+                        // 输出对比结果
+                        if (item_hash_method_value.Equals(item_hash_compute_value))
+                        {
+                            Console.WriteLine("      -" + item_hash_method_name + " 期望[OK]: " + item_hash_method_value);
+                            Console.WriteLine("      -" + item_hash_method_name + " 计算[OK]: " + item_hash_compute_value);
                         }
                         else
                         {
-                            Console.WriteLine("      -" + hash_method_name + " 期望[FAIL]: " + hash_method_value);
-                            Console.WriteLine("      -" + hash_method_name + " 计算[FAIL]: " + hash_compute_value);
+                            Console.WriteLine("      -" + item_hash_method_name + " 期望[FAIL]: " + item_hash_method_value);
+                            Console.WriteLine("      -" + item_hash_method_name + " 计算[FAIL]: " + item_hash_compute_value);
                             error_check_file.Add(file_item);
                             error_check_folder.Add(path);
                         }
@@ -292,6 +302,20 @@ namespace CheckHash2
             }
             Console.Write("\n\n");
 
+            // TODO: 失败的具体原因
+             
         }
+    }
+
+    internal class VerifyErrorDetail
+    {
+        public VerifyErrorDetail(string errorItem, string message)
+        {
+            this.errorItem = errorItem;
+            this.errorMessage = message;
+        }
+
+        public string errorItem { get;set; }
+        public string errorMessage { get; set; }
     }
 }
