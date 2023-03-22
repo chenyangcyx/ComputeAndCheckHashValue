@@ -4,103 +4,168 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Waher.Security.SHA3;
 
 namespace CheckHash2
 {
     internal class ComputeHash
     {
-        private static MD5 md5 = MD5.Create();
         public static string getMD5(FileInfo fi)
         {
-            if (!File.Exists(fi.FullName))
+            using (MD5 md5 = MD5.Create())
             {
-                Console.WriteLine(fi.FullName + "不存在！");
-                return null;
-            }
-            using (var read_stream = fi.OpenRead())
-            {
-                byte[] hashValue = md5.ComputeHash(read_stream);
-                return convertHashCodeBytes(hashValue);
+                /*if (!File.Exists(fi.FullName))
+                {
+                    Console.WriteLine(fi.FullName + "不存在！");
+                    return null;
+                }*/
+                using (var read_stream = fi.OpenRead())
+                {
+                    byte[] hashValue = md5.ComputeHash(read_stream);
+                    return convertHashCodeBytes(hashValue);
+                }
             }
         }
 
-        private static SHA1 sha1 = SHA1.Create();
         public static string getSHA1(FileInfo fi)
         {
-            if (!File.Exists(fi.FullName))
+            using (SHA1 sha1 = SHA1.Create())
             {
-                Console.WriteLine(fi.FullName + "不存在！");
-                return null;
-            }
-            using (var read_stream = fi.OpenRead())
-            {
-                byte[] hashValue = sha1.ComputeHash(read_stream);
-                return convertHashCodeBytes(hashValue);
-            }
-        }
-
-        private static SHA256 sha256 = SHA256.Create();
-        public static string getSHA256(FileInfo fi)
-        {
-            if (!File.Exists(fi.FullName))
-            {
-                Console.WriteLine(fi.FullName + "不存在！");
-                return null;
-            }
-            using (var read_stream = fi.OpenRead())
-            {
-                byte[] hashValue = sha256.ComputeHash(read_stream);
-                return convertHashCodeBytes(hashValue);
+                /*if (!File.Exists(fi.FullName))
+                {
+                    Console.WriteLine(fi.FullName + "不存在！");
+                    return null;
+                }*/
+                using (var read_stream = fi.OpenRead())
+                {
+                    byte[] hashValue = sha1.ComputeHash(read_stream);
+                    return convertHashCodeBytes(hashValue);
+                }
             }
         }
 
-        private static SHA384 sha384 = SHA384.Create();
-        public static string getSHA384(FileInfo fi)
+        public static string getSHA2_256(FileInfo fi)
         {
-            if (!File.Exists(fi.FullName))
+            using (SHA256 sha256 = SHA256.Create())
             {
-                Console.WriteLine(fi.FullName + "不存在！");
-                return null;
-            }
-            using (var read_stream = fi.OpenRead())
-            {
-                byte[] hashValue = sha384.ComputeHash(read_stream);
-                return convertHashCodeBytes(hashValue);
+                /*if (!File.Exists(fi.FullName))
+                {
+                    Console.WriteLine(fi.FullName + "不存在！");
+                    return null;
+                }*/
+                using (var read_stream = fi.OpenRead())
+                {
+                    byte[] hashValue = sha256.ComputeHash(read_stream);
+                    return convertHashCodeBytes(hashValue);
+                }
             }
         }
 
-        private static SHA512 sha512 = SHA512.Create();
-        public static string getSHA512(FileInfo fi)
+        public static string getSHA2_384(FileInfo fi)
         {
-            if (!File.Exists(fi.FullName))
+            using (SHA384 sha384 = SHA384.Create())
             {
-                Console.WriteLine(fi.FullName + "不存在！");
-                return null;
+                /*if (!File.Exists(fi.FullName))
+                {
+                    Console.WriteLine(fi.FullName + "不存在！");
+                    return null;
+                }*/
+                using (var read_stream = fi.OpenRead())
+                {
+                    byte[] hashValue = sha384.ComputeHash(read_stream);
+                    return convertHashCodeBytes(hashValue);
+                }
             }
+        }
+
+        public static string getSHA2_512(FileInfo fi)
+        {
+            using (SHA512 sha512 = SHA512.Create())
+            {
+                /*if (!File.Exists(fi.FullName))
+                {
+                    Console.WriteLine(fi.FullName + "不存在！");
+                    return null;
+                }*/
+                using (var read_stream = fi.OpenRead())
+                {
+                    byte[] hashValue = sha512.ComputeHash(read_stream);
+                    return convertHashCodeBytes(hashValue);
+                }
+            }
+        }
+
+        public static string getSHA3_224(FileInfo fi)
+        {
             using (var read_stream = fi.OpenRead())
             {
-                byte[] hashValue = sha512.ComputeHash(read_stream);
-                return convertHashCodeBytes(hashValue);
+                SHA3_224 sha = new SHA3_224();
+                return convertHashCodeBytes(sha.ComputeVariable(read_stream));
+            }
+        }
+
+        public static string getSHA3_256(FileInfo fi)
+        {
+            using (var read_stream = fi.OpenRead())
+            {
+                SHA3_256 sha = new SHA3_256();
+                return convertHashCodeBytes(sha.ComputeVariable(read_stream));
+            }
+        }
+
+        public static string getSHA3_384(FileInfo fi)
+        {
+            using (var read_stream = fi.OpenRead())
+            {
+                SHA3_384 sha = new SHA3_384();
+                return convertHashCodeBytes(sha.ComputeVariable(read_stream));
+            }
+        }
+
+        public static string getSHA3_512(FileInfo fi)
+        {
+            using (var read_stream = fi.OpenRead())
+            {
+                SHA3_512 sha = new SHA3_512();
+                return convertHashCodeBytes(sha.ComputeVariable(read_stream));
+            }
+        }
+
+        public static string getSHAKE128(FileInfo fi)
+        {
+            using (var read_stream = fi.OpenRead())
+            {
+                SHAKE128 shake128 = new SHAKE128(Utilities.SHAKE128_SIZE);
+                return convertHashCodeBytes(shake128.ComputeVariable(read_stream));
+            }
+        }
+
+        public static string getSHAKE256(FileInfo fi)
+        {
+            using (var read_stream = fi.OpenRead())
+            {
+                SHAKE256 shake256 = new SHAKE256(Utilities.SHAKE256_SIZE);
+                return convertHashCodeBytes(shake256.ComputeVariable(read_stream));
             }
         }
 
         public static string getBLAKE2(FileInfo fi, string hash_type, string blake_path)
         {
-            if (!File.Exists(fi.FullName))
+            /*if (!File.Exists(fi.FullName))
             {
                 Console.WriteLine(fi.FullName + "不存在！");
                 return null;
-            }
+            }*/
             return Utilities.getBLAKEHash_CMD(blake_path, hash_type, fi.FullName).Split(" ")[0];
         }
 
         public static string getBLAKE3(FileInfo fi, string blake_path)
         {
-            if (!File.Exists(fi.FullName))
+            /*if (!File.Exists(fi.FullName))
             {
                 Console.WriteLine(fi.FullName + "不存在！");
                 return null;
-            }
+            }*/
             return Utilities.getBLAKEHash_CMD(blake_path, null, fi.FullName).Split(" ")[0];
         }
 
@@ -112,12 +177,24 @@ namespace CheckHash2
                     return getMD5(new FileInfo(path));
                 case Utilities.SHA1_NAME:
                     return getSHA1(new FileInfo(path));
-                case Utilities.SHA256_NAME:
-                    return getSHA256(new FileInfo(path));
-                case Utilities.SHA384_NAME:
-                    return getSHA384(new FileInfo(path));
-                case Utilities.SHA512_NAME:
-                    return getSHA512(new FileInfo(path));
+                case Utilities.SHA2_256_NAME:
+                    return getSHA2_256(new FileInfo(path));
+                case Utilities.SHA2_384_NAME:
+                    return getSHA2_384(new FileInfo(path));
+                case Utilities.SHA2_512_NAME:
+                    return getSHA2_512(new FileInfo(path));
+                case Utilities.SHA3_224_NAME:
+                    return getSHA3_224(new FileInfo(path));
+                case Utilities.SHA3_256_NAME:
+                    return getSHA3_256(new FileInfo(path));
+                case Utilities.SHA3_384_NAME:
+                    return getSHA3_384(new FileInfo(path));
+                case Utilities.SHA3_512_NAME:
+                    return getSHA3_512(new FileInfo(path));
+                case Utilities.SHAKE128_NAME:
+                    return getSHAKE128(new FileInfo(path));
+                case Utilities.SHAKE256_NAME:
+                    return getSHAKE256(new FileInfo(path));
                 case Utilities.BLAKE2b_NAME:
                     return getBLAKE2(new FileInfo(path), "blake2b", setting.blake2_exe_path);
                 case Utilities.BLAKE2s_NAME:

@@ -140,35 +140,77 @@ void setHashMethod()
     // 设置hash_method_name
     hash_method_name.Add(Utilities.MD5_NAME);
     hash_method_name.Add(Utilities.SHA1_NAME);
-    hash_method_name.Add(Utilities.SHA256_NAME);
-    hash_method_name.Add(Utilities.SHA384_NAME);
-    hash_method_name.Add(Utilities.SHA512_NAME);
+    hash_method_name.Add(Utilities.SHA2_256_NAME);
+    hash_method_name.Add(Utilities.SHA2_384_NAME);
+    hash_method_name.Add(Utilities.SHA2_512_NAME);
+    hash_method_name.Add(Utilities.SHA3_224_NAME);
+    hash_method_name.Add(Utilities.SHA3_256_NAME);
+    hash_method_name.Add(Utilities.SHA3_384_NAME);
+    hash_method_name.Add(Utilities.SHA3_512_NAME);
+    hash_method_name.Add(Utilities.SHAKE128_NAME);
+    hash_method_name.Add(Utilities.SHAKE256_NAME);
     hash_method_name.Add(Utilities.BLAKE2b_NAME);
     hash_method_name.Add(Utilities.BLAKE2s_NAME);
     hash_method_name.Add(Utilities.BLAKE2bp_NAME);
     hash_method_name.Add(Utilities.BLAKE2sp_NAME);
     hash_method_name.Add(Utilities.BLAKE3_NAME);
-    // 设置hash_method_use
+    /** MD5 **/
     if (setting.generate_method.md5 != 0)
         generate_method_use.Add(true);
     else
         generate_method_use.Add(false);
+    /** MD5 **/
+
+    /** SHA1 **/
     if (setting.generate_method.sha1 != 0)
         generate_method_use.Add(true);
     else
         generate_method_use.Add(false);
-    if (setting.generate_method.sha256 != 0)
+    /** SHA1 **/
+
+    /** SHA2 **/
+    if (setting.generate_method.sha2_256 != 0)
         generate_method_use.Add(true);
     else
         generate_method_use.Add(false);
-    if (setting.generate_method.sha384 != 0)
+    if (setting.generate_method.sha2_384 != 0)
         generate_method_use.Add(true);
     else
         generate_method_use.Add(false);
-    if (setting.generate_method.sha512 != 0)
+    if (setting.generate_method.sha2_512 != 0)
         generate_method_use.Add(true);
     else
         generate_method_use.Add(false);
+    /** SHA2 **/
+
+    /** SHA3 **/
+    if (setting.generate_method.sha3_224 != 0)
+        generate_method_use.Add(true);
+    else
+        generate_method_use.Add(false);
+    if (setting.generate_method.sha3_256 != 0)
+        generate_method_use.Add(true);
+    else
+        generate_method_use.Add(false);
+    if (setting.generate_method.sha3_384 != 0)
+        generate_method_use.Add(true);
+    else
+        generate_method_use.Add(false);
+    if (setting.generate_method.sha3_512 != 0)
+        generate_method_use.Add(true);
+    else
+        generate_method_use.Add(false);
+    if (setting.generate_method.shake128 != 0)
+        generate_method_use.Add(true);
+    else
+        generate_method_use.Add(false);
+    if (setting.generate_method.shake256 != 0)
+        generate_method_use.Add(true);
+    else
+        generate_method_use.Add(false);
+    /** SHA3 **/
+
+    /** BLAKE2 **/
     if (setting.generate_method.blake2b != 0)
         generate_method_use.Add(true);
     else
@@ -185,10 +227,14 @@ void setHashMethod()
         generate_method_use.Add(true);
     else
         generate_method_use.Add(false);
+    /** BLAKE2 **/
+
+    /** BLAKE3 **/
     if (setting.generate_method.blake3 != 0)
         generate_method_use.Add(true);
     else
         generate_method_use.Add(false);
+    /** BLAKE3 **/
 }
 
 void setCheckMethod()
@@ -197,22 +243,50 @@ void setCheckMethod()
         verify_method_use.Add(true);
     else
         verify_method_use.Add(false);
+
     if (setting.verify_method.sha1 != 0)
         verify_method_use.Add(true);
     else
         verify_method_use.Add(false);
-    if (setting.verify_method.sha256 != 0)
+
+    if (setting.verify_method.sha2_256 != 0)
         verify_method_use.Add(true);
     else
         verify_method_use.Add(false);
-    if (setting.verify_method.sha384 != 0)
+    if (setting.verify_method.sha2_384 != 0)
         verify_method_use.Add(true);
     else
         verify_method_use.Add(false);
-    if (setting.verify_method.sha512 != 0)
+    if (setting.verify_method.sha2_512 != 0)
         verify_method_use.Add(true);
     else
         verify_method_use.Add(false);
+
+    if(setting.verify_method.sha3_224 != 0)
+        verify_method_use.Add(true);
+    else
+        verify_method_use.Add(false);
+    if (setting.verify_method.sha3_256 != 0)
+        verify_method_use.Add(true);
+    else
+        verify_method_use.Add(false);
+    if (setting.verify_method.sha3_384 != 0)
+        verify_method_use.Add(true);
+    else
+        verify_method_use.Add(false);
+    if (setting.verify_method.sha3_512 != 0)
+        verify_method_use.Add(true);
+    else
+        verify_method_use.Add(false);
+    if (setting.verify_method.shake128 != 0)
+        verify_method_use.Add(true);
+    else
+        verify_method_use.Add(false);
+    if (setting.verify_method.shake256 != 0)
+        verify_method_use.Add(true);
+    else
+        verify_method_use.Add(false);
+
     if (setting.verify_method.blake2b != 0)
         verify_method_use.Add(true);
     else
@@ -229,6 +303,7 @@ void setCheckMethod()
         verify_method_use.Add(true);
     else
         verify_method_use.Add(false);
+
     if (setting.verify_method.blake3 != 0)
         verify_method_use.Add(true);
     else

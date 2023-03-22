@@ -9,14 +9,24 @@ namespace CheckHash2
     {
         public const string MD5_NAME = "MD5";
         public const string SHA1_NAME = "SHA1";
-        public const string SHA256_NAME = "SHA256";
-        public const string SHA384_NAME = "SHA384";
-        public const string SHA512_NAME = "SHA512";
+        public const string SHA2_256_NAME = "SHA2-256";
+        public const string SHA2_384_NAME = "SHA2-384";
+        public const string SHA2_512_NAME = "SHA2-512";
+        public const string SHA3_224_NAME = "SHA3-224";
+        public const string SHA3_256_NAME = "SHA3-256";
+        public const string SHA3_384_NAME = "SHA3-384";
+        public const string SHA3_512_NAME = "SHA3-512";
+        public const string SHAKE128_NAME = "SHAKE128";
+        public const string SHAKE256_NAME = "SHAKE256";
         public const string BLAKE2b_NAME = "BLAKE2b";
         public const string BLAKE2s_NAME = "BLAKE2s";
         public const string BLAKE2bp_NAME = "BLAKE2bp";
         public const string BLAKE2sp_NAME = "BLAKE2sp";
         public const string BLAKE3_NAME = "BLAKE3";
+
+        public const int SHAKE128_SIZE = 128 * 2;
+        public const int SHAKE256_SIZE = 256 * 2;
+
         public static UTF8Encoding utf8_encoding = new UTF8Encoding(false);
         public const string HASH_FILE_NAME = "hash.txt";
         public const string HASH_FILE_SPLIT_LINE_CONTENT = "----------------------------------------";
@@ -167,14 +177,32 @@ namespace CheckHash2
                         case SHA1_NAME:
                             hash_result.Add(SHA1_NAME, line_split[1]);
                             break;
-                        case SHA256_NAME:
-                            hash_result.Add(SHA256_NAME, line_split[1]);
+                        case SHA2_256_NAME:
+                            hash_result.Add(SHA2_256_NAME, line_split[1]);
                             break;
-                        case SHA384_NAME:
-                            hash_result.Add(SHA384_NAME, line_split[1]);
+                        case SHA2_384_NAME:
+                            hash_result.Add(SHA2_384_NAME, line_split[1]);
                             break;
-                        case SHA512_NAME:
-                            hash_result.Add(SHA512_NAME, line_split[1]);
+                        case SHA2_512_NAME:
+                            hash_result.Add(SHA2_512_NAME, line_split[1]);
+                            break;
+                        case SHA3_224_NAME:
+                            hash_result.Add(SHA3_224_NAME, line_split[1]);
+                            break;
+                        case SHA3_256_NAME:
+                            hash_result.Add(SHA3_256_NAME, line_split[1]);
+                            break;
+                        case SHA3_384_NAME:
+                            hash_result.Add(SHA3_384_NAME, line_split[1]);
+                            break;
+                        case SHA3_512_NAME:
+                            hash_result.Add(SHA3_512_NAME, line_split[1]);
+                            break;
+                        case SHAKE128_NAME:
+                            hash_result.Add(SHAKE128_NAME, line_split[1]);
+                            break;
+                        case SHAKE256_NAME:
+                            hash_result.Add(SHAKE256_NAME, line_split[1]);
                             break;
                         case BLAKE2b_NAME:
                             hash_result.Add(BLAKE2b_NAME, line_split[1]);

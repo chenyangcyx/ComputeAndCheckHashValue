@@ -72,7 +72,7 @@ namespace CheckHash2
                         {
                             // 计算文件的hash值
                             string hash_compute_value = ComputeHash.getHashByName(hash_method_name[hash_no], file.FullName, setting);
-                            Console.WriteLine("      -" + hash_method_name[hash_no] + "_hash: " + hash_compute_value);
+                            Console.WriteLine("      -" + hash_method_name[hash_no] + ": " + hash_compute_value);
                             hash_result.Add(hash_method_name[hash_no], hash_compute_value);
                         }
                     }
