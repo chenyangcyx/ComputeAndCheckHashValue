@@ -94,26 +94,25 @@ List<bool> verify_method_use = new List<bool>();
 setCheckMethod();
 // 输出generate_method
 Console.Write("## generate_method: ");
+List<string> generateMethodList = new List<string>();
 for (int i = 0; i < hash_method_name.Count; i++)
 {
     if (generate_method_use[i])
-        if (i == 0)
-            Console.Write(hash_method_name[i]);
-        else
-            Console.Write(", " + hash_method_name[i]);
+    {
+        generateMethodList.Add(hash_method_name[i]);
+    }
 }
-Console.Write("\n");
+Console.WriteLine(string.Join(", ", generateMethodList));
 // 输出verify_method
 Console.Write("## verify_method: ");
+List<string> verifyMethodList = new List<string>();
 for (int i = 0; i < hash_method_name.Count; i++)
 {
     if (verify_method_use[i])
-        if (i == 0)
-            Console.Write(hash_method_name[i]);
-        else
-            Console.Write(", " + hash_method_name[i]);
+        verifyMethodList.Add((hash_method_name[i]));
 }
-Console.Write("\n");
+Console.WriteLine(string.Join(", ", verifyMethodList));
+
 Console.WriteLine("## forecast_remain_time: " + (setting.forecast_remain_time == 1));
 
 // 选择运行模式
@@ -262,7 +261,7 @@ void setCheckMethod()
     else
         verify_method_use.Add(false);
 
-    if(setting.verify_method.sha3_224 != 0)
+    if (setting.verify_method.sha3_224 != 0)
         verify_method_use.Add(true);
     else
         verify_method_use.Add(false);
