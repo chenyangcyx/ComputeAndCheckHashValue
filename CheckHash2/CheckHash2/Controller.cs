@@ -88,12 +88,15 @@ namespace CheckHash2
                         double per_byte_average = handle_file_byte / handle_file_time_second;
                         double remain_second = (all_file_byte - handle_file_byte) / per_byte_average;
                         Console.WriteLine("      -剩余时间：" + (remain_second / 86400.0).ToString("0.0000000") + " 天 ≈≈ " + (remain_second / 3600.0).ToString("0.0000000") + " 小时 ≈≈ " + (remain_second / 60.0).ToString("0.0000000") + " 分 ≈≈ " + remain_second.ToString("0.0000000") + " 秒");
+                        Console.WriteLine("      -预计结束时间：" + DateTime.Now.AddSeconds(remain_second).ToString("yyyy-MM-dd HH:mm:ss"));
+
                     }
                     // 写入dic结果
                     stream_result.Add(file.Name, hash_result);
                 }
                 DateTime folder_after_time = DateTime.Now;
-                Console.WriteLine("  结束时间：" + folder_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共用时：" + (folder_after_time - folder_before_time).TotalDays.ToString("0.0000000") + " 天 ≈≈ " + (folder_after_time - folder_before_time).TotalHours.ToString("0.0000000") + " 小时 ≈≈ " + (folder_after_time - folder_before_time).TotalMinutes.ToString("0.0000000") + " 分 ≈≈ " + (folder_after_time - folder_before_time).TotalSeconds.ToString("0.0000000") + " 秒\n");
+                Console.WriteLine("  结束时间：" + folder_after_time.ToString("yyyy-MM-dd HH:mm:ss"));
+                Console.WriteLine("  总共用时：" + (folder_after_time - folder_before_time).TotalDays.ToString("0.0000000") + " 天 ≈≈ " + (folder_after_time - folder_before_time).TotalHours.ToString("0.0000000") + " 小时 ≈≈ " + (folder_after_time - folder_before_time).TotalMinutes.ToString("0.0000000") + " 分 ≈≈ " + (folder_after_time - folder_before_time).TotalSeconds.ToString("0.0000000") + " 秒\n");
 
                 // 将结果写入到文件夹
                 using (StreamWriter sw_result = new StreamWriter(check_folder_list[path_no] + "\\" + Utilities.HASH_FILE_NAME, false, Utilities.utf8_encoding))
@@ -273,10 +276,12 @@ namespace CheckHash2
                         double per_byte_average = handle_file_byte / handle_file_time_second;
                         double remain_second = (all_file_byte - handle_file_byte) / per_byte_average;
                         Console.WriteLine("      -剩余时间：" + (remain_second / 86400.0).ToString("0.0000000") + " 天 ≈≈ " + (remain_second / 3600.0).ToString("0.0000000") + " 小时 ≈≈ " + (remain_second / 60.0).ToString("0.0000000") + " 分 ≈≈ " + remain_second.ToString("0.0000000") + " 秒");
+                        Console.WriteLine("      -预计结束时间：" + DateTime.Now.AddSeconds(remain_second).ToString("yyyy-MM-dd HH:mm:ss"));
                     }
                 }
                 DateTime folder_after_time = DateTime.Now;
-                Console.WriteLine("  结束时间：" + folder_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共用时：" + (folder_after_time - folder_before_time).TotalDays.ToString("0.0000000") + " 天 ≈≈ " + (folder_after_time - folder_before_time).TotalHours.ToString("0.0000000") + " 小时 ≈≈ " + (folder_after_time - folder_before_time).TotalMinutes.ToString("0.0000000") + " 分 ≈≈ " + (folder_after_time - folder_before_time).TotalSeconds.ToString("0.0000000") + " 秒\n");
+                Console.WriteLine("  结束时间：" + folder_after_time.ToString("yyyy-MM-dd HH:mm:ss"));
+                Console.WriteLine("  总共用时：" + (folder_after_time - folder_before_time).TotalDays.ToString("0.0000000") + " 天 ≈≈ " + (folder_after_time - folder_before_time).TotalHours.ToString("0.0000000") + " 小时 ≈≈ " + (folder_after_time - folder_before_time).TotalMinutes.ToString("0.0000000") + " 分 ≈≈ " + (folder_after_time - folder_before_time).TotalSeconds.ToString("0.0000000") + " 秒\n");
             }
             DateTime after_all = DateTime.Now;
             Console.WriteLine("\n结束执行，结束时间：" + after_all.ToString("yyyy-MM-dd HH:mm:ss"));
