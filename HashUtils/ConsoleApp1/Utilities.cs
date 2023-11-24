@@ -39,7 +39,7 @@ namespace ConsoleApp1
                 Console.WriteLine("文件：" + path + "不存在，退出！");
                 Environment.Exit(2333);
             }
-            return JsonSerializer.Deserialize<SettingStruct.SettingConfig>(File.ReadAllText(path));
+            return JsonSerializer.Deserialize(File.ReadAllText(path), SettingStructJsonContext.Default.SettingConfig);
         }
 
         private static string runCMD_Linux(string cmd)
