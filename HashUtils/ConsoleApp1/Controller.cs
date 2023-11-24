@@ -317,6 +317,15 @@
             }
             Console.Write("\n\n");
         }
+
+        public static void checkSystemInfo()
+        {
+            Console.WriteLine("[os version] " + System.Runtime.InteropServices.RuntimeInformation.OSDescription);
+            Console.WriteLine("[os runtime] " + System.Runtime.InteropServices.RuntimeInformation.RuntimeIdentifier);
+            Console.WriteLine("[.NET version] " + System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription);
+            Console.WriteLine("[Process Architecture] " + System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture);
+            Console.WriteLine("[OS Architecture] " + System.Runtime.InteropServices.RuntimeInformation.OSArchitecture);
+        }
     }
 
     internal class VerifyErrorDetail
