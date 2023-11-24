@@ -11,86 +11,41 @@ namespace ConsoleApp1
     {
         public static string getMD5(FileInfo fi)
         {
-            using (MD5 md5 = MD5.Create())
+            using (var read_stream = fi.OpenRead())
             {
-                /*if (!File.Exists(fi.FullName))
-                {
-                    Console.WriteLine(fi.FullName + "不存在！");
-                    return null;
-                }*/
-                using (var read_stream = fi.OpenRead())
-                {
-                    byte[] hashValue = md5.ComputeHash(read_stream);
-                    return convertHashCodeBytes(hashValue);
-                }
+                return convertHashCodeBytes(MD5.HashData(read_stream));
             }
         }
 
         public static string getSHA1(FileInfo fi)
         {
-            using (SHA1 sha1 = SHA1.Create())
+            using (var read_stream = fi.OpenRead())
             {
-                /*if (!File.Exists(fi.FullName))
-                {
-                    Console.WriteLine(fi.FullName + "不存在！");
-                    return null;
-                }*/
-                using (var read_stream = fi.OpenRead())
-                {
-                    byte[] hashValue = sha1.ComputeHash(read_stream);
-                    return convertHashCodeBytes(hashValue);
-                }
+                return convertHashCodeBytes(SHA1.HashData(read_stream));
             }
         }
 
         public static string getSHA2_256(FileInfo fi)
         {
-            using (SHA256 sha256 = SHA256.Create())
+            using (var read_stream = fi.OpenRead())
             {
-                /*if (!File.Exists(fi.FullName))
-                {
-                    Console.WriteLine(fi.FullName + "不存在！");
-                    return null;
-                }*/
-                using (var read_stream = fi.OpenRead())
-                {
-                    byte[] hashValue = sha256.ComputeHash(read_stream);
-                    return convertHashCodeBytes(hashValue);
-                }
+                return convertHashCodeBytes(SHA256.HashData(read_stream));
             }
         }
 
         public static string getSHA2_384(FileInfo fi)
         {
-            using (SHA384 sha384 = SHA384.Create())
+            using (var read_stream = fi.OpenRead())
             {
-                /*if (!File.Exists(fi.FullName))
-                {
-                    Console.WriteLine(fi.FullName + "不存在！");
-                    return null;
-                }*/
-                using (var read_stream = fi.OpenRead())
-                {
-                    byte[] hashValue = sha384.ComputeHash(read_stream);
-                    return convertHashCodeBytes(hashValue);
-                }
+                return convertHashCodeBytes(SHA384.HashData(read_stream));
             }
         }
 
         public static string getSHA2_512(FileInfo fi)
         {
-            using (SHA512 sha512 = SHA512.Create())
+            using (var read_stream = fi.OpenRead())
             {
-                /*if (!File.Exists(fi.FullName))
-                {
-                    Console.WriteLine(fi.FullName + "不存在！");
-                    return null;
-                }*/
-                using (var read_stream = fi.OpenRead())
-                {
-                    byte[] hashValue = sha512.ComputeHash(read_stream);
-                    return convertHashCodeBytes(hashValue);
-                }
+                return convertHashCodeBytes(SHA512.HashData(read_stream));
             }
         }
 
@@ -150,21 +105,11 @@ namespace ConsoleApp1
 
         public static string getBLAKE2(FileInfo fi, string hash_type, string blake_path)
         {
-            /*if (!File.Exists(fi.FullName))
-            {
-                Console.WriteLine(fi.FullName + "不存在！");
-                return null;
-            }*/
             return Utilities.getBLAKEHash_CMD(blake_path, hash_type, fi.FullName).Split(" ")[0];
         }
 
         public static string getBLAKE3(FileInfo fi, string blake_path)
         {
-            /*if (!File.Exists(fi.FullName))
-            {
-                Console.WriteLine(fi.FullName + "不存在！");
-                return null;
-            }*/
             return Utilities.getBLAKEHash_CMD(blake_path, null, fi.FullName).Split(" ")[0];
         }
 

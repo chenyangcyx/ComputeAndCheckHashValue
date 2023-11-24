@@ -10,14 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="setting_demo.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="setting_demo.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Waher.Security.SHA3" Version="1.0.3" />
   </ItemGroup>
 
