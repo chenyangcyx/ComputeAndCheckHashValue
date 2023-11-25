@@ -10,6 +10,28 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="setting_demo.json" />
+    <None Remove="内嵌资源\blake2\b2sum-amd64-linux" />
+    <None Remove="内嵌资源\blake2\b2sum-amd64-windows.exe" />
+    <None Remove="内嵌资源\blake2\b2sum-i686-linux" />
+    <None Remove="内嵌资源\blake2\b2sum-i686-windows.exe" />
+    <None Remove="内嵌资源\blake3\b3sum_linux_x64_bin" />
+    <None Remove="内嵌资源\blake3\b3sum_macos_x64_bin" />
+    <None Remove="内嵌资源\blake3\b3sum_windows_x64_bin.exe" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="内嵌资源\blake2\b2sum-amd64-linux" />
+    <EmbeddedResource Include="内嵌资源\blake2\b2sum-amd64-windows.exe" />
+    <EmbeddedResource Include="内嵌资源\blake2\b2sum-i686-linux" />
+    <EmbeddedResource Include="内嵌资源\blake2\b2sum-i686-windows.exe" />
+    <EmbeddedResource Include="内嵌资源\blake3\b3sum_linux_x64_bin" />
+    <EmbeddedResource Include="内嵌资源\blake3\b3sum_macos_x64_bin" />
+    <EmbeddedResource Include="内嵌资源\blake3\b3sum_windows_x64_bin.exe" />
+    <EmbeddedResource Include="内嵌资源\setting_demo.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Waher.Security.SHA3" Version="1.0.3" />
   </ItemGroup>
 
