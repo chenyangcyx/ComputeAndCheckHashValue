@@ -1,4 +1,6 @@
-﻿namespace ConsoleApp1
+﻿using System.Runtime.InteropServices;
+
+namespace ConsoleApp1
 {
     internal class Program
     {
@@ -15,37 +17,10 @@
                 showErrmsgAndQuit("配置【check_folder_config_file】" + setting.check_folder_config_file + "不存在！");
             }
 
-            string programFolderPath = AppDomain.CurrentDomain.BaseDirectory;
-            // 检查blake程序是否存在
-            string blake2_exe_path1 = programFolderPath + setting.blake2_exe_path;
-            string blake2_exe_path2 = setting.blake2_exe_path;
-            if (File.Exists(blake2_exe_path1))
-            {
-                setting.blake2_exe_path = blake2_exe_path1;
-            }
-            else if (File.Exists(blake2_exe_path2))
-            {
-                setting.blake2_exe_path = blake2_exe_path2;
-            }
-            else
-            {
-                showErrmsgAndQuit("BLAKE2程序" + setting.blake2_exe_path + "不存在！");
-            }
-            string blake3_exe_path1 = programFolderPath + setting.blake3_exe_path;
-            string blake3_exe_path2 = setting.blake3_exe_path;
-            if (File.Exists(blake3_exe_path1))
-            {
-                setting.blake3_exe_path = blake3_exe_path1;
-            }
-            else if (File.Exists(blake3_exe_path2))
-            {
-                setting.blake3_exe_path = blake3_exe_path2;
-            }
-            else
-            {
-                showErrmsgAndQuit("BLAKE3程序" + setting.blake3_exe_path + "不存在！");
-            }
+            // 准备blake2和blake3程序
+            prepareBlakeProgram(setting);
 
+            string programFolderPath = AppDomain.CurrentDomain.BaseDirectory;
             // 读入检查目录内容
             string check_folder_path1 = programFolderPath + setting.check_folder_config_file;
             string check_folder_path2 = setting.check_folder_config_file;
@@ -147,6 +122,18 @@
 
         static void showErrmsgAndQuit(string errorMsg)
         {
+            // 清理temp目录
+            DirectoryInfo directory = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "temp"));
+            if (directory.Exists)
+            {
+                Console.WriteLine($"temp目录存在，清理目录：{directory.FullName}");
+                directory.Delete(true);
+            }
+            else
+            {
+                Console.WriteLine($"目录不存在，不需要清理：{directory.FullName}");
+            }
+            // 输出信息
             Console.WriteLine(errorMsg);
             while (true)
             {
@@ -381,6 +368,44 @@
             }
 
             return null;
+        }
+
+        static void prepareBlakeProgram(SettingStruct.SettingConfig setting)
+        {
+            string blake2Name = "", blake3Name = "";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                blake2Name = Utilities.EMBEDDED_RESOURCE_NAME_BLAKE2_AMD64_WINDOWS;
+                blake3Name = Utilities.EMBEDDED_RESOURCE_NAME_BLAKE3_AMD64_WINDOWS;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                blake2Name = Utilities.EMBEDDED_RESOURCE_NAME_BLAKE2_AMD64_LINUX;
+                blake3Name = Utilities.EMBEDDED_RESOURCE_NAME_BLAKE3_AMD64_LINUX;
+            }
+            else
+            {
+                showErrmsgAndQuit("当前系统暂不支持BLAKE程序！");
+            }
+
+            Stream blake2Stream = Utilities.getMainfestResourceStream(blake2Name);
+            Stream blake3Stream = Utilities.getMainfestResourceStream(blake3Name);
+
+            FileInfo blake2FileInfo = Utilities.copyEmbeddedResourceToTempFolder(blake2Stream, ["temp"], blake2Name);
+            FileInfo blake3FileInfo = Utilities.copyEmbeddedResourceToTempFolder(blake3Stream, ["temp"], blake3Name);
+
+            Console.WriteLine();
+            if (blake2FileInfo.Exists)
+            {
+                Console.WriteLine($">> 复制文件[{blake2Name}]到目标地址：{blake2FileInfo.FullName}");
+                setting.blake2_exe_path = blake2FileInfo.FullName;
+            }
+            if (blake3FileInfo.Exists)
+            {
+                Console.WriteLine($">> 复制文件[{blake3Name}]到目标地址：{blake3FileInfo.FullName}");
+                setting.blake3_exe_path = blake3FileInfo.FullName;
+            }
+            Console.WriteLine();
         }
     }
 }
