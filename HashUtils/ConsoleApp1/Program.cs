@@ -12,8 +12,7 @@
             // 检查check_folder_config_file是否存在
             if (!File.Exists(setting.check_folder_config_file))
             {
-                Console.WriteLine("配置【check_folder_config_file】" + setting.check_folder_config_file + "不存在！");
-                Environment.Exit(1);
+                showErrmsgAndQuit("配置【check_folder_config_file】" + setting.check_folder_config_file + "不存在！");
             }
 
             string programFolderPath = AppDomain.CurrentDomain.BaseDirectory;
@@ -30,8 +29,7 @@
             }
             else
             {
-                Console.WriteLine("BLAKE2程序" + setting.blake2_exe_path + "不存在！");
-                Environment.Exit(1);
+                showErrmsgAndQuit("BLAKE2程序" + setting.blake2_exe_path + "不存在！");
             }
             string blake3_exe_path1 = programFolderPath + setting.blake3_exe_path;
             string blake3_exe_path2 = setting.blake3_exe_path;
@@ -45,8 +43,7 @@
             }
             else
             {
-                Console.WriteLine("BLAKE3程序" + setting.blake3_exe_path + "不存在！");
-                Environment.Exit(1);
+                showErrmsgAndQuit("BLAKE3程序" + setting.blake3_exe_path + "不存在！");
             }
 
             // 读入检查目录内容
@@ -62,8 +59,7 @@
             }
             else
             {
-                Console.WriteLine("检查目录" + setting.check_folder_config_file + "不存在！");
-                Environment.Exit(1);
+                showErrmsgAndQuit("检查目录" + setting.check_folder_config_file + "不存在！");
             }
             List<string> check_folder_list = new List<string>();
             using (StreamReader stream_reader = new StreamReader(setting.check_folder_config_file, Utilities.utf8_encoding))
@@ -143,6 +139,22 @@
                     break;
                 default:
                     break;
+            }
+
+            // 默认不自动退出程序
+            showErrmsgAndQuit("");
+        }
+
+        static void showErrmsgAndQuit(string errorMsg)
+        {
+            Console.WriteLine(errorMsg);
+            while (true)
+            {
+                string input = Console.ReadLine();
+                if (input.Equals("00"))
+                {
+                    Environment.Exit(0);
+                }
             }
         }
 
@@ -358,16 +370,14 @@
             {
                 if (chooseNum == toChooseFiles.Count)
                 {
-                    Console.WriteLine("退出程序！");
-                    System.Environment.Exit(1);
+                    showErrmsgAndQuit("退出程序！");
                 }
                 Console.WriteLine($"选择了第【{chooseNum}】项: {toChooseFiles[chooseNum].Name}");
                 return toChooseFiles[chooseNum];
             }
             else
             {
-                Console.WriteLine("未选择有效的项目，退出程序！");
-                System.Environment.Exit(1);
+                showErrmsgAndQuit("未选择有效的项目，退出程序！");
             }
 
             return null;
