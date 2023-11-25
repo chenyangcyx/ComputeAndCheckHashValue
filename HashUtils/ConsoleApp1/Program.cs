@@ -124,6 +124,7 @@ namespace ConsoleApp1
         {
             // 清理temp目录
             DirectoryInfo directory = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "temp"));
+            Console.Write("\n\n");
             if (directory.Exists)
             {
                 Console.WriteLine($"temp目录存在，清理目录：{directory.FullName}");
