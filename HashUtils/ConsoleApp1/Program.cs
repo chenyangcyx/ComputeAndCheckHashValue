@@ -4,18 +4,15 @@
     {
         static void Main(string[] args)
         {
-            if (args.Length == 0 || !File.Exists(args[0]))
-            {
-                Console.WriteLine("没有输入配置文件！");
-                Environment.Exit(1);
-            }
-            SettingStruct.SettingConfig setting = Utilities.getSetting(args[0]);
+            // 获取配置文件
+            FileInfo programSettingFileinfo = getSettingFile(args);
+            SettingStruct.SettingConfig setting = Utilities.getSetting(programSettingFileinfo.FullName);
 
             // 检查设置选项
             // 检查check_folder_config_file是否存在
             if (!File.Exists(setting.check_folder_config_file))
             {
-                Console.WriteLine("hash文件夹配置文件" + setting.check_folder_config_file + "不存在！");
+                Console.WriteLine("配置【check_folder_config_file】" + setting.check_folder_config_file + "不存在！");
                 Environment.Exit(1);
             }
 
@@ -136,11 +133,11 @@
                     Console.WriteLine("选择了：[2] 校验文件hash\n");
                     Controller.checkHash(setting, check_folder_list, hash_method_name, verify_method_use);
                     break;
-                    case "3":
+                case "3":
                     Console.WriteLine("选择了：[3] 查看并输出setting文件demo\n");
 
                     break;
-                    case "4":
+                case "4":
                     Console.WriteLine("选择了：[4] 查看当前系统信息\n");
                     Controller.checkSystemInfo();
                     break;
@@ -322,6 +319,58 @@
                 verify_method_use.Add(true);
             else
                 verify_method_use.Add(false);
+        }
+
+        static FileInfo getSettingFile(string[] args)
+        {
+            // 如果运行参数中给出且文件存在 则直接返回
+            if (args.Length > 0 && File.Exists(args[0]))
+            {
+                return new FileInfo(args[0]);
+            }
+            // 其他情况，读取程序所在目录下所有的.json/.txt文件 提供给用户选择
+            List<FileInfo> allFolderFiles = new List<FileInfo>(new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).GetFiles());
+            List<FileInfo> toChooseFiles = new List<FileInfo>();
+            foreach (FileInfo file in allFolderFiles)
+            {
+                if (file.Name.ToLower().EndsWith(".json") || file.Name.ToLower().EndsWith(".txt"))
+                {
+                    toChooseFiles.Add(file);
+                }
+            }
+            // 输出提示，让用户选择
+            Console.WriteLine($"未能够自动找到合适的配置文件，找到{toChooseFiles.Count}个目录下文件：");
+            for (int index = 0; index < toChooseFiles.Count + 1; index++)
+            {
+                if (index == toChooseFiles.Count)
+                {
+                    Console.WriteLine($"【{index}】 退出");
+                }
+                else
+                {
+                    Console.WriteLine($"【{index}】 {toChooseFiles[index].Name}");
+                }
+            }
+            Console.Write("请选择要执行的操作：");
+            string chooseInput = Console.ReadLine();
+            int chooseNum = int.Parse(chooseInput);
+            if (chooseNum >= 0 && chooseNum <= toChooseFiles.Count)
+            {
+                if (chooseNum == toChooseFiles.Count)
+                {
+                    Console.WriteLine("退出程序！");
+                    System.Environment.Exit(1);
+                }
+                Console.WriteLine($"选择了第【{chooseNum}】项: {toChooseFiles[chooseNum].Name}");
+                return toChooseFiles[chooseNum];
+            }
+            else
+            {
+                Console.WriteLine("未选择有效的项目，退出程序！");
+                System.Environment.Exit(1);
+            }
+
+            return null;
         }
     }
 }

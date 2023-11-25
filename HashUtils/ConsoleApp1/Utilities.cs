@@ -34,11 +34,6 @@ namespace ConsoleApp1
 
         public static SettingStruct.SettingConfig getSetting(string path)
         {
-            if (!File.Exists(path))
-            {
-                Console.WriteLine("文件：" + path + "不存在，退出！");
-                Environment.Exit(2333);
-            }
             return JsonSerializer.Deserialize(File.ReadAllText(path), SettingStructJsonContext.Default.SettingConfig);
         }
 
