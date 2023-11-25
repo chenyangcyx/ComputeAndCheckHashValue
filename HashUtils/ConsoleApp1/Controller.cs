@@ -1,4 +1,6 @@
-﻿namespace ConsoleApp1
+﻿using System.Security.Cryptography;
+
+namespace ConsoleApp1
 {
     internal class Controller
     {
@@ -325,6 +327,12 @@
             Console.WriteLine("[.NET version] " + System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription);
             Console.WriteLine("[Process Architecture] " + System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture);
             Console.WriteLine("[OS Architecture] " + System.Runtime.InteropServices.RuntimeInformation.OSArchitecture);
+            Console.WriteLine();
+            Console.WriteLine("[.NET SHA3_256] " + (SHA3_256.IsSupported ? "√√ Supported" : "×× Unsupported"));
+            Console.WriteLine("[.NET SHA3_384] " + (SHA3_384.IsSupported ? "√√ Supported" : "×× Unsupported"));
+            Console.WriteLine("[.NET SHA3_512] " + (SHA3_512.IsSupported ? "√√ Supported" : "×× Unsupported"));
+            Console.WriteLine("[.NET Shake128] " + (Shake128.IsSupported ? "√√ Supported" : "×× Unsupported"));
+            Console.WriteLine("[.NET Shake256] " + (Shake256.IsSupported ? "√√ Supported" : "×× Unsupported"));
         }
     }
 
