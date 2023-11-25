@@ -346,7 +346,22 @@ namespace ConsoleApp1
 
         public static void showAndOutputSettingDemo()
         {
+            // 屏幕输出文件
+            using (StreamReader reader = new StreamReader(Utilities.getMainfestResourceStream(Utilities.EMBEDDED_RESOURCE_NAME_SETTING_DEMO_JSON)))
+            {
+                string content = reader.ReadToEnd();
+                Console.WriteLine(content);
+            }
 
+            // 复制文件到指定的目录下
+            using (Stream stream = Utilities.getMainfestResourceStream(Utilities.EMBEDDED_RESOURCE_NAME_SETTING_DEMO_JSON))
+            {
+                FileInfo result = Utilities.copyEmbeddedResourceToTempFolder(stream, new List<string>(), Utilities.EMBEDDED_RESOURCE_NAME_SETTING_TARGET_JSON.Replace("{}", string.Format("{0:yyyyMMddHHmmss}", DateTime.Now)));
+                if (result.Exists)
+                {
+                    Console.WriteLine($"\n文件复制成功，地址：{result.FullName}");
+                }
+            }
         }
     }
 

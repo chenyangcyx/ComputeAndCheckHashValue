@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
@@ -26,6 +27,13 @@ namespace ConsoleApp1
 
         public const int SHAKE128_SIZE = 128 * 2;
         public const int SHAKE256_SIZE = 256 * 2;
+
+        public const string EMBEDDED_RESOURCE_NAME_BLAKE2_AMD64_LINUX = "b2sum-amd64-linux";
+        public const string EMBEDDED_RESOURCE_NAME_BLAKE2_AMD64_WINDOWS = "b2sum-amd64-windows.exe";
+        public const string EMBEDDED_RESOURCE_NAME_BLAKE3_AMD64_LINUX = "b3sum_linux_x64_bin";
+        public const string EMBEDDED_RESOURCE_NAME_BLAKE3_AMD64_WINDOWS = "b3sum_windows_x64_bin.exe";
+        public const string EMBEDDED_RESOURCE_NAME_SETTING_DEMO_JSON = "setting_demo.json";
+        public const string EMBEDDED_RESOURCE_NAME_SETTING_TARGET_JSON = "setting_demo_{}.json";
 
         public static UTF8Encoding utf8_encoding = new UTF8Encoding(false);
         public const string HASH_FILE_NAME = "hash.txt";
@@ -230,6 +238,49 @@ namespace ConsoleApp1
             result.Add(name, hash_result);
 
             return result;
+        }
+
+        public static Stream getMainfestResourceStream(string fileName)
+        {
+            string[] resourceNames = Assembly.GetExecutingAssembly().GetManifestResourceNames();
+            foreach (string item in resourceNames)
+            {
+                if (item.EndsWith(fileName))
+                {
+                    return Assembly.GetExecutingAssembly().GetManifestResourceStream(item);
+                }
+            }
+            return null;
+        }
+
+        public static FileInfo copyEmbeddedResourceToTempFolder(Stream stream, List<string> appendFolderName, string targetFileName)
+        {
+            List<string> toCombinePath =
+            [
+                AppDomain.CurrentDomain.BaseDirectory,
+                .. appendFolderName,
+                targetFileName,
+            ];
+            // 要复制到的目录
+            string path = Path.Combine(toCombinePath.ToArray());
+            FileInfo fileInfo = new FileInfo(path);
+            // 创建目录
+            DirectoryInfo directoryInfo = fileInfo.Directory;
+            if (!directoryInfo.Exists)
+            {
+                directoryInfo.Create();
+            }
+            // 复制文件
+            using (Stream output = File.Create(path))
+            {
+                stream.CopyTo(output);
+            }
+            // 判断是否复制成功
+            if (fileInfo.Exists)
+            {
+                return fileInfo;
+            }
+            return null;
         }
     }
 }

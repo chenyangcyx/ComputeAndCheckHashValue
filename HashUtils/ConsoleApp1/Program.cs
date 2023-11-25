@@ -131,7 +131,7 @@
                     break;
                 case "3":
                     Console.WriteLine("选择了：[3] 查看并输出setting文件demo\n");
-
+                    Controller.showAndOutputSettingDemo();
                     break;
                 case "4":
                     Console.WriteLine("选择了：[4] 查看当前系统信息\n");
