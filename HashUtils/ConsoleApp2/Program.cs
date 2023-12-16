@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace ConsoleApp2
 {
@@ -17,7 +16,7 @@ namespace ConsoleApp2
                 // 检查check_folder_config_file是否存在
                 if (!File.Exists(setting.check_folder_config_file))
                 {
-                    showErrmsgAndQuit("配置【check_folder_config_file】" + setting.check_folder_config_file + "不存在！");
+                    throw new Exception("配置【check_folder_config_file】" + setting.check_folder_config_file + "不存在！");
                 }
 
                 // 准备blake2和blake3程序
@@ -37,7 +36,7 @@ namespace ConsoleApp2
                 }
                 else
                 {
-                    showErrmsgAndQuit("检查目录" + setting.check_folder_config_file + "不存在！");
+                    throw new Exception("检查目录" + setting.check_folder_config_file + "不存在！");
                 }
                 List<string> check_folder_list = new List<string>();
                 using (StreamReader stream_reader = new StreamReader(setting.check_folder_config_file, Utilities.utf8_encoding))
@@ -118,44 +117,37 @@ namespace ConsoleApp2
                     default:
                         break;
                 }
-
-                // 默认不自动退出程序
-                showErrmsgAndQuit("");
             }catch(Exception e)
             {
-                Console.WriteLine($"程序运行时发生异常，异常消息：{e.Message}");
-                Console.WriteLine($"异常来源：{e.Source}");
-                Console.WriteLine($"异常数据：{e.ToString}");
-                Console.WriteLine($"异常详细信息如下：");
+                Console.WriteLine("\n##### 程序运行时发生异常异常消息 #####");
+                Console.WriteLine($"【异常消息】{e.Message}");
+                Console.WriteLine($"【异常来源】{e.Source}");
+                Console.WriteLine($"【异常详细信息】");
                 Console.WriteLine(e.StackTrace);
             }
             finally
             {
-            }
-        }
-
-        static void showErrmsgAndQuit(string errorMsg)
-        {
-            // 清理temp目录
-            DirectoryInfo directory = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "temp"));
-            Console.Write("\n\n");
-            if (directory.Exists)
-            {
-                Console.WriteLine($"temp目录存在，清理目录：{directory.FullName}");
-                directory.Delete(true);
-            }
-            else
-            {
-                Console.WriteLine($"目录不存在，不需要清理：{directory.FullName}");
-            }
-            // 输出信息
-            Console.WriteLine(errorMsg);
-            while (true)
-            {
-                string input = Console.ReadLine();
-                if (input.Equals("00"))
+                // 清理temp目录
+                DirectoryInfo directory = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "temp"));
+                Console.Write("\n\n********************************\n**********程序运行结束**********\n********************************\n\n");
+                if (directory.Exists)
                 {
-                    Environment.Exit(0);
+                    Console.WriteLine($"temp目录存在，清理目录：{directory.FullName}");
+                    directory.Delete(true);
+                }
+                else
+                {
+                    Console.WriteLine($"目录不存在，不需要清理：{directory.FullName}");
+                }
+
+                // 输出信息，直至输入00完全退出
+                while (true)
+                {
+                    string input = Console.ReadLine();
+                    if (input.Equals("00"))
+                    {
+                        Environment.Exit(0);
+                    }
                 }
             }
         }
@@ -372,17 +364,15 @@ namespace ConsoleApp2
             {
                 if (chooseNum == toChooseFiles.Count)
                 {
-                    showErrmsgAndQuit("退出程序！");
+                    throw new Exception("退出程序！");
                 }
                 Console.WriteLine($"选择了第【{chooseNum}】项: {toChooseFiles[chooseNum].Name}");
                 return toChooseFiles[chooseNum];
             }
             else
             {
-                showErrmsgAndQuit("未选择有效的项目，退出程序！");
+                throw new Exception("未选择有效的项目，退出程序！");
             }
-
-            return null;
         }
 
         static void prepareBlakeProgram(SettingStruct.SettingConfig setting)
@@ -400,7 +390,7 @@ namespace ConsoleApp2
             }
             else
             {
-                showErrmsgAndQuit("当前系统暂不支持BLAKE程序！");
+                throw new Exception("当前系统暂不支持BLAKE程序！");
             }
 
             Stream blake2Stream = Utilities.getMainfestResourceStream(blake2Name);
