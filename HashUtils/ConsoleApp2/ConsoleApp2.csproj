@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="embedded_resource\blake2\b2sum-amd64-linux" />
+    <None Remove="embedded_resource\blake2\b2sum-amd64-windows.exe" />
+    <None Remove="embedded_resource\blake3\b3sum_linux_x64_bin" />
+    <None Remove="embedded_resource\blake3\b3sum_windows_x64_bin.exe" />
+    <None Remove="embedded_resource\setting_demo.json" />
+    <None Remove="README" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="README" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="embedded_resource\blake2\b2sum-amd64-linux" />
+    <EmbeddedResource Include="embedded_resource\blake2\b2sum-amd64-windows.exe" />
+    <EmbeddedResource Include="embedded_resource\blake3\b3sum_linux_x64_bin" />
+    <EmbeddedResource Include="embedded_resource\blake3\b3sum_windows_x64_bin.exe" />
+    <EmbeddedResource Include="embedded_resource\setting_demo.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Waher.Security.SHA3" Version="1.0.3" />
+  </ItemGroup>
+
+</Project>
