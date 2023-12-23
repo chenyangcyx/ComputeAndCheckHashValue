@@ -1,0 +1,7 @@
+﻿【UPDATE】
+
+
+
+【TODO】
+1. 根据系统版本配置，动态选择SHA3以及shake算法的实现来源
+2. blake2和blake3程序地址，不应该在setting中设置
