@@ -8,6 +8,7 @@ namespace ConsoleApp2
 {
     internal class Utilities
     {
+        /** hash方法名称 START */
         public const string MD5_NAME = "MD5";
         public const string SHA1_NAME = "SHA1";
         public const string SHA2_256_NAME = "SHA2-256";
@@ -24,21 +25,32 @@ namespace ConsoleApp2
         public const string BLAKE2bp_NAME = "BLAKE2bp";
         public const string BLAKE2sp_NAME = "BLAKE2sp";
         public const string BLAKE3_NAME = "BLAKE3";
+        /** hash方法名称 END */
 
+        /** hash方法参数 START */
         public const int SHAKE128_SIZE = 128 * 2;
         public const int SHAKE256_SIZE = 256 * 2;
+        /** hash方法参数 END */
 
+        /** 程序内嵌文件名称 START */
         public const string EMBEDDED_RESOURCE_NAME_BLAKE2_AMD64_LINUX = "b2sum-amd64-linux";
         public const string EMBEDDED_RESOURCE_NAME_BLAKE2_AMD64_WINDOWS = "b2sum-amd64-windows.exe";
         public const string EMBEDDED_RESOURCE_NAME_BLAKE3_AMD64_LINUX = "b3sum_linux_x64_bin";
         public const string EMBEDDED_RESOURCE_NAME_BLAKE3_AMD64_WINDOWS = "b3sum_windows_x64_bin.exe";
         public const string EMBEDDED_RESOURCE_NAME_SETTING_DEMO_JSON = "setting_demo.json";
         public const string EMBEDDED_RESOURCE_NAME_SETTING_TARGET_JSON = "setting_demo_{}.json";
+        /** 程序内嵌文件名称 END */
 
+        /** 程序运行常量 START */
         public static UTF8Encoding utf8_encoding = new UTF8Encoding(false);
         public const string HASH_FILE_NAME = "hash.txt";
         public const string HASH_FILE_SPLIT_LINE_CONTENT = "----------------------------------------";
         public const string HASH_FILE_FILE_NAME_START = "[name] ";
+        /** 程序运行常量 START */
+
+        /** 程序运行必要参数（运行前必须设置） START */
+        public static string PROGRAM_RUNNING_PARAM_TEMP_FOLDER = null;
+        /** 程序运行必要参数（运行前必须设置） END */
 
         public static SettingStruct.SettingConfig getSetting(string path)
         {
