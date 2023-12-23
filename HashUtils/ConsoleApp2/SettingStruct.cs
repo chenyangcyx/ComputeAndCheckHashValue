@@ -3,9 +3,6 @@ using static ConsoleApp2.SettingStruct;
 
 namespace ConsoleApp2
 {
-    [JsonSerializable(typeof(SettingConfig))]
-    internal partial class SettingStructJsonContext : JsonSerializerContext { }
-
     internal class SettingStruct
     {
         public class SettingConfig

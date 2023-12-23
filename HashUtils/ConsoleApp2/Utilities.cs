@@ -55,7 +55,7 @@ namespace ConsoleApp2
 
         public static SettingStruct.SettingConfig getSetting(string path)
         {
-            return JsonSerializer.Deserialize(File.ReadAllText(path), SettingStructJsonContext.Default.SettingConfig);
+            return JsonSerializer.Deserialize<SettingStruct.SettingConfig>(File.ReadAllText(path));
         }
 
         private static string runCMD_Linux(string cmd)
