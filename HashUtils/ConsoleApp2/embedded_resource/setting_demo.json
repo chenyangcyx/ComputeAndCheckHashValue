@@ -1,6 +1,5 @@
 ﻿{
   "check_folder_config_file": "checkFolder.txt",
-  "forecast_remain_time": 1,
   "generate_method": {
     "md5": 1,
     "sha1": 1,

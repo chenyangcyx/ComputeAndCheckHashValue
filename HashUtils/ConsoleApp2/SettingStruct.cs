@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using static ConsoleApp2.SettingStruct;
 
 namespace ConsoleApp2
 {
@@ -21,9 +20,6 @@ namespace ConsoleApp2
 
             [JsonPropertyName("verify_method")]
             public Hash_Method verify_method { get; set; }
-
-            [JsonPropertyName("forecast_remain_time")]
-            public int forecast_remain_time { get; set; }
         }
 
         public class Hash_Method

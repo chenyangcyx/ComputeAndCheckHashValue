@@ -87,8 +87,6 @@ namespace ConsoleApp2
                 }
                 Console.WriteLine(string.Join(", ", verifyMethodList));
 
-                Console.WriteLine("## forecast_remain_time: " + (setting.forecast_remain_time == 1));
-
                 // 选择运行模式
                 Console.WriteLine("请选择程序的运行模式：");
                 Console.WriteLine("[1] 生成hash文件");
