@@ -105,12 +105,12 @@ namespace ConsoleApp3
 
         public static string getBLAKE2(FileInfo fi, string hash_type, string blake_path)
         {
-            return Utilities.getBLAKEHash_CMD(blake_path, hash_type, fi.FullName).Split(" ")[0];
+            return Utilities.getBLAKEHash_CMD(blake_path, hash_type, fi.FullName)!.Split(" ")[0];
         }
 
         public static string getBLAKE3(FileInfo fi, string blake_path)
         {
-            return Utilities.getBLAKEHash_CMD(blake_path, null, fi.FullName).Split(" ")[0];
+            return Utilities.getBLAKEHash_CMD(blake_path, null, fi.FullName)!.Split(" ")[0];
         }
 
         public static string getHashByName(string hash_method, string path, SettingStruct.SettingConfig setting)
@@ -140,17 +140,17 @@ namespace ConsoleApp3
                 case Utilities.SHAKE256_NAME:
                     return getSHAKE256(new FileInfo(path));
                 case Utilities.BLAKE2b_NAME:
-                    return getBLAKE2(new FileInfo(path), "blake2b", setting.blake2_exe_path);
+                    return getBLAKE2(new FileInfo(path), "blake2b", setting.blake2_exe_path!);
                 case Utilities.BLAKE2s_NAME:
-                    return getBLAKE2(new FileInfo(path), "blake2s", setting.blake2_exe_path);
+                    return getBLAKE2(new FileInfo(path), "blake2s", setting.blake2_exe_path!);
                 case Utilities.BLAKE2bp_NAME:
-                    return getBLAKE2(new FileInfo(path), "blake2bp", setting.blake2_exe_path);
+                    return getBLAKE2(new FileInfo(path), "blake2bp", setting.blake2_exe_path!);
                 case Utilities.BLAKE2sp_NAME:
-                    return getBLAKE2(new FileInfo(path), "blake2sp", setting.blake2_exe_path);
+                    return getBLAKE2(new FileInfo(path), "blake2sp", setting.blake2_exe_path!);
                 case Utilities.BLAKE3_NAME:
-                    return getBLAKE3(new FileInfo(path), setting.blake3_exe_path);
+                    return getBLAKE3(new FileInfo(path), setting.blake3_exe_path!);
             }
-            return null;
+            throw new Exception($"不支持的hash方法[{hash_method}]");
         }
 
         public static string convertHashCodeBytes(byte[] hashvalue)

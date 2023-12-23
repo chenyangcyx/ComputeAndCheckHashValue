@@ -173,7 +173,7 @@ namespace ConsoleApp3
                 {
                     while (!stream_reader.EndOfStream)
                     {
-                        string line = stream_reader.ReadLine();
+                        string line = stream_reader.ReadLine()!;
                         if (string.IsNullOrEmpty(line))
                         {
                             continue;

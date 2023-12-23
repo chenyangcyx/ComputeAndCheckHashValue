@@ -7,19 +7,19 @@ namespace ConsoleApp3
         public class SettingConfig
         {
             [JsonPropertyName("check_folder_config_file")]
-            public string check_folder_config_file { get; set; }
-
-            [JsonPropertyName("blake2_exe_path")]
-            public string blake2_exe_path { get; set; }
-
-            [JsonPropertyName("blake3_exe_path")]
-            public string blake3_exe_path { get; set; }
+            public required string check_folder_config_file { get; set; }
 
             [JsonPropertyName("generate_method")]
-            public Hash_Method generate_method { get; set; }
+            public required Hash_Method generate_method { get; set; }
 
             [JsonPropertyName("verify_method")]
-            public Hash_Method verify_method { get; set; }
+            public required Hash_Method verify_method { get; set; }
+
+            [JsonPropertyName("blake2_exe_path")]
+            public string? blake2_exe_path { get; set; }
+
+            [JsonPropertyName("blake3_exe_path")]
+            public string? blake3_exe_path { get; set; }
         }
 
         public class Hash_Method

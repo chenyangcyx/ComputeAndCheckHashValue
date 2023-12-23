@@ -49,13 +49,13 @@ namespace ConsoleApp3
         /** 程序运行常量 START */
 
         /** 程序运行必要参数（运行前必须设置） START */
-        public static string PROGRAM_RUNNING_PARAM_TEMP_FOLDER_NAME = null;
-        public static string PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH = null;
+        public static string? PROGRAM_RUNNING_PARAM_TEMP_FOLDER_NAME;
+        public static string? PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH;
         /** 程序运行必要参数（运行前必须设置） END */
 
         public static SettingStruct.SettingConfig getSetting(string path)
         {
-            return JsonSerializer.Deserialize<SettingStruct.SettingConfig>(File.ReadAllText(path));
+            return JsonSerializer.Deserialize<SettingStruct.SettingConfig>(File.ReadAllText(path))!;
         }
 
         private static string runCMD_Linux(string cmd)
@@ -73,7 +73,7 @@ namespace ConsoleApp3
                 {
                     while (!sr.EndOfStream)
                     {
-                        string _t = sr.ReadLine();
+                        string? _t = sr.ReadLine();
                         sb.Append(_t + '\n');
                     }
                 }
@@ -98,7 +98,7 @@ namespace ConsoleApp3
                 {
                     while (!sr.EndOfStream)
                     {
-                        string _t = sr.ReadLine();
+                        string? _t = sr.ReadLine();
                         sb.Append(_t + '\n');
                     }
                 }
@@ -122,9 +122,8 @@ namespace ConsoleApp3
             new DirectoryInfo(path).Create();
         }
 
-        public static string getBLAKEHash_CMD(string blake_path, string type, string file_path)
+        public static string? getBLAKEHash_CMD(string blake_path, string? type, string file_path)
         {
-            string result = null;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 if (type == null)
@@ -139,7 +138,7 @@ namespace ConsoleApp3
                 else
                     return runCMD_Windows(blake_path, $"-a {type} \"{file_path}\"");
             }
-            return result;
+            return null;
         }
 
         public static void setAllFolderInfo(Dictionary<string, List<FileInfo>> local_all_file_dic_list, List<string> check_folder_list)
@@ -169,7 +168,7 @@ namespace ConsoleApp3
         public static Dictionary<string, Dictionary<string, string>> getHashResultDict(List<string> all_line_list)
         {
             Dictionary<string, Dictionary<string, string>> result = new Dictionary<string, Dictionary<string, string>>();
-            string name = null;
+            string? name = null;
             Dictionary<string, string> hash_result = new Dictionary<string, string>();
             foreach (var line in all_line_list)
             {
@@ -242,13 +241,13 @@ namespace ConsoleApp3
                 // 间隔标签
                 else if (line.Equals(HASH_FILE_SPLIT_LINE_CONTENT))
                 {
-                    result.Add(name, new Dictionary<string, string>(hash_result));
+                    result.Add(name!, new Dictionary<string, string>(hash_result));
                     name = null;
                     hash_result.Clear();
                 }
             }
             // 最后仍有一次记录未被写入
-            result.Add(name, hash_result);
+            result.Add(name!, hash_result);
 
             return result;
         }
@@ -260,10 +259,10 @@ namespace ConsoleApp3
             {
                 if (item.EndsWith(fileName))
                 {
-                    return Assembly.GetExecutingAssembly().GetManifestResourceStream(item);
+                    return Assembly.GetExecutingAssembly().GetManifestResourceStream(item)!;
                 }
             }
-            return null;
+            throw new Exception($"内嵌文件[{fileName}]不存在");
         }
 
         public static FileInfo copyEmbeddedResourceToTempFolder(Stream stream, List<string> appendFolderName, string targetFileName)
@@ -278,7 +277,7 @@ namespace ConsoleApp3
             string path = Path.Combine(toCombinePath.ToArray());
             FileInfo fileInfo = new FileInfo(path);
             // 创建目录
-            DirectoryInfo directoryInfo = fileInfo.Directory;
+            DirectoryInfo directoryInfo = fileInfo.Directory!;
             if (!directoryInfo.Exists)
             {
                 directoryInfo.Create();
@@ -293,7 +292,10 @@ namespace ConsoleApp3
             {
                 return fileInfo;
             }
-            return null;
+            else
+            {
+                throw new Exception($"复制内嵌文件失败{targetFileName}");
+            }
         }
     }
 }

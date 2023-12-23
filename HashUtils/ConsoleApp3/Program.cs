@@ -43,7 +43,7 @@ namespace ConsoleApp3
                 {
                     while (!stream_reader.EndOfStream)
                     {
-                        string line = stream_reader.ReadLine();
+                        string line = stream_reader.ReadLine()!;
                         if (string.IsNullOrEmpty(line))
                         {
                             continue;
@@ -93,7 +93,7 @@ namespace ConsoleApp3
                 Console.WriteLine("[2] 校验文件hash");
                 Console.WriteLine("[3] 查看并输出setting文件demo");
                 Console.WriteLine("[4] 查看NET8功能支持情况");
-                string chooseNo = Console.ReadLine();
+                string chooseNo = Console.ReadLine()!;
                 switch (chooseNo)
                 {
                     case "1":
@@ -127,7 +127,7 @@ namespace ConsoleApp3
             finally
             {
                 // 清理temp目录
-                DirectoryInfo directory = new DirectoryInfo(Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH);
+                DirectoryInfo directory = new DirectoryInfo(Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH!);
                 Console.Write("\n\n********************************\n**********程序运行结束**********\n********************************\n\n");
                 if (directory.Exists)
                 {
@@ -142,7 +142,7 @@ namespace ConsoleApp3
                 // 输出信息，直至输入00完全退出
                 while (true)
                 {
-                    string input = Console.ReadLine();
+                    string input = Console.ReadLine()!;
                     if (input.Equals("00"))
                     {
                         Environment.Exit(0);
@@ -357,7 +357,7 @@ namespace ConsoleApp3
                 }
             }
             Console.Write("请选择要执行的操作：");
-            string chooseInput = Console.ReadLine();
+            string chooseInput = Console.ReadLine()!;
             int chooseNum = int.Parse(chooseInput);
             if (chooseNum >= 0 && chooseNum <= toChooseFiles.Count)
             {
