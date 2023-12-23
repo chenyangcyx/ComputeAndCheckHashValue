@@ -126,17 +126,20 @@ namespace ConsoleApp3
             }
             finally
             {
-                // 清理temp目录
-                DirectoryInfo directory = new DirectoryInfo(Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH!);
                 Console.Write("\n\n********************************\n**********程序运行结束**********\n********************************\n\n");
-                if (directory.Exists)
+                // 清理temp目录
+                if (Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH != null)
                 {
-                    Console.WriteLine($"temp目录存在，清理目录：{directory.FullName}");
-                    directory.Delete(true);
-                }
-                else
-                {
-                    Console.WriteLine($"目录不存在，不需要清理：{directory.FullName}");
+                    DirectoryInfo directory = new DirectoryInfo(Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH);
+                    if (directory.Exists)
+                    {
+                        Console.WriteLine($"temp目录存在，清理目录：{directory.FullName}");
+                        directory.Delete(true);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"目录不存在，不需要清理：{directory.FullName}");
+                    }
                 }
 
                 // 输出信息，直至输入00完全退出
@@ -340,9 +343,25 @@ namespace ConsoleApp3
             {
                 if (file.Name.ToLower().EndsWith(".json") || file.Name.ToLower().EndsWith(".txt"))
                 {
-                    toChooseFiles.Add(file);
+                    // 对于toChooseFiles中的文件逐个反序列化尝试看是否是符合标准的配置文件
+                    try
+                    {
+                        Utilities.getSetting(file.FullName);
+                        toChooseFiles.Add(file);
+                    }
+                    catch (Exception)
+                    {
+                        continue;
+                    }
                 }
             }
+            // 如果没有符合条件的配置文件，则直接退出
+            if (toChooseFiles.Count == 0)
+            {
+                Console.WriteLine($"程序目录下没有找到符合配置文件格式的文件！");
+                throw new Exception("程序目录下没有找到符合配置文件格式的文件");
+            }
+
             // 输出提示，让用户选择
             Console.WriteLine($"未能够自动找到合适的配置文件，找到{toChooseFiles.Count}个目录下文件：");
             for (int index = 0; index < toChooseFiles.Count + 1; index++)
