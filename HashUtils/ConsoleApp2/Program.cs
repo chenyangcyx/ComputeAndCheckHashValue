@@ -19,8 +19,8 @@ namespace ConsoleApp2
                     throw new Exception("配置【check_folder_config_file】" + setting.check_folder_config_file + "不存在！");
                 }
 
-                // 准备blake2和blake3程序
-                prepareBlakeProgram(setting);
+                // 准备程序运行必要的文件和参数
+                prepareProgram(setting);
 
                 string programFolderPath = AppDomain.CurrentDomain.BaseDirectory;
                 // 读入检查目录内容
@@ -117,7 +117,8 @@ namespace ConsoleApp2
                     default:
                         break;
                 }
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Console.WriteLine("\n##### 程序运行时发生异常异常消息 #####");
                 Console.WriteLine($"【异常消息】{e.Message}");
@@ -128,7 +129,7 @@ namespace ConsoleApp2
             finally
             {
                 // 清理temp目录
-                DirectoryInfo directory = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "temp"));
+                DirectoryInfo directory = new DirectoryInfo(Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH);
                 Console.Write("\n\n********************************\n**********程序运行结束**********\n********************************\n\n");
                 if (directory.Exists)
                 {
@@ -375,9 +376,14 @@ namespace ConsoleApp2
             }
         }
 
-        static void prepareBlakeProgram(SettingStruct.SettingConfig setting)
+        static void prepareProgram(SettingStruct.SettingConfig setting)
         {
-            string blake2Name = "", blake3Name = "";
+            // 生成程序此次运行的临时目录名称
+            Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_NAME = Guid.NewGuid().ToString().Replace("-", "");
+            Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_NAME);
+
+            // 复制BLAKE程序到临时目录下
+            string blake2Name, blake3Name;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 blake2Name = Utilities.EMBEDDED_RESOURCE_NAME_BLAKE2_AMD64_WINDOWS;
@@ -396,8 +402,8 @@ namespace ConsoleApp2
             Stream blake2Stream = Utilities.getMainfestResourceStream(blake2Name);
             Stream blake3Stream = Utilities.getMainfestResourceStream(blake3Name);
 
-            FileInfo blake2FileInfo = Utilities.copyEmbeddedResourceToTempFolder(blake2Stream, ["temp"], blake2Name);
-            FileInfo blake3FileInfo = Utilities.copyEmbeddedResourceToTempFolder(blake3Stream, ["temp"], blake3Name);
+            FileInfo blake2FileInfo = Utilities.copyEmbeddedResourceToTempFolder(blake2Stream, new List<string>() { Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_NAME }, blake2Name);
+            FileInfo blake3FileInfo = Utilities.copyEmbeddedResourceToTempFolder(blake3Stream, new List<string>() { Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_NAME }, blake3Name);
 
             Console.WriteLine();
             if (blake2FileInfo.Exists)

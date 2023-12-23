@@ -49,7 +49,8 @@ namespace ConsoleApp2
         /** 程序运行常量 START */
 
         /** 程序运行必要参数（运行前必须设置） START */
-        public static string PROGRAM_RUNNING_PARAM_TEMP_FOLDER = null;
+        public static string PROGRAM_RUNNING_PARAM_TEMP_FOLDER_NAME = null;
+        public static string PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH = null;
         /** 程序运行必要参数（运行前必须设置） END */
 
         public static SettingStruct.SettingConfig getSetting(string path)
