@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 
 namespace ConsoleApp3
 {
@@ -395,6 +396,10 @@ namespace ConsoleApp3
 
         static void prepareProgram(SettingStruct.SettingConfig setting)
         {
+            // 检测是否可以使用NET原生支持的SHAKE和SHA3算法实现
+            Utilities.CAN_USE_NET_SHAKE_ALGORITHM = Shake128.IsSupported && Shake256.IsSupported;
+            Utilities.CAN_USE_NET_SHA3_ALGORITHM = SHA3_256.IsSupported && SHA3_384.IsSupported && SHA3_512.IsSupported;
+
             // 生成程序此次运行的临时目录名称
             Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_NAME = Guid.NewGuid().ToString().Replace("-", "");
             Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_NAME);

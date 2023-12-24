@@ -27,6 +27,8 @@ namespace ConsoleApp3
         public const string BLAKE3_NAME = "BLAKE3";
         public const int SHAKE128_SIZE = 128 * 2;
         public const int SHAKE256_SIZE = 256 * 2;
+        public static bool CAN_USE_NET_SHAKE_ALGORITHM = false;
+        public static bool CAN_USE_NET_SHA3_ALGORITHM = false;
         /** hash方法名称参数 END */
 
         /** BLAKE程序路径 */
