@@ -57,8 +57,8 @@ namespace ConsoleApp3
                 int no = 0;
                 foreach (var path in check_folder_list)
                     Console.WriteLine((++no) + ". " + path);
-                Console.WriteLine("## blake2_exe_path: " + setting.blake2_exe_path);
-                Console.WriteLine("## blake3_exe_path: " + setting.blake3_exe_path);
+                Console.WriteLine("## blake2_exe_path: " + Utilities.BLAKE2_EXE_PATH);
+                Console.WriteLine("## blake3_exe_path: " + Utilities.BLAKE3_EXE_PATH);
                 // 设置hash_method_name, generate_method_use
                 List<string> hash_method_name = new List<string>();
                 List<bool> generate_method_use = new List<bool>();
@@ -426,12 +426,12 @@ namespace ConsoleApp3
             if (blake2FileInfo.Exists)
             {
                 Console.WriteLine($">> 复制文件[{blake2Name}]到目标地址：{blake2FileInfo.FullName}");
-                setting.blake2_exe_path = blake2FileInfo.FullName;
+                Utilities.BLAKE2_EXE_PATH = blake2FileInfo.FullName;
             }
             if (blake3FileInfo.Exists)
             {
                 Console.WriteLine($">> 复制文件[{blake3Name}]到目标地址：{blake3FileInfo.FullName}");
-                setting.blake3_exe_path = blake3FileInfo.FullName;
+                Utilities.BLAKE3_EXE_PATH = blake3FileInfo.FullName;
             }
             Console.WriteLine();
         }

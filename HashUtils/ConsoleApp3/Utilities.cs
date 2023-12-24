@@ -8,7 +8,7 @@ namespace ConsoleApp3
 {
     internal class Utilities
     {
-        /** hash方法名称 START */
+        /** hash方法名称参数 START */
         public const string MD5_NAME = "MD5";
         public const string SHA1_NAME = "SHA1";
         public const string SHA2_256_NAME = "SHA2-256";
@@ -25,12 +25,14 @@ namespace ConsoleApp3
         public const string BLAKE2bp_NAME = "BLAKE2bp";
         public const string BLAKE2sp_NAME = "BLAKE2sp";
         public const string BLAKE3_NAME = "BLAKE3";
-        /** hash方法名称 END */
-
-        /** hash方法参数 START */
         public const int SHAKE128_SIZE = 128 * 2;
         public const int SHAKE256_SIZE = 256 * 2;
-        /** hash方法参数 END */
+        /** hash方法名称参数 END */
+
+        /** BLAKE程序路径 */
+        public static string? BLAKE2_EXE_PATH;
+        public static string? BLAKE3_EXE_PATH;
+        /** BLAKE程序路径 */
 
         /** 程序内嵌文件名称 START */
         public const string EMBEDDED_RESOURCE_NAME_BLAKE2_AMD64_LINUX = "b2sum-amd64-linux";

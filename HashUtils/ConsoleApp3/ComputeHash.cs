@@ -140,15 +140,15 @@ namespace ConsoleApp3
                 case Utilities.SHAKE256_NAME:
                     return getSHAKE256(new FileInfo(path));
                 case Utilities.BLAKE2b_NAME:
-                    return getBLAKE2(new FileInfo(path), "blake2b", setting.blake2_exe_path!);
+                    return getBLAKE2(new FileInfo(path), "blake2b", Utilities.BLAKE2_EXE_PATH!);
                 case Utilities.BLAKE2s_NAME:
-                    return getBLAKE2(new FileInfo(path), "blake2s", setting.blake2_exe_path!);
+                    return getBLAKE2(new FileInfo(path), "blake2s", Utilities.BLAKE2_EXE_PATH!);
                 case Utilities.BLAKE2bp_NAME:
-                    return getBLAKE2(new FileInfo(path), "blake2bp", setting.blake2_exe_path!);
+                    return getBLAKE2(new FileInfo(path), "blake2bp", Utilities.BLAKE2_EXE_PATH!);
                 case Utilities.BLAKE2sp_NAME:
-                    return getBLAKE2(new FileInfo(path), "blake2sp", setting.blake2_exe_path!);
+                    return getBLAKE2(new FileInfo(path), "blake2sp", Utilities.BLAKE2_EXE_PATH!);
                 case Utilities.BLAKE3_NAME:
-                    return getBLAKE3(new FileInfo(path), setting.blake3_exe_path!);
+                    return getBLAKE3(new FileInfo(path), Utilities.BLAKE3_EXE_PATH!);
             }
             throw new Exception($"不支持的hash方法[{hash_method}]");
         }

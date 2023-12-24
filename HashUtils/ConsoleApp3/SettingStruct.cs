@@ -14,12 +14,6 @@ namespace ConsoleApp3
 
             [JsonPropertyName("verify_method")]
             public required Hash_Method verify_method { get; set; }
-
-            [JsonPropertyName("blake2_exe_path")]
-            public string? blake2_exe_path { get; set; }
-
-            [JsonPropertyName("blake3_exe_path")]
-            public string? blake3_exe_path { get; set; }
         }
 
         public class Hash_Method
