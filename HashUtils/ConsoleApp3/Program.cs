@@ -127,21 +127,27 @@ namespace ConsoleApp3
             }
             finally
             {
-                Console.Write("\n\n********************************\n**********程序运行结束**********\n********************************\n\n");
-                // 清理temp目录
-                if (Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH != null)
+                if (Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH == null)
                 {
-                    DirectoryInfo directory = new DirectoryInfo(Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH);
-                    if (directory.Exists)
-                    {
-                        Console.WriteLine($"temp目录存在，清理目录：{directory.FullName}");
-                        directory.Delete(true);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"目录不存在，不需要清理：{directory.FullName}");
-                    }
+                    Console.WriteLine("程序未被正确初始化，直接退出！\n\n");
+                    while (true) { Console.ReadLine(); }
                 }
+                DirectoryInfo directory = new DirectoryInfo(Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH);
+
+                Console.WriteLine("\n\n********************************\n**********程序运行结束**********\n********************************");
+                Console.WriteLine($"程序运行的临时目录：{Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH}");
+                if (directory.Exists)
+                {
+                    FileInfo[] directoryFiles = directory.GetFiles();
+                    for (int i = 1; i <= directoryFiles.Length; i++)
+                    {
+                        Console.WriteLine($" {i}.{directoryFiles[i - 1].Name}");
+                    }
+                    Console.WriteLine();
+                }
+                Console.WriteLine(" ● 输入00退出程序");
+                Console.WriteLine(" ● 输入11删除临时目录并退出程序");
+                Console.Write("\n\n");
 
                 // 输出信息，直至输入00完全退出
                 while (true)
@@ -149,6 +155,25 @@ namespace ConsoleApp3
                     string input = Console.ReadLine()!;
                     if (input.Equals("00"))
                     {
+                        Environment.Exit(0);
+                    }
+                    else if (input.Equals("11"))
+                    {
+                        // 清理temp目录
+                        if (Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH != null)
+                        {
+
+                            if (directory.Exists)
+                            {
+                                Console.WriteLine($"temp目录存在，清理目录：{directory.FullName}");
+                                directory.Delete(true);
+                            }
+                            else
+                            {
+                                Console.WriteLine($"目录不存在，不需要清理：{directory.FullName}");
+                            }
+                        }
+                        // 退出程序
                         Environment.Exit(0);
                     }
                 }
