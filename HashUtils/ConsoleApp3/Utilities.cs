@@ -47,6 +47,7 @@ namespace ConsoleApp3
 
         /** 程序运行常量 START */
         public static UTF8Encoding utf8_encoding = new UTF8Encoding(false);
+        public static string PROGRAM_NAME = "CheckHash3";
         public const string HASH_FILE_NAME = "hash.txt";
         public const string HASH_FILE_SPLIT_LINE_CONTENT = "----------------------------------------";
         public const string HASH_FILE_FILE_NAME_START = "[name] ";

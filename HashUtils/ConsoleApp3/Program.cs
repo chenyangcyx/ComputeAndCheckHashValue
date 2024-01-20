@@ -426,7 +426,21 @@ namespace ConsoleApp3
             Utilities.CAN_USE_NET_SHA3_ALGORITHM = SHA3_256.IsSupported && SHA3_384.IsSupported && SHA3_512.IsSupported;
 
             // 生成程序此次运行的临时目录名称
-            Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_NAME = Guid.NewGuid().ToString().Replace("-", "");
+            List<string> allFolderNameList = new List<string>();
+            using (StreamReader stream_reader = new StreamReader(setting.check_folder_config_file, Utilities.utf8_encoding))
+            {
+                while (!stream_reader.EndOfStream)
+                {
+                    string line = stream_reader.ReadLine()!;
+                    if (string.IsNullOrEmpty(line))
+                    {
+                        continue;
+                    }
+                    allFolderNameList.Add(line);
+                }
+            }
+            allFolderNameList.Sort((a, b) => a.CompareTo(b));
+            Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_NAME = Utilities.PROGRAM_NAME + "-" + ComputeHash.getSHA2_256(string.Join(",", allFolderNameList));
             Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_NAME);
 
             // 复制BLAKE程序到临时目录下
