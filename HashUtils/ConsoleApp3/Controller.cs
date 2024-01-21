@@ -5,7 +5,7 @@ namespace ConsoleApp3
 {
     internal class Controller
     {
-        public static void generateHash(SettingStruct.SettingConfig setting, List<string> check_folder_list, List<string> hash_method_name, List<bool> hash_method_use)
+        public static void generateHash(SettingStruct.SettingConfig setting, List<string> check_folder_list, List<string> hash_method_name, List<bool> hash_method_use, bool use_run_log = true)
         {
             DateTime before_all = DateTime.Now;
             Console.WriteLine("\n开始生成，开始时间：" + before_all.ToString("yyyy-MM-dd HH:mm:ss") + "\n");
@@ -30,14 +30,18 @@ namespace ConsoleApp3
             /* 预测剩余时间 END */
 
             /* 如果存在run_log文件，则读取里面的所有内容 */
-            Dictionary<string, RunLog> exist_run_log_dic = Utilities.getHashResultDictFromRunLog(Utilities.PROGRAM_RUNNING_LOG_FILE_PATH!, hash_method_name);
+            Dictionary<string, RunLog> exist_run_log_dic = new Dictionary<string, RunLog>();
+            if (use_run_log)
+            {
+                exist_run_log_dic = Utilities.getHashResultDictFromRunLog(Utilities.PROGRAM_RUNNING_LOG_FILE_PATH!, hash_method_name);
+            }
             if (exist_run_log_dic.Count == 0)
             {
-                Console.WriteLine($"\n▶ 未检测到程序运行log文件{Utilities.PROGRAM_LOG_FILE_NAME}\n");
+                Console.WriteLine($"\n**未检测到程序运行log文件{Utilities.PROGRAM_LOG_FILE_NAME}\n");
             }
             else
             {
-                Console.WriteLine($"\n● 检测到程序运行log文件{Utilities.PROGRAM_LOG_FILE_NAME}，共有{exist_run_log_dic.Count}条记录，文件地址：{Utilities.PROGRAM_RUNNING_LOG_FILE_PATH}\n");
+                Console.WriteLine($"\n**检测到程序运行log文件{Utilities.PROGRAM_LOG_FILE_NAME}，共有{exist_run_log_dic.Count}条记录，文件地址：{Utilities.PROGRAM_RUNNING_LOG_FILE_PATH}\n");
             }
             /* 如果存在run_log文件，则读取里面的所有内容 */
 

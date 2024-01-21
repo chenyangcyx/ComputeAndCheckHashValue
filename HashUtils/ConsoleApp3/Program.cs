@@ -91,26 +91,31 @@ namespace ConsoleApp3
                 // 选择运行模式
                 Console.WriteLine("请选择程序的运行模式：");
                 Console.WriteLine("[1] 生成hash文件");
-                Console.WriteLine("[2] 校验文件hash");
-                Console.WriteLine("[3] 查看并输出setting文件demo");
-                Console.WriteLine("[4] 查看NET8功能支持情况");
+                Console.WriteLine("[2] 生成hash文件（不使用run_log.txt）");
+                Console.WriteLine("[3] 校验文件hash");
+                Console.WriteLine("[4] 查看并输出setting文件demo");
+                Console.WriteLine("[5] 查看NET8功能支持情况");
                 string chooseNo = Console.ReadLine()!;
                 switch (chooseNo)
                 {
                     case "1":
                         Console.WriteLine("选择了：[1] 生成hash文件\n");
-                        Controller.generateHash(setting, check_folder_list, hash_method_name, generate_method_use);
+                        Controller.generateHash(setting, check_folder_list, hash_method_name, generate_method_use, true);
                         break;
                     case "2":
-                        Console.WriteLine("选择了：[2] 校验文件hash\n");
-                        Controller.checkHash(setting, check_folder_list, hash_method_name, verify_method_use);
+                        Console.WriteLine("选择了：[2] 生成hash文件（不使用run_log.txt）\n");
+                        Controller.generateHash(setting, check_folder_list, hash_method_name, generate_method_use, false);
                         break;
                     case "3":
-                        Console.WriteLine("选择了：[3] 查看并输出setting文件demo\n");
-                        Controller.showAndOutputSettingDemo();
+                        Console.WriteLine("选择了：[3] 校验文件hash\n");
+                        Controller.checkHash(setting, check_folder_list, hash_method_name, verify_method_use);
                         break;
                     case "4":
-                        Console.WriteLine("选择了：[4] 查看当前系统信息\n");
+                        Console.WriteLine("选择了：[4] 查看并输出setting文件demo\n");
+                        Controller.showAndOutputSettingDemo();
+                        break;
+                    case "5":
+                        Console.WriteLine("选择了：[5] 查看当前系统信息\n");
                         Controller.checkSystemInfo();
                         break;
                     default:
