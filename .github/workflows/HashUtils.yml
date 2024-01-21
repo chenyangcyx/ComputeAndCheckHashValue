@@ -1,0 +1,56 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: HashUtils(with .NET8)
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Show Program Infos
+      run: |
+        echo "==================当前使用的.NET版本=================="
+        dotnet --version
+        echo "==================当前目录信息=================="
+        echo "当前目录: "`pwd`
+        echo "home目录: "`echo -n ~`
+
+    - name: Build and Clean
+      run: |
+        cd ~/HashUtils
+        dotnet build --no-restore
+        dotnet clean
+
+    - name: publish
+      run: |
+        cd ~/HashUtils/ConsoleApp1
+        dotnet publish /p:Configuration=Release /p:PublishProfile=NET8-winx64
+
+        cd ~/HashUtils/ConsoleApp2
+        dotnet publish /p:Configuration=Release /p:PublishProfile=NET8-winx64
+
+        cd ~/HashUtils/ConsoleApp3
+        dotnet publish /p:Configuration=Release /p:PublishProfile=NET8-winx64
+
+    - name: Upload Publish Result Files
+      uses: actions/upload-artifact@main
+      with:
+        name: HashUtils
+        path: ~/HashUtils/ConsoleApp3/bin/Release/net8.0/publish
