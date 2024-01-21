@@ -21,9 +21,6 @@ jobs:
       with:
         dotnet-version: 8.x
 
-    - name: Restore dependencies
-      run: dotnet restore
-
     - name: Show Program Infos
       run: |
         echo "==================当前使用的.NET版本=================="
@@ -32,25 +29,32 @@ jobs:
         echo "当前目录: "`pwd`
         echo "home目录: "`echo -n ~`
 
-    - name: Build and Clean
-      run: |
-        cd ~/HashUtils
-        dotnet build --no-restore
-        dotnet clean
-
-    - name: publish
+    - name: Build&Publish ConsoleApp1
       run: |
         cd ~/HashUtils/ConsoleApp1
+        dotnet restore
+        dotnet build --no-restore
+        dotnet clean
         dotnet publish /p:Configuration=Release /p:PublishProfile=NET8-winx64
 
+    - name: Build&Publish ConsoleApp2
+      run: |
         cd ~/HashUtils/ConsoleApp2
+        dotnet restore
+        dotnet build --no-restore
+        dotnet clean
         dotnet publish /p:Configuration=Release /p:PublishProfile=NET8-winx64
 
+    - name: Build&Publish ConsoleApp3
+      run: |
         cd ~/HashUtils/ConsoleApp3
+        dotnet restore
+        dotnet build --no-restore
+        dotnet clean
         dotnet publish /p:Configuration=Release /p:PublishProfile=NET8-winx64
 
     - name: Upload Publish Result Files
       uses: actions/upload-artifact@main
       with:
         name: HashUtils
-        path: ~/HashUtils/ConsoleApp3/bin/Release/net8.0/publish
+        path: ~/HashUtils/ConsoleApp3/bin/Release
