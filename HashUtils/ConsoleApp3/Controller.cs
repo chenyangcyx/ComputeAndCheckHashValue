@@ -10,10 +10,10 @@ namespace ConsoleApp3
             DateTime before_all = DateTime.Now;
             Console.WriteLine("\n开始生成，开始时间：" + before_all.ToString("yyyy-MM-dd HH:mm:ss") + "\n");
             /*预测剩余时间*/
-            int all_file_num = 0;
+            long all_file_num = 0;
             long all_file_byte = 0L;
             double handle_file_time_second = 0d;
-            int handle_file_num = 0;
+            long handle_file_num = 0;
             long handle_file_byte = 0L;
             // 统计所有文件个数及大小
             Dictionary<string, List<FileInfo>> local_all_file_dic_list = new Dictionary<string, List<FileInfo>>();
@@ -79,6 +79,7 @@ namespace ConsoleApp3
                     handle_file_time_second += use_time_second;
                     double per_byte_average = handle_file_byte / handle_file_time_second;
                     double remain_second = (all_file_byte - handle_file_byte) / per_byte_average;
+                    Console.WriteLine($"      -当前进度：{handle_file_num} / {all_file_num} = {(handle_file_num * 100.0d / all_file_num).ToString("0.00")}%，当前文件：{handle_file_num}，总共文件：{all_file_num}");
                     Console.WriteLine("      -剩余时间：" + (remain_second / 86400.0).ToString("0.0000000") + " 天 ≈≈ " + (remain_second / 3600.0).ToString("0.0000000") + " 小时 ≈≈ " + (remain_second / 60.0).ToString("0.0000000") + " 分 ≈≈ " + remain_second.ToString("0.0000000") + " 秒");
                     Console.WriteLine("      -预计结束时间：" + DateTime.Now.AddSeconds(remain_second).ToString("yyyy-MM-dd HH:mm:ss"));
                     /** 预估剩余时间 */
@@ -131,10 +132,10 @@ namespace ConsoleApp3
             DateTime before_all = DateTime.Now;
             Console.WriteLine("\n开始校验，开始时间：" + before_all.ToString("yyyy-MM-dd HH:mm:ss") + "\n");
             /*预测剩余时间*/
-            int all_file_num = 0;
+            long all_file_num = 0;
             long all_file_byte = 0L;
             double handle_file_time_second = 0d;
-            int handle_file_num = 0;
+            long handle_file_num = 0;
             long handle_file_byte = 0L;
             // 统计所有文件个数及大小
             Dictionary<string, List<FileInfo>> local_all_file_dic_list = new Dictionary<string, List<FileInfo>>();
@@ -263,6 +264,7 @@ namespace ConsoleApp3
                     handle_file_time_second += use_time_second;
                     double per_byte_average = handle_file_byte / handle_file_time_second;
                     double remain_second = (all_file_byte - handle_file_byte) / per_byte_average;
+                    Console.WriteLine($"      -当前进度：{handle_file_num} / {all_file_num} = {(handle_file_num * 100.0d / all_file_num).ToString("0.00")}%，当前文件：{handle_file_num}，总共文件：{all_file_num}");
                     Console.WriteLine("      -剩余时间：" + (remain_second / 86400.0).ToString("0.0000000") + " 天 ≈≈ " + (remain_second / 3600.0).ToString("0.0000000") + " 小时 ≈≈ " + (remain_second / 60.0).ToString("0.0000000") + " 分 ≈≈ " + remain_second.ToString("0.0000000") + " 秒");
                     Console.WriteLine("      -预计结束时间：" + DateTime.Now.AddSeconds(remain_second).ToString("yyyy-MM-dd HH:mm:ss"));
                     /** 预估剩余时间 */

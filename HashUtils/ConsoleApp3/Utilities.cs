@@ -282,7 +282,7 @@ namespace ConsoleApp3
             string path = Path.Combine(toCombinePath.ToArray());
 
             // 如果文件已经存在，则直接退出
-            if(File.Exists(path))
+            if (File.Exists(path))
             {
                 return new FileInfo(path);
             }
