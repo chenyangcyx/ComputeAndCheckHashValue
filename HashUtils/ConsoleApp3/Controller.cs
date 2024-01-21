@@ -9,7 +9,8 @@ namespace ConsoleApp3
         {
             DateTime before_all = DateTime.Now;
             Console.WriteLine("\n开始生成，开始时间：" + before_all.ToString("yyyy-MM-dd HH:mm:ss") + "\n");
-            /*预测剩余时间*/
+
+            /* 预测剩余时间 START */
             long all_file_num = 0;
             long all_file_byte = 0L;
             double handle_file_time_second = 0d;
@@ -26,7 +27,8 @@ namespace ConsoleApp3
                     all_file_byte += file.Length;
                 }
             }
-            /*预测剩余时间*/
+            /* 预测剩余时间 END */
+
             List<string> error_check_folder = new List<string>();
             int no = 0;
             for (int path_no = 0; path_no < check_folder_list.Count; path_no++)
@@ -73,7 +75,8 @@ namespace ConsoleApp3
                     DateTime file_after_time = DateTime.Now;
                     double use_time_second = (file_after_time - file_before_time).TotalSeconds;
                     Console.WriteLine("      -开始时间：" + file_before_time.ToString("yyyy-MM-dd HH:mm:ss") + "，结束时间：" + file_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共同时：" + use_time_second.ToString("0.0000000") + " 秒");
-                    /** 预估剩余时间 */
+                    
+                    /* 预估剩余时间 START */
                     handle_file_num++;
                     handle_file_byte += file.Length;
                     handle_file_time_second += use_time_second;
@@ -82,7 +85,8 @@ namespace ConsoleApp3
                     Console.WriteLine($"      -当前进度：{handle_file_num} / {all_file_num} = {(handle_file_num * 100.0d / all_file_num).ToString("0.00")}%，当前文件：{handle_file_num}，总共文件：{all_file_num}");
                     Console.WriteLine("      -剩余时间：" + (remain_second / 86400.0).ToString("0.0000000") + " 天 ≈≈ " + (remain_second / 3600.0).ToString("0.0000000") + " 小时 ≈≈ " + (remain_second / 60.0).ToString("0.0000000") + " 分 ≈≈ " + remain_second.ToString("0.0000000") + " 秒");
                     Console.WriteLine("      -预计结束时间：" + DateTime.Now.AddSeconds(remain_second).ToString("yyyy-MM-dd HH:mm:ss"));
-                    /** 预估剩余时间 */
+                    /* 预估剩余时间 END */
+
                     // 写入dic结果
                     stream_result.Add(file.Name, hash_result);
                 }
@@ -131,7 +135,8 @@ namespace ConsoleApp3
         {
             DateTime before_all = DateTime.Now;
             Console.WriteLine("\n开始校验，开始时间：" + before_all.ToString("yyyy-MM-dd HH:mm:ss") + "\n");
-            /*预测剩余时间*/
+            
+            /* 预测剩余时间 START */
             long all_file_num = 0;
             long all_file_byte = 0L;
             double handle_file_time_second = 0d;
@@ -148,6 +153,8 @@ namespace ConsoleApp3
                     all_file_byte += file.Length;
                 }
             }
+            /* 预测剩余时间 END */
+
             // 开始流程
             VerifyErrorDetailHandler error_check_file = new VerifyErrorDetailHandler();
             VerifyErrorDetailHandler error_check_folder = new VerifyErrorDetailHandler();
@@ -249,7 +256,8 @@ namespace ConsoleApp3
                     DateTime file_after_time = DateTime.Now;
                     double use_time_second = (file_after_time - file_before_time).TotalSeconds;
                     Console.WriteLine("      -开始时间：" + file_before_time.ToString("yyyy-MM-dd HH:mm:ss") + "，结束时间：" + file_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共同时：" + use_time_second.ToString("0.0000000") + " 秒");
-                    /** 预估剩余时间 */
+                    
+                    /* 预估剩余时间 START */
                     handle_file_num++;
                     handle_file_byte += file.Length;
                     handle_file_time_second += use_time_second;
@@ -258,7 +266,7 @@ namespace ConsoleApp3
                     Console.WriteLine($"      -当前进度：{handle_file_num} / {all_file_num} = {(handle_file_num * 100.0d / all_file_num).ToString("0.00")}%，当前文件：{handle_file_num}，总共文件：{all_file_num}");
                     Console.WriteLine("      -剩余时间：" + (remain_second / 86400.0).ToString("0.0000000") + " 天 ≈≈ " + (remain_second / 3600.0).ToString("0.0000000") + " 小时 ≈≈ " + (remain_second / 60.0).ToString("0.0000000") + " 分 ≈≈ " + remain_second.ToString("0.0000000") + " 秒");
                     Console.WriteLine("      -预计结束时间：" + DateTime.Now.AddSeconds(remain_second).ToString("yyyy-MM-dd HH:mm:ss"));
-                    /** 预估剩余时间 */
+                    /* 预估剩余时间 END */
                 }
                 DateTime folder_after_time = DateTime.Now;
                 Console.WriteLine("  结束时间：" + folder_after_time.ToString("yyyy-MM-dd HH:mm:ss"));
