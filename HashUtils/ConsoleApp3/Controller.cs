@@ -29,6 +29,16 @@ namespace ConsoleApp3
             }
             /* 预测剩余时间 END */
 
+            /* 临时目录写入stream初始化 */
+            StreamWriter programTempFolderRunningLogFile = new StreamWriter(
+                Utilities.PROGRAM_RUNNING_LOG_FILE_PATH!,
+                true,
+                Utilities.utf8_encoding);
+            programTempFolderRunningLogFile.AutoFlush = true;
+            outputAndFlushStream(programTempFolderRunningLogFile,
+                $"\n\n开始运行程序：{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}\n\n");
+            /* 临时目录写入stream初始化 */
+
             List<string> error_check_folder = new List<string>();
             int no = 0;
             for (int path_no = 0; path_no < check_folder_list.Count; path_no++)
@@ -67,6 +77,10 @@ namespace ConsoleApp3
                         {
                             // 计算文件的hash值
                             string hash_compute_value = ComputeHash.getHashByName(hash_method_name[hash_no], file.FullName, setting);
+                            // runLog运行临时文件输出
+                            RunLog runLog = new RunLog(check_folder_list[path_no], file, hash_method_name[hash_no], hash_compute_value);
+                            outputAndFlushStream(programTempFolderRunningLogFile, runLog);
+                            // 屏幕输出
                             Console.WriteLine("      -" + hash_method_name[hash_no] + ": " + hash_compute_value);
                             hash_result.Add(hash_method_name[hash_no], hash_compute_value);
                         }
@@ -75,7 +89,7 @@ namespace ConsoleApp3
                     DateTime file_after_time = DateTime.Now;
                     double use_time_second = (file_after_time - file_before_time).TotalSeconds;
                     Console.WriteLine("      -开始时间：" + file_before_time.ToString("yyyy-MM-dd HH:mm:ss") + "，结束时间：" + file_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共同时：" + use_time_second.ToString("0.0000000") + " 秒");
-                    
+
                     /* 预估剩余时间 START */
                     handle_file_num++;
                     handle_file_byte += file.Length;
@@ -105,7 +119,7 @@ namespace ConsoleApp3
                         {
                             sw_result.WriteLine(Utilities.HASH_FILE_SPLIT_LINE_CONTENT);
                         }
-                        sw_result.WriteLine(Utilities.HASH_FILE_FILE_NAME_START + keyValuePair.Key);
+                        sw_result.WriteLine(Utilities.HASH_FILE_CONTENT_NAME_PREFIX + keyValuePair.Key);
                         foreach (var hash_item in keyValuePair.Value)
                         {
                             sw_result.WriteLine("[" + hash_item.Key + "] " + hash_item.Value);
@@ -129,13 +143,17 @@ namespace ConsoleApp3
                 Console.WriteLine("全部文件夹全部生成正确！");
             }
             Console.Write("\n\n");
+
+            outputAndFlushStream(programTempFolderRunningLogFile,
+                $"\n\n结束运行程序：{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}\n\n",
+                true);
         }
 
         public static void checkHash(SettingStruct.SettingConfig setting, List<string> check_folder_list, List<string> hash_method_name, List<bool> verify_method_use)
         {
             DateTime before_all = DateTime.Now;
             Console.WriteLine("\n开始校验，开始时间：" + before_all.ToString("yyyy-MM-dd HH:mm:ss") + "\n");
-            
+
             /* 预测剩余时间 START */
             long all_file_num = 0;
             long all_file_byte = 0L;
@@ -256,7 +274,7 @@ namespace ConsoleApp3
                     DateTime file_after_time = DateTime.Now;
                     double use_time_second = (file_after_time - file_before_time).TotalSeconds;
                     Console.WriteLine("      -开始时间：" + file_before_time.ToString("yyyy-MM-dd HH:mm:ss") + "，结束时间：" + file_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共同时：" + use_time_second.ToString("0.0000000") + " 秒");
-                    
+
                     /* 预估剩余时间 START */
                     handle_file_num++;
                     handle_file_byte += file.Length;
@@ -356,6 +374,32 @@ namespace ConsoleApp3
                     Console.WriteLine($"\n文件复制成功，地址：{result.FullName}");
                 }
             }
+        }
+
+        private static void outputAndFlushStream(StreamWriter writer, string content, bool closeStream = false)
+        {
+            writer.WriteLine(content);
+            writer.Flush();
+            if (closeStream)
+            {
+                writer.Flush();
+                writer.Close();
+            }
+        }
+
+        private static void outputAndFlushStream(StreamWriter writer, RunLog runLog)
+        {
+            writer.WriteLine();
+
+            writer.WriteLine(Utilities.PROGRAM_LOG_CONTENT_SPLIT_LINE_CONTENT_START);
+            writer.WriteLine($"{Utilities.PROGRAM_LOG_CONTENT_FOLDER_PREFIX}{runLog.folderPath}");
+            writer.WriteLine($"{Utilities.PROGRAM_LOG_CONTENT_FILE_PATH_PREFIX}{runLog.fileInfo.FullName}");
+            writer.WriteLine($"{Utilities.PROGRAM_LOG_CONTENT_FILE_SIZE_PREFIX}{runLog.fileInfo.Length}");
+            writer.WriteLine($"[{runLog.hashName}] {runLog.hashValue}");
+            writer.WriteLine(Utilities.PROGRAM_LOG_CONTENT_SPLIT_LINE_CONTENT_END);
+
+            writer.WriteLine();
+            writer.Flush();
         }
     }
 

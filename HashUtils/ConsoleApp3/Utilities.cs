@@ -8,6 +8,9 @@ namespace ConsoleApp3
 {
     internal class Utilities
     {
+        // 程序名称
+        public static string PROGRAM_NAME = "CheckHash3";
+
         /** hash方法名称参数 START */
         public const string MD5_NAME = "MD5";
         public const string SHA1_NAME = "SHA1";
@@ -47,15 +50,21 @@ namespace ConsoleApp3
 
         /** 程序运行常量 START */
         public static UTF8Encoding utf8_encoding = new UTF8Encoding(false);
-        public static string PROGRAM_NAME = "CheckHash3";
         public const string HASH_FILE_NAME = "hash.txt";
         public const string HASH_FILE_SPLIT_LINE_CONTENT = "----------------------------------------";
-        public const string HASH_FILE_FILE_NAME_START = "[name] ";
+        public const string HASH_FILE_CONTENT_NAME_PREFIX = "[name] ";
+        public const string PROGRAM_LOG_FILE_NAME = "run_log.txt";
+        public const string PROGRAM_LOG_CONTENT_FOLDER_PREFIX = "[folder_path] ";
+        public const string PROGRAM_LOG_CONTENT_FILE_PATH_PREFIX = "[file_path] ";
+        public const string PROGRAM_LOG_CONTENT_FILE_SIZE_PREFIX = "[size] ";
+        public const string PROGRAM_LOG_CONTENT_SPLIT_LINE_CONTENT_START = "============PROGRAM RUNNING LOG START============";
+        public const string PROGRAM_LOG_CONTENT_SPLIT_LINE_CONTENT_END = "============PROGRAM RUNNING LOG END============";
         /** 程序运行常量 START */
 
         /** 程序运行必要参数（运行前必须设置） START */
         public static string? PROGRAM_RUNNING_PARAM_TEMP_FOLDER_NAME;
         public static string? PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH;
+        public static string? PROGRAM_RUNNING_LOG_FILE_PATH;
         /** 程序运行必要参数（运行前必须设置） END */
 
         public static SettingStruct.SettingConfig getSetting(string path)
@@ -181,9 +190,9 @@ namespace ConsoleApp3
                 if (line.StartsWith("["))
                 {
                     // name属性
-                    if (line.StartsWith(HASH_FILE_FILE_NAME_START))
+                    if (line.StartsWith(HASH_FILE_CONTENT_NAME_PREFIX))
                     {
-                        name = line.Substring(HASH_FILE_FILE_NAME_START.Length);
+                        name = line.Substring(HASH_FILE_CONTENT_NAME_PREFIX.Length);
                         continue;
                     }
                     // hash方法

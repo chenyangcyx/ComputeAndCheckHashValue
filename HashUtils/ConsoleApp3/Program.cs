@@ -141,7 +141,7 @@ namespace ConsoleApp3
                     FileInfo[] directoryFiles = directory.GetFiles();
                     for (int i = 1; i <= directoryFiles.Length; i++)
                     {
-                        Console.WriteLine($" {i}.{directoryFiles[i - 1].Name}");
+                        Console.WriteLine($" {i}. {directoryFiles[i - 1].Name}");
                     }
                     Console.WriteLine();
                 }
@@ -442,6 +442,7 @@ namespace ConsoleApp3
             allFolderNameList.Sort((a, b) => a.CompareTo(b));
             Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_NAME = Utilities.PROGRAM_NAME + "-" + ComputeHash.getSHA2_256(string.Join(",", allFolderNameList));
             Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_NAME);
+            Utilities.PROGRAM_RUNNING_LOG_FILE_PATH = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_NAME, Utilities.PROGRAM_LOG_FILE_NAME);
             DirectoryInfo programTempFolderDirectoryInfo = new DirectoryInfo(Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH);
 
             // 初始化blake2和blake3程序的地址
