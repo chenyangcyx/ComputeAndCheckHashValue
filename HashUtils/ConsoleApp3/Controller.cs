@@ -91,7 +91,7 @@ namespace ConsoleApp3
                 Console.WriteLine("  总共用时：" + (folder_after_time - folder_before_time).TotalDays.ToString("0.0000000") + " 天 ≈≈ " + (folder_after_time - folder_before_time).TotalHours.ToString("0.0000000") + " 小时 ≈≈ " + (folder_after_time - folder_before_time).TotalMinutes.ToString("0.0000000") + " 分 ≈≈ " + (folder_after_time - folder_before_time).TotalSeconds.ToString("0.0000000") + " 秒\n");
 
                 // 将结果写入到文件夹
-                using (StreamWriter sw_result = new StreamWriter(check_folder_list[path_no] + "\\" + Utilities.HASH_FILE_NAME, false, Utilities.utf8_encoding))
+                using (StreamWriter sw_result = new StreamWriter(Path.Combine(check_folder_list[path_no], Utilities.HASH_FILE_NAME), false, Utilities.utf8_encoding))
                 {
                     var streamResultList = stream_result.ToList();
                     for (int item_no = 0; item_no < streamResultList.Count; item_no++)
@@ -185,15 +185,6 @@ namespace ConsoleApp3
                 // 获取该文件保存的hash值
                 // 对应结构：文件名->(hash方法->hash值)
                 Dictionary<string, Dictionary<string, string>> hash_file_dic = Utilities.getHashResultDict(hash_file_all_line_list);
-                //Console.WriteLine("#"+(path_no+1) + "# " + path);
-                //foreach (var item in hash_file_dic)
-                //{
-                //    Console.WriteLine("    "+Utilities.HASH_FILE_FILE_NAME_START+item.Key);
-                //    foreach (var item_item in item.Value)
-                //    {
-                //        Console.WriteLine("        [" + item_item.Key + "] " + item_item.Value);
-                //    }
-                //}
                 // 开始校验流程
                 DateTime folder_before_time = DateTime.Now;
                 Console.WriteLine((++no) + "." + path + "，开始时间：" + folder_before_time.ToString("yyyy-MM-dd HH:mm:ss"));
