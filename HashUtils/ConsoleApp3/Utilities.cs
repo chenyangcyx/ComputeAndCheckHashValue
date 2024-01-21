@@ -179,7 +179,9 @@ namespace ConsoleApp3
             return result;
         }
 
-        public static Dictionary<string, Dictionary<string, string>> getHashResultDict(List<string> all_line_list)
+        // 从hash.txt文件读取hash结果
+        // fileName -> (hashName -> hashValue)
+        public static Dictionary<string, Dictionary<string, string>> getHashResultDictFromHashFile(List<string> all_line_list)
         {
             Dictionary<string, Dictionary<string, string>> result = new Dictionary<string, Dictionary<string, string>>();
             string? name = null;
@@ -263,6 +265,81 @@ namespace ConsoleApp3
             // 最后仍有一次记录未被写入
             result.Add(name!, hash_result);
 
+            return result;
+        }
+
+        // 从run_log.txt文件读取hash结果
+        // folderPath -> [filePath -> (hashName -> hashValue)]
+        public static Dictionary<string, RunLog> getHashResultDictFromRunLog(List<string> all_line_list, List<string> all_hash_method_name_list)
+        {
+            Dictionary<string, RunLog> result = new Dictionary<string, RunLog>();
+            string? folderPath = null;
+            string? filePath = null;
+            long fileSize = -1;
+            string? hashName = null;
+            string? hashValue = null;
+            foreach (string line in all_line_list)
+            {
+                // RUN LOG开始
+                if (line.Equals(PROGRAM_LOG_CONTENT_SPLIT_LINE_CONTENT_START))
+                {
+                    folderPath = null;
+                    filePath = null;
+                    fileSize = -1;
+                    hashName = null;
+                    hashValue = null;
+
+                    continue;
+                }
+                // RUN LOG 结束
+                else if (line.Equals(PROGRAM_LOG_CONTENT_SPLIT_LINE_CONTENT_END))
+                {
+                    RunLog runLog = new RunLog(folderPath!, filePath!, fileSize, hashName!, hashValue!);
+                    result[runLog.getRunLogHash()] = runLog;
+
+                    continue;
+                }
+                // 每一项目
+                else if (line.StartsWith("["))
+                {
+                    // [folder_path]
+                    if (line.StartsWith(PROGRAM_LOG_CONTENT_FOLDER_PREFIX))
+                    {
+                        folderPath = line.Substring(PROGRAM_LOG_CONTENT_FOLDER_PREFIX.Length);
+                        continue;
+                    }
+                    // [file_path]
+                    else if (line.StartsWith(PROGRAM_LOG_CONTENT_FILE_PATH_PREFIX))
+                    {
+                        filePath = line.Substring(PROGRAM_LOG_CONTENT_FILE_PATH_PREFIX.Length);
+                        continue;
+                    }
+                    // [size]
+                    else if (line.StartsWith(PROGRAM_LOG_CONTENT_FILE_SIZE_PREFIX))
+                    {
+                        fileSize = long.Parse(line.Substring(PROGRAM_LOG_CONTENT_FILE_SIZE_PREFIX.Length));
+                        continue;
+                    }
+                    // 其他情况，hash的key-value值
+                    else
+                    {
+                        string[] line_split = line.Split(" ");
+                        string hash_method_name = line_split[0].Replace("[", "").Replace("]", "");
+                        foreach (string hash_method_name_item in all_hash_method_name_list)
+                        {
+                            if (hash_method_name_item.Equals(hash_method_name))
+                            {
+                                hashName = hash_method_name_item;
+                                hashValue = line_split[1];
+
+                                break;
+                            }
+                        }
+
+                        continue;
+                    }
+                }
+            }
             return result;
         }
 

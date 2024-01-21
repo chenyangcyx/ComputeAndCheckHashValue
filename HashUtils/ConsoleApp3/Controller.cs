@@ -43,18 +43,18 @@ namespace ConsoleApp3
             int no = 0;
             for (int path_no = 0; path_no < check_folder_list.Count; path_no++)
             {
-                Dictionary<string, Dictionary<string, string>> stream_result = new Dictionary<string, Dictionary<string, string>>();
-                string path = check_folder_list[path_no];
-                if (!Directory.Exists(path))
+                string this_folder_path = check_folder_list[path_no];
+                if (!Directory.Exists(this_folder_path))
                 {
-                    Console.WriteLine((++no) + "." + path + " 不存在，跳过！\n");
-                    error_check_folder.Add(path);
+                    Console.WriteLine((++no) + "." + this_folder_path + " 不存在，跳过！\n");
+                    error_check_folder.Add(this_folder_path);
                     continue;
                 }
                 DateTime folder_before_time = DateTime.Now;
-                Console.WriteLine((++no) + "." + path + "，开始时间：" + folder_before_time.ToString("yyyy-MM-dd HH:mm:ss"));
+                Console.WriteLine((++no) + "." + this_folder_path + "，开始时间：" + folder_before_time.ToString("yyyy-MM-dd HH:mm:ss"));
                 // 获取所有的文件信息
-                List<string> all_file = Utilities.getAllFileInFolder(path, local_all_file_dic_list, setting);
+                List<string> all_file = Utilities.getAllFileInFolder(this_folder_path, local_all_file_dic_list, setting);
+                List<FileInfo> all_file_no_hash_file = new List<FileInfo>();
                 int file_no = 0;
 
                 // 开始逐个遍历文件
@@ -66,6 +66,10 @@ namespace ConsoleApp3
                     if (file.Name.Equals(Utilities.HASH_FILE_NAME))
                     {
                         continue;
+                    }
+                    else
+                    {
+                        all_file_no_hash_file.Add(file);
                     }
                     Console.WriteLine("    (" + (++file_no) + ")" + file_item);
 
@@ -88,7 +92,7 @@ namespace ConsoleApp3
 
                     DateTime file_after_time = DateTime.Now;
                     double use_time_second = (file_after_time - file_before_time).TotalSeconds;
-                    Console.WriteLine("      -开始时间：" + file_before_time.ToString("yyyy-MM-dd HH:mm:ss") + "，结束时间：" + file_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共同时：" + use_time_second.ToString("0.0000000") + " 秒");
+                    Console.WriteLine("      -开始时间：" + file_before_time.ToString("yyyy-MM-dd HH:mm:ss") + "，结束时间：" + file_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共同时：" + use_time_second.ToString("0.0000") + " 秒");
 
                     /* 预估剩余时间 START */
                     handle_file_num++;
@@ -97,39 +101,64 @@ namespace ConsoleApp3
                     double per_byte_average = handle_file_byte / handle_file_time_second;
                     double remain_second = (all_file_byte - handle_file_byte) / per_byte_average;
                     Console.WriteLine($"      -当前进度：{handle_file_num} / {all_file_num} = {(handle_file_num * 100.0d / all_file_num).ToString("0.00")}%，当前文件：{handle_file_num}，总共文件：{all_file_num}");
-                    Console.WriteLine("      -剩余时间：" + (remain_second / 86400.0).ToString("0.0000000") + " 天 ≈≈ " + (remain_second / 3600.0).ToString("0.0000000") + " 小时 ≈≈ " + (remain_second / 60.0).ToString("0.0000000") + " 分 ≈≈ " + remain_second.ToString("0.0000000") + " 秒");
+                    Console.WriteLine("      -剩余时间：" + (remain_second / 86400.0).ToString("0.0000") + " 天 ≈≈ " + (remain_second / 3600.0).ToString("0.0000") + " 小时 ≈≈ " + (remain_second / 60.0).ToString("0.0000") + " 分 ≈≈ " + remain_second.ToString("0.0000") + " 秒");
                     Console.WriteLine("      -预计结束时间：" + DateTime.Now.AddSeconds(remain_second).ToString("yyyy-MM-dd HH:mm:ss"));
                     /* 预估剩余时间 END */
-
-                    // 写入dic结果
-                    stream_result.Add(file.Name, hash_result);
                 }
                 DateTime folder_after_time = DateTime.Now;
                 Console.WriteLine("  结束时间：" + folder_after_time.ToString("yyyy-MM-dd HH:mm:ss"));
-                Console.WriteLine("  总共用时：" + (folder_after_time - folder_before_time).TotalDays.ToString("0.0000000") + " 天 ≈≈ " + (folder_after_time - folder_before_time).TotalHours.ToString("0.0000000") + " 小时 ≈≈ " + (folder_after_time - folder_before_time).TotalMinutes.ToString("0.0000000") + " 分 ≈≈ " + (folder_after_time - folder_before_time).TotalSeconds.ToString("0.0000000") + " 秒\n");
+                Console.WriteLine("  总共用时：" + (folder_after_time - folder_before_time).TotalDays.ToString("0.0000") + " 天 ≈≈ " + (folder_after_time - folder_before_time).TotalHours.ToString("0.0000") + " 小时 ≈≈ " + (folder_after_time - folder_before_time).TotalMinutes.ToString("0.0000") + " 分 ≈≈ " + (folder_after_time - folder_before_time).TotalSeconds.ToString("0.0000") + " 秒\n");
 
-                // 将结果写入到文件夹
+                // 关闭log文件的写入
+                outputAndFlushStream(programTempFolderRunningLogFile, $"\n\n结束运行程序：{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}\n\n", true);
+
+                // 读取程序运行RUN_LOG文件中的所有记录
+                List<string> run_log_file_all_lines = new List<string>();
+                using (StreamReader stream_reader = new StreamReader(Utilities.PROGRAM_RUNNING_LOG_FILE_PATH!, Utilities.utf8_encoding))
+                {
+                    while (!stream_reader.EndOfStream)
+                    {
+                        string line = stream_reader.ReadLine()!;
+                        if (string.IsNullOrEmpty(line))
+                        {
+                            continue;
+                        }
+                        run_log_file_all_lines.Add(line);
+                    }
+                }
+                Dictionary<string, RunLog> all_run_log_dic = Utilities.getHashResultDictFromRunLog(run_log_file_all_lines, hash_method_name);
+
+                // 将RUN LOG中的记录全部写入到hash.txt文件中
                 using (StreamWriter sw_result = new StreamWriter(Path.Combine(check_folder_list[path_no], Utilities.HASH_FILE_NAME), false, Utilities.utf8_encoding))
                 {
-                    var streamResultList = stream_result.ToList();
-                    for (int item_no = 0; item_no < streamResultList.Count; item_no++)
+                    for (int file_info_no = 0; file_info_no < all_file_no_hash_file.Count; file_info_no++)
                     {
-                        var keyValuePair = streamResultList[item_no];
-                        if (item_no > 0)
+                        FileInfo fileInfo = all_file_no_hash_file[file_info_no];
+                        if (file_info_no > 0)
                         {
                             sw_result.WriteLine(Utilities.HASH_FILE_SPLIT_LINE_CONTENT);
                         }
-                        sw_result.WriteLine(Utilities.HASH_FILE_CONTENT_NAME_PREFIX + keyValuePair.Key);
-                        foreach (var hash_item in keyValuePair.Value)
+                        sw_result.WriteLine(Utilities.HASH_FILE_CONTENT_NAME_PREFIX + fileInfo.Name);
+                        for (int hash_no = 0; hash_no < hash_method_name.Count; hash_no++)
                         {
-                            sw_result.WriteLine("[" + hash_item.Key + "] " + hash_item.Value);
+                            if (hash_method_use[hash_no])
+                            {
+                                string run_log_dic_key = RunLog.getRunLogHash(this_folder_path, fileInfo, hash_method_name[hash_no]);
+                                if (!all_run_log_dic.ContainsKey(run_log_dic_key))
+                                {
+                                    throw new Exception($"找不到对应的hash记录，folderPath={this_folder_path}, filePath={fileInfo.FullName}, fileSize={fileInfo.Length}, hashName={hash_method_name[hash_no]}");
+                                }
+                                RunLog runLog = all_run_log_dic[run_log_dic_key];
+                                // 将结果写入到hash.txt文件
+                                sw_result.WriteLine("[" + runLog.hashName + "] " + runLog.hashValue);
+                            }
                         }
                     }
                 }
             }
             DateTime after_all = DateTime.Now;
             Console.WriteLine("\n结束执行，结束时间：" + after_all.ToString("yyyy-MM-dd HH:mm:ss"));
-            Console.WriteLine("总共用时：" + (after_all - before_all).TotalDays.ToString("0.0000000") + " 天 ≈≈ " + (after_all - before_all).TotalHours.ToString("0.0000000") + " 小时 ≈≈ " + (after_all - before_all).TotalMinutes.ToString("0.0000000") + " 分 ≈≈ " + (after_all - before_all).TotalSeconds.ToString("0.0000000") + " 秒");
+            Console.WriteLine("总共用时：" + (after_all - before_all).TotalDays.ToString("0.0000") + " 天 ≈≈ " + (after_all - before_all).TotalHours.ToString("0.0000") + " 小时 ≈≈ " + (after_all - before_all).TotalMinutes.ToString("0.0000") + " 分 ≈≈ " + (after_all - before_all).TotalSeconds.ToString("0.0000") + " 秒");
 
             if (error_check_folder.Count > 0)
             {
@@ -143,10 +172,6 @@ namespace ConsoleApp3
                 Console.WriteLine("全部文件夹全部生成正确！");
             }
             Console.Write("\n\n");
-
-            outputAndFlushStream(programTempFolderRunningLogFile,
-                $"\n\n结束运行程序：{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}\n\n",
-                true);
         }
 
         public static void checkHash(SettingStruct.SettingConfig setting, List<string> check_folder_list, List<string> hash_method_name, List<bool> verify_method_use)
@@ -209,7 +234,7 @@ namespace ConsoleApp3
                 }
                 // 获取该文件保存的hash值
                 // 对应结构：文件名->(hash方法->hash值)
-                Dictionary<string, Dictionary<string, string>> hash_file_dic = Utilities.getHashResultDict(hash_file_all_line_list);
+                Dictionary<string, Dictionary<string, string>> hash_file_dic = Utilities.getHashResultDictFromHashFile(hash_file_all_line_list);
                 // 开始校验流程
                 DateTime folder_before_time = DateTime.Now;
                 Console.WriteLine((++no) + "." + path + "，开始时间：" + folder_before_time.ToString("yyyy-MM-dd HH:mm:ss"));
@@ -273,7 +298,7 @@ namespace ConsoleApp3
 
                     DateTime file_after_time = DateTime.Now;
                     double use_time_second = (file_after_time - file_before_time).TotalSeconds;
-                    Console.WriteLine("      -开始时间：" + file_before_time.ToString("yyyy-MM-dd HH:mm:ss") + "，结束时间：" + file_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共同时：" + use_time_second.ToString("0.0000000") + " 秒");
+                    Console.WriteLine("      -开始时间：" + file_before_time.ToString("yyyy-MM-dd HH:mm:ss") + "，结束时间：" + file_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共同时：" + use_time_second.ToString("0.0000") + " 秒");
 
                     /* 预估剩余时间 START */
                     handle_file_num++;
@@ -282,17 +307,17 @@ namespace ConsoleApp3
                     double per_byte_average = handle_file_byte / handle_file_time_second;
                     double remain_second = (all_file_byte - handle_file_byte) / per_byte_average;
                     Console.WriteLine($"      -当前进度：{handle_file_num} / {all_file_num} = {(handle_file_num * 100.0d / all_file_num).ToString("0.00")}%，当前文件：{handle_file_num}，总共文件：{all_file_num}");
-                    Console.WriteLine("      -剩余时间：" + (remain_second / 86400.0).ToString("0.0000000") + " 天 ≈≈ " + (remain_second / 3600.0).ToString("0.0000000") + " 小时 ≈≈ " + (remain_second / 60.0).ToString("0.0000000") + " 分 ≈≈ " + remain_second.ToString("0.0000000") + " 秒");
+                    Console.WriteLine("      -剩余时间：" + (remain_second / 86400.0).ToString("0.0000") + " 天 ≈≈ " + (remain_second / 3600.0).ToString("0.0000") + " 小时 ≈≈ " + (remain_second / 60.0).ToString("0.0000") + " 分 ≈≈ " + remain_second.ToString("0.0000") + " 秒");
                     Console.WriteLine("      -预计结束时间：" + DateTime.Now.AddSeconds(remain_second).ToString("yyyy-MM-dd HH:mm:ss"));
                     /* 预估剩余时间 END */
                 }
                 DateTime folder_after_time = DateTime.Now;
                 Console.WriteLine("  结束时间：" + folder_after_time.ToString("yyyy-MM-dd HH:mm:ss"));
-                Console.WriteLine("  总共用时：" + (folder_after_time - folder_before_time).TotalDays.ToString("0.0000000") + " 天 ≈≈ " + (folder_after_time - folder_before_time).TotalHours.ToString("0.0000000") + " 小时 ≈≈ " + (folder_after_time - folder_before_time).TotalMinutes.ToString("0.0000000") + " 分 ≈≈ " + (folder_after_time - folder_before_time).TotalSeconds.ToString("0.0000000") + " 秒\n");
+                Console.WriteLine("  总共用时：" + (folder_after_time - folder_before_time).TotalDays.ToString("0.0000") + " 天 ≈≈ " + (folder_after_time - folder_before_time).TotalHours.ToString("0.0000") + " 小时 ≈≈ " + (folder_after_time - folder_before_time).TotalMinutes.ToString("0.0000") + " 分 ≈≈ " + (folder_after_time - folder_before_time).TotalSeconds.ToString("0.0000") + " 秒\n");
             }
             DateTime after_all = DateTime.Now;
             Console.WriteLine("\n结束执行，结束时间：" + after_all.ToString("yyyy-MM-dd HH:mm:ss"));
-            Console.WriteLine("总共用时：" + (after_all - before_all).TotalDays.ToString("0.0000000") + " 天 ≈≈ " + (after_all - before_all).TotalHours.ToString("0.0000000") + " 小时 ≈≈ " + (after_all - before_all).TotalMinutes.ToString("0.0000000") + " 分 ≈≈ " + (after_all - before_all).TotalSeconds.ToString("0.0000000") + " 秒");
+            Console.WriteLine("总共用时：" + (after_all - before_all).TotalDays.ToString("0.0000") + " 天 ≈≈ " + (after_all - before_all).TotalHours.ToString("0.0000") + " 小时 ≈≈ " + (after_all - before_all).TotalMinutes.ToString("0.0000") + " 分 ≈≈ " + (after_all - before_all).TotalSeconds.ToString("0.0000") + " 秒");
 
             if (error_check_file.Count > 0)
             {
@@ -393,8 +418,8 @@ namespace ConsoleApp3
 
             writer.WriteLine(Utilities.PROGRAM_LOG_CONTENT_SPLIT_LINE_CONTENT_START);
             writer.WriteLine($"{Utilities.PROGRAM_LOG_CONTENT_FOLDER_PREFIX}{runLog.folderPath}");
-            writer.WriteLine($"{Utilities.PROGRAM_LOG_CONTENT_FILE_PATH_PREFIX}{runLog.fileInfo.FullName}");
-            writer.WriteLine($"{Utilities.PROGRAM_LOG_CONTENT_FILE_SIZE_PREFIX}{runLog.fileInfo.Length}");
+            writer.WriteLine($"{Utilities.PROGRAM_LOG_CONTENT_FILE_PATH_PREFIX}{runLog.filePath}");
+            writer.WriteLine($"{Utilities.PROGRAM_LOG_CONTENT_FILE_SIZE_PREFIX}{runLog.fileSize}");
             writer.WriteLine($"[{runLog.hashName}] {runLog.hashValue}");
             writer.WriteLine(Utilities.PROGRAM_LOG_CONTENT_SPLIT_LINE_CONTENT_END);
 
