@@ -49,7 +49,7 @@ namespace ConsoleApp3
         /** 程序内嵌文件名称 END */
 
         /** 程序运行常量 START */
-        public static UTF8Encoding utf8_encoding = new UTF8Encoding(false);
+        public static UTF8Encoding UTF8_ENCODING = new UTF8Encoding(false);
         public const string HASH_FILE_NAME = "hash.txt";
         public const string HASH_FILE_SPLIT_LINE_CONTENT = "----------------------------------------";
         public const string HASH_FILE_CONTENT_NAME_PREFIX = "[name] ";
@@ -270,8 +270,26 @@ namespace ConsoleApp3
 
         // 从run_log.txt文件读取hash结果
         // folderPath -> [filePath -> (hashName -> hashValue)]
-        public static Dictionary<string, RunLog> getHashResultDictFromRunLog(List<string> all_line_list, List<string> all_hash_method_name_list)
+        public static Dictionary<string, RunLog> getHashResultDictFromRunLog(string run_log_path, List<string> all_hash_method_name_list)
         {
+            List<string> all_line_list = new List<string>();
+            if (!File.Exists(run_log_path))
+            {
+                return new Dictionary<string, RunLog>();
+            }
+            using (StreamReader stream_reader = new StreamReader(run_log_path!, UTF8_ENCODING))
+            {
+                while (!stream_reader.EndOfStream)
+                {
+                    string line = stream_reader.ReadLine()!;
+                    if (string.IsNullOrEmpty(line))
+                    {
+                        continue;
+                    }
+                    all_line_list.Add(line);
+                }
+            }
+
             Dictionary<string, RunLog> result = new Dictionary<string, RunLog>();
             string? folderPath = null;
             string? filePath = null;

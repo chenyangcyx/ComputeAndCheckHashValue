@@ -40,7 +40,7 @@ namespace ConsoleApp3
                     throw new Exception("检查目录" + setting.check_folder_config_file + "不存在！");
                 }
                 List<string> check_folder_list = new List<string>();
-                using (StreamReader stream_reader = new StreamReader(setting.check_folder_config_file, Utilities.utf8_encoding))
+                using (StreamReader stream_reader = new StreamReader(setting.check_folder_config_file, Utilities.UTF8_ENCODING))
                 {
                     while (!stream_reader.EndOfStream)
                     {
@@ -427,7 +427,7 @@ namespace ConsoleApp3
 
             // 生成程序此次运行的临时目录名称
             List<string> allFolderNameList = new List<string>();
-            using (StreamReader stream_reader = new StreamReader(setting.check_folder_config_file, Utilities.utf8_encoding))
+            using (StreamReader stream_reader = new StreamReader(setting.check_folder_config_file, Utilities.UTF8_ENCODING))
             {
                 while (!stream_reader.EndOfStream)
                 {

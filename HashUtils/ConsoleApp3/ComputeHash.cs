@@ -35,7 +35,7 @@ namespace ConsoleApp3
 
         public static string getSHA2_256(string strContent)
         {
-            return convertHashCodeBytes(SHA256.HashData(Utilities.utf8_encoding.GetBytes(strContent)));
+            return convertHashCodeBytes(SHA256.HashData(Utilities.UTF8_ENCODING.GetBytes(strContent)));
         }
 
         public static string getSHA2_384(FileInfo fi)

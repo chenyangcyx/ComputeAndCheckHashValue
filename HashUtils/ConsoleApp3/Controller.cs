@@ -29,11 +29,23 @@ namespace ConsoleApp3
             }
             /* 预测剩余时间 END */
 
+            /* 如果存在run_log文件，则读取里面的所有内容 */
+            Dictionary<string, RunLog> exist_run_log_dic = Utilities.getHashResultDictFromRunLog(Utilities.PROGRAM_RUNNING_LOG_FILE_PATH!, hash_method_name);
+            if (exist_run_log_dic.Count == 0)
+            {
+                Console.WriteLine($"\n▶ 未检测到程序运行log文件{Utilities.PROGRAM_LOG_FILE_NAME}\n");
+            }
+            else
+            {
+                Console.WriteLine($"\n● 检测到程序运行log文件{Utilities.PROGRAM_LOG_FILE_NAME}，共有{exist_run_log_dic.Count}条记录，文件地址：{Utilities.PROGRAM_RUNNING_LOG_FILE_PATH}\n");
+            }
+            /* 如果存在run_log文件，则读取里面的所有内容 */
+
             /* 临时目录写入stream初始化 */
             StreamWriter programTempFolderRunningLogFile = new StreamWriter(
                 Utilities.PROGRAM_RUNNING_LOG_FILE_PATH!,
                 true,
-                Utilities.utf8_encoding);
+                Utilities.UTF8_ENCODING);
             programTempFolderRunningLogFile.AutoFlush = true;
             outputAndFlushStream(programTempFolderRunningLogFile,
                 $"\n\n开始运行程序：{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}\n\n");
@@ -79,6 +91,12 @@ namespace ConsoleApp3
                     {
                         if (hash_method_use[hash_no])
                         {
+                            // 判断在run_log.txt文件中是否已经存储了结果
+                            if (exist_run_log_dic.ContainsKey(RunLog.getRunLogHash(this_folder_path, file, hash_method_name[hash_no])))
+                            {
+                                Console.WriteLine($"      -{hash_method_name[hash_no]}: 已经计算过，跳过不再重复计算");
+                                continue;
+                            }
                             // 计算文件的hash值
                             string hash_compute_value = ComputeHash.getHashByName(hash_method_name[hash_no], file.FullName, setting);
                             // runLog运行临时文件输出
@@ -101,7 +119,7 @@ namespace ConsoleApp3
                     double per_byte_average = handle_file_byte / handle_file_time_second;
                     double remain_second = (all_file_byte - handle_file_byte) / per_byte_average;
                     Console.WriteLine($"      -当前进度：{handle_file_num} / {all_file_num} = {(handle_file_num * 100.0d / all_file_num).ToString("0.00")}%，当前文件：{handle_file_num}，总共文件：{all_file_num}");
-                    Console.WriteLine("      -剩余时间：" + remain_second.ToString("0.0000") + " 秒 ≈≈ " + (remain_second / 60.0).ToString("0.0000") + " 分 ≈≈ " + (remain_second / 3600.0).ToString("0.0000") + " 小时 ≈≈ " + (remain_second / 86400.0).ToString("0.0000") + " 天");
+                    Console.WriteLine("      -剩余时间：" + (remain_second / 86400.0).ToString("0.0000") + " 天 ≈≈ " + (remain_second / 3600.0).ToString("0.0000") + " 小时 ≈≈ " + (remain_second / 60.0).ToString("0.0000") + " 分 ≈≈ " + remain_second.ToString("0.0000") + " 秒");
                     Console.WriteLine("      -预计结束时间：" + DateTime.Now.AddSeconds(remain_second).ToString("yyyy-MM-dd HH:mm:ss"));
                     /* 预估剩余时间 END */
                 }
@@ -113,23 +131,10 @@ namespace ConsoleApp3
                 outputAndFlushStream(programTempFolderRunningLogFile, $"\n\n结束运行程序：{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}\n\n", true);
 
                 // 读取程序运行RUN_LOG文件中的所有记录
-                List<string> run_log_file_all_lines = new List<string>();
-                using (StreamReader stream_reader = new StreamReader(Utilities.PROGRAM_RUNNING_LOG_FILE_PATH!, Utilities.utf8_encoding))
-                {
-                    while (!stream_reader.EndOfStream)
-                    {
-                        string line = stream_reader.ReadLine()!;
-                        if (string.IsNullOrEmpty(line))
-                        {
-                            continue;
-                        }
-                        run_log_file_all_lines.Add(line);
-                    }
-                }
-                Dictionary<string, RunLog> all_run_log_dic = Utilities.getHashResultDictFromRunLog(run_log_file_all_lines, hash_method_name);
+                Dictionary<string, RunLog> all_run_log_dic = Utilities.getHashResultDictFromRunLog(Utilities.PROGRAM_RUNNING_LOG_FILE_PATH!, hash_method_name);
 
                 // 将RUN LOG中的记录全部写入到hash.txt文件中
-                using (StreamWriter sw_result = new StreamWriter(Path.Combine(check_folder_list[path_no], Utilities.HASH_FILE_NAME), false, Utilities.utf8_encoding))
+                using (StreamWriter sw_result = new StreamWriter(Path.Combine(check_folder_list[path_no], Utilities.HASH_FILE_NAME), false, Utilities.UTF8_ENCODING))
                 {
                     for (int file_info_no = 0; file_info_no < all_file_no_hash_file.Count; file_info_no++)
                     {
@@ -220,7 +225,7 @@ namespace ConsoleApp3
                 }
                 // 读入文件夹内的hash.txt文件
                 List<string> hash_file_all_line_list = new List<string>();
-                using (StreamReader stream_reader = new StreamReader(hash_file_path, Utilities.utf8_encoding))
+                using (StreamReader stream_reader = new StreamReader(hash_file_path, Utilities.UTF8_ENCODING))
                 {
                     while (!stream_reader.EndOfStream)
                     {
@@ -307,7 +312,7 @@ namespace ConsoleApp3
                     double per_byte_average = handle_file_byte / handle_file_time_second;
                     double remain_second = (all_file_byte - handle_file_byte) / per_byte_average;
                     Console.WriteLine($"      -当前进度：{handle_file_num} / {all_file_num} = {(handle_file_num * 100.0d / all_file_num).ToString("0.00")}%，当前文件：{handle_file_num}，总共文件：{all_file_num}");
-                    Console.WriteLine("      -剩余时间：" + remain_second.ToString("0.0000") + " 秒 ≈≈ " + (remain_second / 60.0).ToString("0.0000") + " 分 ≈≈ " + (remain_second / 3600.0).ToString("0.0000") + " 小时 ≈≈ " + (remain_second / 86400.0).ToString("0.0000") + " 天");
+                    Console.WriteLine("      -剩余时间：" + (remain_second / 86400.0).ToString("0.0000") + " 天 ≈≈ " + (remain_second / 3600.0).ToString("0.0000") + " 小时 ≈≈ " + (remain_second / 60.0).ToString("0.0000") + " 分 ≈≈ " + remain_second.ToString("0.0000") + " 秒");
                     Console.WriteLine("      -预计结束时间：" + DateTime.Now.AddSeconds(remain_second).ToString("yyyy-MM-dd HH:mm:ss"));
                     /* 预估剩余时间 END */
                 }
