@@ -278,22 +278,28 @@ namespace ConsoleApp3
                 .. appendFolderName,
                 targetFileName,
             ];
-            // 要复制到的目录
+            // 构造目标文件地址
             string path = Path.Combine(toCombinePath.ToArray());
+
+            // 如果文件已经存在，则直接退出
+            if(File.Exists(path))
+            {
+                return new FileInfo(path);
+            }
+
+            // 如果文件夹不存在则创建
             FileInfo fileInfo = new FileInfo(path);
-            // 创建目录
             DirectoryInfo directoryInfo = fileInfo.Directory!;
             if (!directoryInfo.Exists)
             {
                 directoryInfo.Create();
             }
-            // 复制文件
             using (Stream output = File.Create(path))
             {
                 stream.CopyTo(output);
             }
             // 判断是否复制成功
-            if (fileInfo.Exists)
+            if (File.Exists(path))
             {
                 return fileInfo;
             }

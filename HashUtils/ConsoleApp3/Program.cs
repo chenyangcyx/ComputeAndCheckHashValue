@@ -442,8 +442,9 @@ namespace ConsoleApp3
             allFolderNameList.Sort((a, b) => a.CompareTo(b));
             Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_NAME = Utilities.PROGRAM_NAME + "-" + ComputeHash.getSHA2_256(string.Join(",", allFolderNameList));
             Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_NAME);
+            DirectoryInfo programTempFolderDirectoryInfo = new DirectoryInfo(Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH);
 
-            // 复制BLAKE程序到临时目录下
+            // 初始化blake2和blake3程序的地址
             string blake2Name, blake3Name;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -460,24 +461,38 @@ namespace ConsoleApp3
                 throw new Exception("当前系统暂不支持BLAKE程序！");
             }
 
+            // 复制blake2和blake3程序到临时目录下
             Stream blake2Stream = Utilities.getMainfestResourceStream(blake2Name);
             Stream blake3Stream = Utilities.getMainfestResourceStream(blake3Name);
-
             FileInfo blake2FileInfo = Utilities.copyEmbeddedResourceToTempFolder(blake2Stream, new List<string>() { Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_NAME }, blake2Name);
             FileInfo blake3FileInfo = Utilities.copyEmbeddedResourceToTempFolder(blake3Stream, new List<string>() { Utilities.PROGRAM_RUNNING_PARAM_TEMP_FOLDER_NAME }, blake3Name);
-
-            Console.WriteLine();
-            if (blake2FileInfo.Exists)
+            if (programTempFolderDirectoryInfo.Exists)
             {
+                Console.WriteLine();
+
+                Console.WriteLine($"程序临时目录已存在：{programTempFolderDirectoryInfo.FullName}");
+
+                Console.WriteLine($">> {blake2Name}: {blake2FileInfo.FullName}");
+                Utilities.BLAKE2_EXE_PATH = blake2FileInfo.FullName;
+
+                Console.WriteLine($">> {blake3Name}: {blake3FileInfo.FullName}");
+                Utilities.BLAKE3_EXE_PATH = blake3FileInfo.FullName;
+
+                Console.WriteLine();
+                return;
+            }
+            else
+            {
+                Console.WriteLine();
+
                 Console.WriteLine($">> 复制文件[{blake2Name}]到目标地址：{blake2FileInfo.FullName}");
                 Utilities.BLAKE2_EXE_PATH = blake2FileInfo.FullName;
-            }
-            if (blake3FileInfo.Exists)
-            {
+
                 Console.WriteLine($">> 复制文件[{blake3Name}]到目标地址：{blake3FileInfo.FullName}");
                 Utilities.BLAKE3_EXE_PATH = blake3FileInfo.FullName;
+
+                Console.WriteLine();
             }
-            Console.WriteLine();
         }
     }
 }
