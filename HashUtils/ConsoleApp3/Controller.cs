@@ -101,7 +101,7 @@ namespace ConsoleApp3
                     double per_byte_average = handle_file_byte / handle_file_time_second;
                     double remain_second = (all_file_byte - handle_file_byte) / per_byte_average;
                     Console.WriteLine($"      -当前进度：{handle_file_num} / {all_file_num} = {(handle_file_num * 100.0d / all_file_num).ToString("0.00")}%，当前文件：{handle_file_num}，总共文件：{all_file_num}");
-                    Console.WriteLine("      -剩余时间：" + (remain_second / 86400.0).ToString("0.0000") + " 天 ≈≈ " + (remain_second / 3600.0).ToString("0.0000") + " 小时 ≈≈ " + (remain_second / 60.0).ToString("0.0000") + " 分 ≈≈ " + remain_second.ToString("0.0000") + " 秒");
+                    Console.WriteLine("      -剩余时间：" + remain_second.ToString("0.0000") + " 秒 ≈≈ " + (remain_second / 60.0).ToString("0.0000") + " 分 ≈≈ " + (remain_second / 3600.0).ToString("0.0000") + " 小时 ≈≈ " + (remain_second / 86400.0).ToString("0.0000") + " 天");
                     Console.WriteLine("      -预计结束时间：" + DateTime.Now.AddSeconds(remain_second).ToString("yyyy-MM-dd HH:mm:ss"));
                     /* 预估剩余时间 END */
                 }
@@ -307,7 +307,7 @@ namespace ConsoleApp3
                     double per_byte_average = handle_file_byte / handle_file_time_second;
                     double remain_second = (all_file_byte - handle_file_byte) / per_byte_average;
                     Console.WriteLine($"      -当前进度：{handle_file_num} / {all_file_num} = {(handle_file_num * 100.0d / all_file_num).ToString("0.00")}%，当前文件：{handle_file_num}，总共文件：{all_file_num}");
-                    Console.WriteLine("      -剩余时间：" + (remain_second / 86400.0).ToString("0.0000") + " 天 ≈≈ " + (remain_second / 3600.0).ToString("0.0000") + " 小时 ≈≈ " + (remain_second / 60.0).ToString("0.0000") + " 分 ≈≈ " + remain_second.ToString("0.0000") + " 秒");
+                    Console.WriteLine("      -剩余时间：" + remain_second.ToString("0.0000") + " 秒 ≈≈ " + (remain_second / 60.0).ToString("0.0000") + " 分 ≈≈ " + (remain_second / 3600.0).ToString("0.0000") + " 小时 ≈≈ " + (remain_second / 86400.0).ToString("0.0000") + " 天");
                     Console.WriteLine("      -预计结束时间：" + DateTime.Now.AddSeconds(remain_second).ToString("yyyy-MM-dd HH:mm:ss"));
                     /* 预估剩余时间 END */
                 }
