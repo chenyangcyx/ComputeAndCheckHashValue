@@ -161,7 +161,7 @@ namespace ConsoleApp3
                     error_check_folder.addVerifyErrorDetail(new VerifyErrorDetail(path, "目录路径不存在，跳过"));
                     continue;
                 }
-                string hash_file_path = path + "\\" + Utilities.HASH_FILE_NAME;
+                string hash_file_path = Path.Combine(path, Utilities.HASH_FILE_NAME);
                 if (!File.Exists(hash_file_path))
                 {
                     Console.WriteLine((++no) + "." + hash_file_path + " 不存在，跳过！\n");
