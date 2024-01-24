@@ -46,12 +46,8 @@ namespace ConsoleApp3
             /* 如果存在run_log文件，则读取里面的所有内容 */
 
             /* 临时目录写入stream初始化 */
-            StreamWriter programTempFolderRunningLogFile = new StreamWriter(
-                Utilities.PROGRAM_RUNNING_LOG_FILE_PATH!,
-                true,
-                Utilities.UTF8_ENCODING);
-            programTempFolderRunningLogFile.AutoFlush = true;
-            outputAndFlushStream(programTempFolderRunningLogFile,
+            StreamWriter? programTempFolderRunningLogFile = openStream(Utilities.PROGRAM_RUNNING_LOG_FILE_PATH!, true);
+            outputAndFlushStream(programTempFolderRunningLogFile!,
                 $"\n\n开始运行程序：{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}\n\n");
             /* 临时目录写入stream初始化 */
 
@@ -131,11 +127,10 @@ namespace ConsoleApp3
                 Console.WriteLine("  结束时间：" + folder_after_time.ToString("yyyy-MM-dd HH:mm:ss"));
                 Console.WriteLine("  总共用时：" + (folder_after_time - folder_before_time).TotalDays.ToString("0.0000") + " 天 ≈≈ " + (folder_after_time - folder_before_time).TotalHours.ToString("0.0000") + " 小时 ≈≈ " + (folder_after_time - folder_before_time).TotalMinutes.ToString("0.0000") + " 分 ≈≈ " + (folder_after_time - folder_before_time).TotalSeconds.ToString("0.0000") + " 秒\n");
 
-                // 关闭log文件的写入
-                outputAndFlushStream(programTempFolderRunningLogFile, $"\n\n结束运行程序：{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}\n\n", true);
-
                 // 读取程序运行RUN_LOG文件中的所有记录
+                outputAndFlushStream(programTempFolderRunningLogFile!, null, true);
                 Dictionary<string, RunLog> all_run_log_dic = Utilities.getHashResultDictFromRunLog(Utilities.PROGRAM_RUNNING_LOG_FILE_PATH!, hash_method_name);
+                programTempFolderRunningLogFile = openStream(Utilities.PROGRAM_RUNNING_LOG_FILE_PATH!, false);
 
                 // 将RUN LOG中的记录全部写入到hash.txt文件中
                 using (StreamWriter sw_result = new StreamWriter(Path.Combine(check_folder_list[path_no], Utilities.HASH_FILE_NAME), false, Utilities.UTF8_ENCODING))
@@ -181,6 +176,9 @@ namespace ConsoleApp3
                 Console.WriteLine("全部文件夹全部生成正确！");
             }
             Console.Write("\n\n");
+
+            // 关闭log文件的写入
+            outputAndFlushStream(programTempFolderRunningLogFile, $"\n\n结束运行程序：{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}\n\n", true);
         }
 
         public static void checkHash(SettingStruct.SettingConfig setting, List<string> check_folder_list, List<string> hash_method_name, List<bool> verify_method_use)
@@ -408,6 +406,14 @@ namespace ConsoleApp3
                     Console.WriteLine($"\n文件复制成功，地址：{result.FullName}");
                 }
             }
+        }
+
+        private static StreamWriter openStream(string path, bool first_time = false)
+        {
+            StreamWriter result = new StreamWriter(path!, true, Utilities.UTF8_ENCODING);
+            result.AutoFlush = true;
+
+            return result;
         }
 
         private static void outputAndFlushStream(StreamWriter writer, string content, bool closeStream = false)
