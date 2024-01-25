@@ -144,9 +144,34 @@ namespace ConsoleApp3
                 if (directory.Exists)
                 {
                     FileInfo[] directoryFiles = directory.GetFiles();
+                    List<string> all_file_name_list = new List<string>();
+                    List<string> all_file_byte_size_list = new List<string>();
+                    foreach (FileInfo file in directoryFiles)
+                    {
+                        all_file_name_list.Add(file.Name);
+                        all_file_byte_size_list.Add(file.Length.ToString("0.00") + " KB");
+                    }
+                    int max_space1 = calWriteLineSpace(all_file_name_list, 10, false);
+                    int max_space2 = calWriteLineSpace(all_file_byte_size_list, 8, false);
+                    int max_space2_left = calWriteLineSpace(all_file_byte_size_list, 8, true);
                     for (int i = 1; i <= directoryFiles.Length; i++)
                     {
-                        Console.WriteLine($" {i}. {directoryFiles[i - 1].Name}");
+                        Console.Write($" {i}. {directoryFiles[i - 1].Name}");
+                        for (int j = 1; j <= max_space1 - directoryFiles[i - 1].Name.Length; j++)
+                        {
+                            Console.Write(" ");
+                        }
+                        Console.Write($"{(directoryFiles[i - 1].Length / 1024.0d).ToString("0.00")} KB");
+                        for (int j = 1; j <= max_space2 - all_file_byte_size_list[i - 1].Length; j++)
+                        {
+                            Console.Write(" ");
+                        }
+                        Console.Write("=");
+                        for (int j = 1; j <= max_space2_left; j++)
+                        {
+                            Console.Write(" ");
+                        }
+                        Console.WriteLine($"{(directoryFiles[i - 1].Length / 1048576.0d).ToString("0.00")} MB");
                     }
                     Console.WriteLine();
                 }
@@ -498,6 +523,35 @@ namespace ConsoleApp3
                 Utilities.BLAKE3_EXE_PATH = blake3FileInfo.FullName;
 
                 Console.WriteLine();
+            }
+        }
+
+        static int calWriteLineSpace(List<string> lines, int unit, bool just_need_space = true)
+        {
+            // 获取lines中的最大长度
+            int max_length = -1;
+            foreach (string item in lines)
+            {
+                max_length = item.Length >= max_length ? item.Length : max_length;
+            }
+            // 计算大于max_length的最大长度
+            int count = 1;
+            while (true)
+            {
+                int all_spaces = count * unit;
+                if (all_spaces <= max_length)
+                {
+                    count++;
+                    continue;
+                }
+                if (just_need_space)
+                {
+                    return all_spaces - max_length;
+                }
+                else
+                {
+                    return all_spaces;
+                }
             }
         }
     }

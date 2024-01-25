@@ -110,7 +110,7 @@ namespace ConsoleApp3
 
                     DateTime file_after_time = DateTime.Now;
                     double use_time_second = (file_after_time - file_before_time).TotalSeconds;
-                    Console.WriteLine("      -开始时间：" + file_before_time.ToString("yyyy-MM-dd HH:mm:ss") + "，结束时间：" + file_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共同时：" + use_time_second.ToString("0.0000") + " 秒");
+                    Console.WriteLine("      -开始时间：" + file_before_time.ToString("yyyy-MM-dd HH:mm:ss") + "，结束时间：" + file_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共同时：" + use_time_second.ToString("0.0000") + " 秒 ≈≈ " + (use_time_second / 60.0).ToString("0.0000") + " 分");
 
                     /* 预估剩余时间 START */
                     handle_file_num++;
@@ -305,7 +305,7 @@ namespace ConsoleApp3
 
                     DateTime file_after_time = DateTime.Now;
                     double use_time_second = (file_after_time - file_before_time).TotalSeconds;
-                    Console.WriteLine("      -开始时间：" + file_before_time.ToString("yyyy-MM-dd HH:mm:ss") + "，结束时间：" + file_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共同时：" + use_time_second.ToString("0.0000") + " 秒");
+                    Console.WriteLine("      -开始时间：" + file_before_time.ToString("yyyy-MM-dd HH:mm:ss") + "，结束时间：" + file_after_time.ToString("yyyy-MM-dd HH:mm:ss") + "，总共同时：" + use_time_second.ToString("0.0000") + " 秒 ≈≈ " + (use_time_second / 60.0).ToString("0.0000") + " 分");
 
                     /* 预估剩余时间 START */
                     handle_file_num++;
