@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
     <PublishAot>False</PublishAot>
     <InvariantGlobalization>true</InvariantGlobalization>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
