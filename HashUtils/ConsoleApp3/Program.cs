@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
 namespace ConsoleApp3
@@ -88,38 +89,77 @@ namespace ConsoleApp3
                 }
                 Console.WriteLine(string.Join(", ", verifyMethodList));
 
-                // 选择运行模式
-                Console.WriteLine("请选择程序的运行模式：");
-                Console.WriteLine("[1] 生成hash文件");
-                Console.WriteLine("[2] 生成hash文件（不使用run_log.txt）");
-                Console.WriteLine("[3] 校验文件hash");
-                Console.WriteLine("[4] 查看并输出setting文件demo");
-                Console.WriteLine("[5] 查看NET8功能支持情况");
-                string chooseNo = Console.ReadLine()!;
-                switch (chooseNo)
+                bool choose_mode_run_next = true;
+                while (true)
                 {
-                    case "1":
-                        Console.WriteLine("选择了：[1] 生成hash文件\n");
-                        Controller.generateHash(setting, check_folder_list, hash_method_name, generate_method_use, true);
+                    // 选择运行模式
+                    Console.WriteLine("请选择程序的运行模式：");
+                    if (Utilities.PROGRAM_RUNNING_USE_TIMER)
+                    {
+                        Console.WriteLine("[1] 关闭定时执行任务，当前开启状态：【开启】");
+                    }
+                    else
+                    {
+                        Console.WriteLine("[1] 开启定时执行任务，当前开启状态：【关闭】");
+                    }
+                    Console.WriteLine("[2] 生成hash文件");
+                    Console.WriteLine("[3] 生成hash文件（不使用run_log.txt）");
+                    Console.WriteLine("[4] 校验文件hash");
+                    Console.WriteLine("[5] 查看并输出setting文件demo");
+                    Console.WriteLine("[6] 查看NET8功能支持情况");
+
+                    string chooseNo = Console.ReadLine()!;
+                    switch (chooseNo)
+                    {
+                        case "1":
+                            Utilities.PROGRAM_RUNNING_USE_TIMER = !Utilities.PROGRAM_RUNNING_USE_TIMER;
+                            if (Utilities.PROGRAM_RUNNING_USE_TIMER)
+                            {
+                                Console.WriteLine("\n\n开启了定时器！\n\n");
+                            }
+                            else
+                            {
+                                Console.WriteLine("\n\n关闭了定时器！\n\n");
+                            }
+                            choose_mode_run_next = false;
+                            break;
+                        case "2":
+                            Console.WriteLine("选择了：[1] 生成hash文件\n");
+                            waitFromRun();
+                            Controller.generateHash(setting, check_folder_list, hash_method_name, generate_method_use, true);
+                            choose_mode_run_next = true;
+                            break;
+                        case "3":
+                            Console.WriteLine("选择了：[2] 生成hash文件（不使用run_log.txt）\n");
+                            waitFromRun();
+                            Controller.generateHash(setting, check_folder_list, hash_method_name, generate_method_use, false);
+                            choose_mode_run_next = true;
+                            break;
+                        case "4":
+                            Console.WriteLine("选择了：[3] 校验文件hash\n");
+                            waitFromRun();
+                            Controller.checkHash(setting, check_folder_list, hash_method_name, verify_method_use);
+                            choose_mode_run_next = true;
+                            break;
+                        case "5":
+                            Console.WriteLine("选择了：[4] 查看并输出setting文件demo\n");
+                            Controller.showAndOutputSettingDemo();
+                            choose_mode_run_next = true;
+                            break;
+                        case "6":
+                            Console.WriteLine("选择了：[5] 查看当前系统信息\n");
+                            Controller.checkSystemInfo();
+                            choose_mode_run_next = true;
+                            break;
+                        default:
+                            choose_mode_run_next = true;
+                            break;
+                    }
+
+                    if (choose_mode_run_next)
+                    {
                         break;
-                    case "2":
-                        Console.WriteLine("选择了：[2] 生成hash文件（不使用run_log.txt）\n");
-                        Controller.generateHash(setting, check_folder_list, hash_method_name, generate_method_use, false);
-                        break;
-                    case "3":
-                        Console.WriteLine("选择了：[3] 校验文件hash\n");
-                        Controller.checkHash(setting, check_folder_list, hash_method_name, verify_method_use);
-                        break;
-                    case "4":
-                        Console.WriteLine("选择了：[4] 查看并输出setting文件demo\n");
-                        Controller.showAndOutputSettingDemo();
-                        break;
-                    case "5":
-                        Console.WriteLine("选择了：[5] 查看当前系统信息\n");
-                        Controller.checkSystemInfo();
-                        break;
-                    default:
-                        break;
+                    }
                 }
             }
             catch (Exception e)
@@ -551,6 +591,102 @@ namespace ConsoleApp3
                 else
                 {
                     return all_spaces;
+                }
+            }
+        }
+
+        static void waitFromRun()
+        {
+            if (Utilities.PROGRAM_RUNNING_USE_TIMER)
+            {
+                Console.WriteLine("程序开启了定时模式！");
+            }
+            else
+            {
+                return;
+            }
+
+            bool sleep_over = false;
+            while (!sleep_over)
+            {
+                Console.WriteLine("请输入定时时间（注意时间不能超过24天）：");
+                Console.WriteLine(" -格式1：秒级别，100sec");
+                Console.WriteLine(" -格式2：分级别，100min");
+                Console.WriteLine(" -格式3：时级别，100hour");
+                Console.WriteLine(" -格式4：具体时间，2024-01-01 12:34:56");
+                string input_line = Console.ReadLine()!;
+                long wait_seconds = -1;
+                DateTime endTime;
+                if (checkTimerFormat(input_line, out wait_seconds, out endTime))
+                {
+                    for (long i = 0; i <= wait_seconds; i++)
+                    {
+                        Console.WriteLine($"已经过去了[{i}]秒，还剩[{wait_seconds - i}]秒，当前时间[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}]，结束时间[{endTime.ToString("yyyy-MM-dd HH:mm:ss")}]");
+                        Thread.Sleep(1000);
+                    }
+                    sleep_over = true;
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine("输入的定时时间不正确，请重新输入！");
+                }
+            }
+        }
+
+        static bool checkTimerFormat(string format, out long wait_seconds, out DateTime endTime)
+        {
+            DateTime nowtime = DateTime.Now;
+            // 秒、分、小时
+            if (format.Contains("sec") || format.Contains("min") || format.Contains("hour"))
+            {
+                int try_parse_value = -1;
+                string timeValue = format.Replace("sec", "").Replace("min", "").Replace("hour", "");
+                bool result = int.TryParse(timeValue, out try_parse_value);
+                if (result && try_parse_value > 0)
+                {
+                    if (format.Contains("sec"))
+                    {
+                        wait_seconds = try_parse_value;
+                    }
+                    else if (format.Contains("min"))
+                    {
+                        wait_seconds = try_parse_value * 60;
+                    }
+                    else if (format.Contains("hour"))
+                    {
+                        wait_seconds = try_parse_value * 60 * 60;
+                    }
+                    else
+                    {
+                        throw new Exception("不支持的时间格式转换：" + format);
+                    }
+                    endTime = nowtime.AddSeconds(wait_seconds);
+                    return true;
+                }
+                else
+                {
+                    wait_seconds = -1;
+                    endTime = DateTime.Now;
+                    return false;
+                }
+            }
+            // 具体时间
+            else
+            {
+                DateTime try_parse_datetime;
+                bool result = DateTime.TryParseExact(format, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out try_parse_datetime);
+                if (result)
+                {
+                    wait_seconds = (long)(try_parse_datetime - DateTime.Now).TotalSeconds;
+                    endTime = try_parse_datetime;
+                    return true;
+                }
+                else
+                {
+                    wait_seconds = -1;
+                    endTime = DateTime.Now;
+                    return false;
                 }
             }
         }

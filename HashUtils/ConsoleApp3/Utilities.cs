@@ -62,6 +62,7 @@ namespace ConsoleApp3
         /** 程序运行常量 START */
 
         /** 程序运行必要参数（运行前必须设置） START */
+        public static bool PROGRAM_RUNNING_USE_TIMER = false;
         public static string? PROGRAM_RUNNING_PARAM_TEMP_FOLDER_NAME;
         public static string? PROGRAM_RUNNING_PARAM_TEMP_FOLDER_PATH;
         public static string? PROGRAM_RUNNING_LOG_FILE_PATH;

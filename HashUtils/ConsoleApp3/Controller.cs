@@ -47,8 +47,7 @@ namespace ConsoleApp3
 
             /* 临时目录写入stream初始化 */
             StreamWriter? programTempFolderRunningLogFile = openStream(Utilities.PROGRAM_RUNNING_LOG_FILE_PATH!, true);
-            outputAndFlushStream(programTempFolderRunningLogFile!,
-                $"\n\n开始运行程序：{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}\n\n");
+            outputAndFlushStream(programTempFolderRunningLogFile!, $"\n\n开始运行程序：{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}\n\n");
             /* 临时目录写入stream初始化 */
 
             List<string> error_check_folder = new List<string>();
