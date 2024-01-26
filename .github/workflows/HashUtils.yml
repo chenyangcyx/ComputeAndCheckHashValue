@@ -54,7 +54,10 @@ jobs:
         dotnet restore
         dotnet build --no-restore
         dotnet clean
-        dotnet publish /p:Configuration=Release /p:PublishProfile=NET8-winx64
+        dotnet publish /p:Configuration=Release /p:PublishProfile=AnyCPU-winx64-依赖框架
+        dotnet publish /p:Configuration=Release /p:PublishProfile=AnyCPU-winx64-独立
+        dotnet publish /p:Configuration=Release /p:PublishProfile=x64-winx64-依赖框架
+        dotnet publish /p:Configuration=Release /p:PublishProfile=x64-winx64-独立
 
     - name: Upload Publish Result Files
       uses: actions/upload-artifact@main
