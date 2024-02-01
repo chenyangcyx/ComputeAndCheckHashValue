@@ -124,30 +124,30 @@ namespace ConsoleApp3
                             choose_mode_run_next = false;
                             break;
                         case "2":
-                            Console.WriteLine("选择了：[1] 生成hash文件\n");
+                            Console.WriteLine($"选择了：[{chooseNo}] 生成hash文件\n");
                             waitFromRun();
                             Controller.generateHash(setting, check_folder_list, hash_method_name, generate_method_use, true);
                             choose_mode_run_next = true;
                             break;
                         case "3":
-                            Console.WriteLine("选择了：[2] 生成hash文件（不使用run_log.txt）\n");
+                            Console.WriteLine($"选择了：[{chooseNo}] 生成hash文件（不使用run_log.txt）\n");
                             waitFromRun();
                             Controller.generateHash(setting, check_folder_list, hash_method_name, generate_method_use, false);
                             choose_mode_run_next = true;
                             break;
                         case "4":
-                            Console.WriteLine("选择了：[3] 校验文件hash\n");
+                            Console.WriteLine($"选择了：[{chooseNo}] 校验文件hash\n");
                             waitFromRun();
                             Controller.checkHash(setting, check_folder_list, hash_method_name, verify_method_use);
                             choose_mode_run_next = true;
                             break;
                         case "5":
-                            Console.WriteLine("选择了：[4] 查看并输出setting文件demo\n");
+                            Console.WriteLine($"选择了：[{chooseNo}] 查看并输出setting文件demo\n");
                             Controller.showAndOutputSettingDemo();
                             choose_mode_run_next = true;
                             break;
                         case "6":
-                            Console.WriteLine("选择了：[5] 查看当前系统信息\n");
+                            Console.WriteLine($"选择了：[{chooseNo}] 查看当前系统信息\n");
                             Controller.checkSystemInfo();
                             choose_mode_run_next = true;
                             break;
