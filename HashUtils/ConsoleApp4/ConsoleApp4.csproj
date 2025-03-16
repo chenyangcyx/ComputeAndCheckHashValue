@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="embedded_resource\blake2\b2sum-amd64-linux" />
+    <EmbeddedResource Include="embedded_resource\blake2\b2sum-amd64-windows.exe" />
+    <EmbeddedResource Include="embedded_resource\blake3\b3sum_linux_x64_bin" />
+    <EmbeddedResource Include="embedded_resource\blake3\b3sum_windows_x64_bin.exe" />
+    <EmbeddedResource Include="embedded_resource\setting_demo.json" />
+  </ItemGroup>
+
+</Project>

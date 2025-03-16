@@ -1,0 +1,27 @@
+﻿{
+  "check_folder_config_file": "checkFolder.txt",
+  "generate_method": {
+    "md5": 1,
+    "sha1": 1,
+    "sha256": 1,
+    "sha384": 1,
+    "sha512": 1,
+    "blake2b": 1,
+    "blake2bp": 1,
+    "blake2s": 1,
+    "blake2sp": 1,
+    "blake3": 1
+  },
+  "verify_method": {
+    "md5": 0,
+    "sha1": 0,
+    "sha256": 0,
+    "sha384": 0,
+    "sha512": 0,
+    "blake2b": 0,
+    "blake2bp": 0,
+    "blake2s": 0,
+    "blake2sp": 0,
+    "blake3": 1
+  }
+}
