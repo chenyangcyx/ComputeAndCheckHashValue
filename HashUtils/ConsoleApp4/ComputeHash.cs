@@ -54,7 +54,7 @@ namespace ConsoleApp4
         {
             using (var read_stream = fi.OpenRead())
             {
-                SHA3_224 sha = new SHA3_224();
+                Waher.Security.SHA3.SHA3_224 sha = new Waher.Security.SHA3.SHA3_224();
                 return convertHashCodeBytes(sha.ComputeVariable(read_stream));
             }
         }
@@ -63,7 +63,7 @@ namespace ConsoleApp4
         {
             using (var read_stream = fi.OpenRead())
             {
-                SHA3_256 sha = new SHA3_256();
+                Waher.Security.SHA3.SHA3_256 sha = new Waher.Security.SHA3.SHA3_256();
                 return convertHashCodeBytes(sha.ComputeVariable(read_stream));
             }
         }
@@ -72,7 +72,7 @@ namespace ConsoleApp4
         {
             using (var read_stream = fi.OpenRead())
             {
-                SHA3_384 sha = new SHA3_384();
+                Waher.Security.SHA3.SHA3_384 sha = new Waher.Security.SHA3.SHA3_384();
                 return convertHashCodeBytes(sha.ComputeVariable(read_stream));
             }
         }
@@ -81,7 +81,7 @@ namespace ConsoleApp4
         {
             using (var read_stream = fi.OpenRead())
             {
-                SHA3_512 sha = new SHA3_512();
+                Waher.Security.SHA3.SHA3_512 sha = new Waher.Security.SHA3.SHA3_512();
                 return convertHashCodeBytes(sha.ComputeVariable(read_stream));
             }
         }
@@ -90,7 +90,7 @@ namespace ConsoleApp4
         {
             using (var read_stream = fi.OpenRead())
             {
-                SHAKE128 shake128 = new SHAKE128(Utilities.SHAKE128_SIZE);
+                Waher.Security.SHA3.SHAKE128 shake128 = new Waher.Security.SHA3.SHAKE128(Utilities.SHAKE128_SIZE);
                 return convertHashCodeBytes(shake128.ComputeVariable(read_stream));
             }
         }
@@ -99,7 +99,7 @@ namespace ConsoleApp4
         {
             using (var read_stream = fi.OpenRead())
             {
-                SHAKE256 shake256 = new SHAKE256(Utilities.SHAKE256_SIZE);
+                Waher.Security.SHA3.SHAKE256 shake256 = new Waher.Security.SHA3.SHAKE256(Utilities.SHAKE256_SIZE);
                 return convertHashCodeBytes(shake256.ComputeVariable(read_stream));
             }
         }

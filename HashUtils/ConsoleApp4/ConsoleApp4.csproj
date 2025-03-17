@@ -23,4 +23,8 @@
     <EmbeddedResource Include="embedded_resource\setting_demo.json" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Waher.Security.SHA3" Version="1.2.0" />
+  </ItemGroup>
+
 </Project>

@@ -11,10 +11,10 @@ namespace ConsoleApp4
             Console.WriteLine("\n开始生成，开始时间：" + before_all.ToString("yyyy-MM-dd HH:mm:ss") + "\n");
 
             /* 预测剩余时间 START */
-            long all_file_num = 0;
+            long all_file_num = 0L;
             long all_file_byte = 0L;
             double handle_file_time_second = 0d;
-            long handle_file_num = 0;
+            long handle_file_num = 0L;
             long handle_file_byte = 0L;
             // 统计所有文件个数及大小
             Dictionary<string, List<FileInfo>> local_all_file_dic_list = new Dictionary<string, List<FileInfo>>();
@@ -186,10 +186,10 @@ namespace ConsoleApp4
             Console.WriteLine("\n开始校验，开始时间：" + before_all.ToString("yyyy-MM-dd HH:mm:ss") + "\n");
 
             /* 预测剩余时间 START */
-            long all_file_num = 0;
+            long all_file_num = 0L;
             long all_file_byte = 0L;
             double handle_file_time_second = 0d;
-            long handle_file_num = 0;
+            long handle_file_num = 0L;
             long handle_file_byte = 0L;
             // 统计所有文件个数及大小
             Dictionary<string, List<FileInfo>> local_all_file_dic_list = new Dictionary<string, List<FileInfo>>();
@@ -384,6 +384,141 @@ namespace ConsoleApp4
             foreach (string resourceName in resourceNames)
             {
                 Console.WriteLine("[Mainfest Resource] " + resourceName);
+            }
+        }
+
+        /**
+         * 检查文件diff和RAR文件数量统计
+         */
+        public static void checkFileDiffAndRarNum(SettingStruct.SettingConfig setting, List<string> check_folder_list)
+        {
+            // 统计所有文件夹内的文件个数及大小
+            Dictionary<string, List<FileInfo>> local_all_file_dic_list = new Dictionary<string, List<FileInfo>>();
+            Utilities.setAllFolderInfo(local_all_file_dic_list, check_folder_list);
+            // 逐个文件夹进行遍历统计
+            Dictionary<string, List<string>> folder_exteral_file = new Dictionary<string, List<string>>();
+            Dictionary<string, List<string>> folder_lose_file = new Dictionary<string, List<string>>();
+            int no = 0;
+            for (int path_no = 0; path_no < check_folder_list.Count; path_no++)
+            {
+                string path = check_folder_list[path_no];
+                if (!Directory.Exists(path))
+                {
+                    Console.WriteLine((++no) + "." + path + " 不存在，跳过！\n");
+                    continue;
+                }
+                string hash_file_path = Path.Combine(path, Utilities.HASH_FILE_NAME);
+                if (!File.Exists(hash_file_path))
+                {
+                    Console.WriteLine((++no) + "." + hash_file_path + " 不存在，跳过！\n");
+                    continue;
+                }
+                // 读入文件夹内的hash.txt文件
+                List<string> hash_file_all_line_list = new List<string>();
+                using (StreamReader stream_reader = new StreamReader(hash_file_path, Utilities.UTF8_ENCODING))
+                {
+                    while (!stream_reader.EndOfStream)
+                    {
+                        string line = stream_reader.ReadLine()!;
+                        if (string.IsNullOrEmpty(line))
+                        {
+                            continue;
+                        }
+                        hash_file_all_line_list.Add(line);
+                    }
+                }
+                // 获取该文件保存的hash值
+                // 对应结构：文件名->(hash方法->hash值)
+                Dictionary<string, Dictionary<string, string>> hash_file_dic = Utilities.getHashResultDictFromHashFile(hash_file_all_line_list);
+
+                // dic_all_file：文件夹内的所有文件
+                List<string> dic_all_file = Utilities.getAllFileInFolder(path, local_all_file_dic_list, setting);
+                dic_all_file.Remove(Path.Combine(check_folder_list[path_no], Utilities.HASH_FILE_NAME));
+                // hash_all_file：hash文件统计的所有文件
+                List<string> hash_all_file_short = hash_file_dic.Keys.ToList();
+                List<string> hash_all_file_fullName = new List<string>();
+                hash_all_file_short.ForEach(item => hash_all_file_fullName.Add((new FileInfo(Path.Combine(check_folder_list[path_no], item))).FullName));
+
+                // hash存在但是目录不存在的文件
+                List<string> temp_folder_file = [.. dic_all_file];
+                List<string> temp_hash_file = [.. hash_all_file_fullName];
+                temp_hash_file.RemoveAll(item => temp_folder_file.Contains(item));
+
+                // 目录存在但是hash不存在的文件
+                List<string> temp_folder_file2 = [.. dic_all_file];
+                List<string> temp_hash_file2 = [.. hash_all_file_fullName];
+                temp_folder_file2.RemoveAll(item => temp_hash_file2.Contains(item));
+
+                Console.WriteLine($"{++no}. {path}");
+                Console.WriteLine($"  - hash存在但是目录不存在的文件（{temp_hash_file.Count}个）：");
+                int no1 = 0;
+                foreach (var item in temp_hash_file)
+                {
+                    string file_short_name = new FileInfo(item).Name;
+                    Console.WriteLine($"  {++no1}. {file_short_name}");
+                }
+
+                Console.WriteLine();
+                Console.WriteLine($"  - 目录存在但是hash不存在的文件（{temp_folder_file2.Count}个）：");
+                int no2 = 0;
+                foreach (var item in temp_folder_file2)
+                {
+                    string file_short_name = new FileInfo(item).Name;
+                    Console.WriteLine($"  {++no2}. {file_short_name}");
+                }
+                Console.WriteLine();
+
+                // RAR文件统计
+                List<string> rar_count_file_temp = [.. dic_all_file];
+                rar_count_file_temp.RemoveAll(item => item.EndsWith(".rar") || item.EndsWith(".RAR") || item.EndsWith(".rev") || item.EndsWith(".REV"));
+                if (rar_count_file_temp.Count > 0)
+                {
+                    Console.WriteLine("  - 目录下存在非RAR或REV文件，无法统计，跳过！");
+                    Console.WriteLine();
+                    continue;
+                }
+
+                // 统计RAR和REV文件数量
+                List<string> rar_rev_count_file = [.. dic_all_file];
+                List<string> rar_file_list = new List<string>();
+                List<string> rev_file_list = new List<string>();
+                int rar_count = 0, rev_count = 0;
+                foreach (var item in rar_rev_count_file)
+                {
+                    if (item.EndsWith(".rar") || item.EndsWith(".RAR"))
+                    {
+                        rar_file_list.Add(item);
+                        rar_count++;
+                    }
+                    if (item.EndsWith(".rev") || item.EndsWith(".REV"))
+                    {
+                        rev_file_list.Add(item);
+                        rev_count++;
+                    }
+                }
+                int rar_exp_count = 0, rev_exp_count = 0;
+                rar_file_list.Sort((item1, item2) => item1.CompareTo(item2));
+                rev_file_list.Sort((item1, item2) => item1.CompareTo(item2));
+                if (rar_file_list.Count == 1)
+                {
+                    rar_exp_count = 1;
+                }
+                else
+                {
+                    rar_exp_count = int.Parse(rar_file_list[rar_file_list.Count - 1].Replace(".rar", "").Replace(".RAR", "").Substring(rar_file_list[rar_file_list.Count - 1].IndexOf(".part") + 5));
+                }
+                if (rev_file_list.Count == 1)
+                {
+                    rev_exp_count = 1;
+                }
+                else
+                {
+                    rev_exp_count = int.Parse(rev_file_list[rev_file_list.Count - 1].Replace(".rev", "").Replace(".REV", "").Substring(rev_file_list[rev_file_list.Count - 1].IndexOf(".part") + 5));
+                }
+                Console.WriteLine($"  - 文件夹RAR数量={rar_file_list.Count}，RAR最大编号={rar_exp_count}，数量差={rar_exp_count - rar_file_list.Count}");
+                Console.WriteLine();
+                Console.WriteLine($"  - 文件夹REV数量={rev_file_list.Count}，REV最大编号={rev_exp_count}，数量差={rev_exp_count - rev_file_list.Count}");
+                Console.WriteLine();
             }
         }
 

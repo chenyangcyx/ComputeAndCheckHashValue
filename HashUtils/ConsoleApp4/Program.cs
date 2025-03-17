@@ -106,7 +106,8 @@ namespace ConsoleApp4
                     Console.WriteLine("[3] 生成hash文件（不使用run_log.txt）");
                     Console.WriteLine("[4] 校验文件hash");
                     Console.WriteLine("[5] 查看并输出setting文件demo");
-                    Console.WriteLine("[6] 查看NET8功能支持情况");
+                    Console.WriteLine("[6] 查看NET9功能支持情况");
+                    Console.WriteLine("[7] 检查文件diff和RAR文件数量统计");
 
                     string chooseNo = Console.ReadLine()!;
                     switch (chooseNo)
@@ -149,6 +150,11 @@ namespace ConsoleApp4
                         case "6":
                             Console.WriteLine($"选择了：[{chooseNo}] 查看当前系统信息\n");
                             Controller.checkSystemInfo();
+                            choose_mode_run_next = true;
+                            break;
+                        case "7":
+                            Console.WriteLine($"选择了：[{chooseNo}] 检查文件diff和RAR文件数量统计\n");
+                            Controller.checkFileDiffAndRarNum(setting, check_folder_list);
                             choose_mode_run_next = true;
                             break;
                         default:
